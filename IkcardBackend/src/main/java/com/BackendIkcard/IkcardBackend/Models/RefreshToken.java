@@ -1,5 +1,6 @@
 package com.BackendIkcard.IkcardBackend.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,7 +20,8 @@ public class RefreshToken {
   private long id;
 
   @OneToOne
-  @JoinColumn(name = "idUtilisateur", referencedColumnName = "id")
+  @JsonIgnore
+  @JoinColumn(name = "user_id", referencedColumnName = "id")
   private User user;
 
   @Column(nullable = false, unique = true)

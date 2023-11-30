@@ -1,6 +1,7 @@
 package com.BackendIkcard.IkcardBackend.Models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -16,13 +17,14 @@ import javax.persistence.*;
 public class Annonce {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-   public long IdAnnonce;
+    public long IdAnnonce;
 
-  public String TitreAnnonce;
+    public String TitreAnnonce;
 
-public String Image;
+    public String Image;
 
-public String Contenu;
-@ManyToOne
+    public String Contenu;
+    @JsonIgnore
+    @ManyToOne
     private Administrateur administrateur;
 }

@@ -30,7 +30,23 @@ public class AdminServiceImp  implements AdministrateurService {
 
     @Override
     public ReponseMessage modifierAdministrateur(Administrateur administrateur) {
-        return null;
+
+        if (adminnistrateurRepository.findById(administrateur.getId()) !=null) {
+            return adminnistrateurRepository.findById(administrateur.getId())
+                    .map(administrateur1->{
+                        administrateur1.setNom(administrateur.getNom());
+                        /*administrateur1.setPrenom(administrateur.getPrenom());
+                        administrateur1.setAdresse(administrateur.getAdresse());
+                        administrateur1.setVille(administrateur.getVille());*/
+                        adminnistrateurRepository.save(administrateur);
+                        ReponseMessage message = new ReponseMessage("administrateur modifié avec succes", true);
+                        return  message;
+                    }).orElseThrow(() -> new RuntimeException("Désole, administrateur non trouvée"));
+        }else {
+            ReponseMessage message = new ReponseMessage("Désole, administrateur non trouvée", false);
+
+            return message;
+        }
     }
 
     @Override

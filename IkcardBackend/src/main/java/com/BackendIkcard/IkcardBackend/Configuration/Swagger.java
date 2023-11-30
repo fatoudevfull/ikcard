@@ -31,7 +31,7 @@ public class Swagger {
         return new ApiInfoBuilder()
                 .title("Api de l,application e_tulon  - Spring Boot Swagger Configuration")
                 .description("\"Swagger configuration for E_TULON \"")
-                .license("By BALLO Ibrahima")
+                .license("By Sy Fatoumata")
                 .version("1.0")
                 .build();
     }

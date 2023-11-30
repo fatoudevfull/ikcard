@@ -113,7 +113,7 @@ public class UserController {
         Set<Role> roles = new HashSet<>();
 
         if (strRoles == null) {
-            Role citoyenRole = roleRepository.findByName(ERole.ROLE_USER);
+            Role citoyenRole = roleRepository.findByName(ERole.USER);
             if (citoyenRole == null) {
                 log.info("role non trouvé" + citoyenRole);
                 return ResponseMessage.generateResponse("Erreur", HttpStatus.BAD_REQUEST, "Erreur: Role nom trouver.");
@@ -124,7 +124,7 @@ public class UserController {
             strRoles.forEach(role -> {
                 switch (role) {
                     case "superadmin":
-                        Role superadminRole = roleRepository.findByName(ERole.ROLE_SUPERADMIN);
+                        Role superadminRole = roleRepository.findByName(ERole.SUPERADMIN);
                         if (superadminRole == null) {
                             //return  ResponseMessage.generateResponse("Erreur",HttpStatus.BAD_REQUEST,"Erreur: Role nom trouver.");
                         } else {
@@ -132,7 +132,7 @@ public class UserController {
                         }
                         break;
                     case "admin":
-                        Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN1);
+                        Role adminRole = roleRepository.findByName(ERole.ADMINIVEAU1);
                         if (adminRole == null) {
                             //return  ResponseMessage.generateResponse("Erreur",HttpStatus.BAD_REQUEST,"Erreur: Role nom trouver.");
                         } else {
@@ -145,7 +145,7 @@ public class UserController {
                     // roles.add(adminRole);
                     // break;
                     default:
-                        Role userRole = roleRepository.findByName(ERole.ROLE_USER);
+                        Role userRole = roleRepository.findByName(ERole.USER);
                         if (userRole == null) {
                             //return  ResponseMessage.generateResponse("Erreur",HttpStatus.BAD_REQUEST,"Erreur: Role nom trouver.");
                         } else {

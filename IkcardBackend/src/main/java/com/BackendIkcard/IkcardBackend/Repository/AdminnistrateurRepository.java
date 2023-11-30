@@ -12,6 +12,7 @@ public interface AdminnistrateurRepository extends JpaRepository<Administrateur,
     boolean existsByEmail(String email);
 
 
+
    // Optional<Administrateur> findByUsername(String username);
 
 

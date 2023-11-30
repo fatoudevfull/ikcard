@@ -1,6 +1,9 @@
 package com.BackendIkcard.IkcardBackend.Models;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -18,7 +21,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     public String nom;
-   @Column(unique = true)
+    @Column(unique = true)
     public String email;
     public String numero;
     @Column(unique = true)
@@ -30,11 +33,11 @@ public class User {
     private String Pays;
     private String ville;
     private String adresse;
+    public String lienReferencement;
 
 
-
-    @ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
-    @JoinTable(  name = "user_roles",
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "idUtilisateur"),
             inverseJoinColumns = @JoinColumn(name = "id"))
     private Set<Role> roles = new HashSet<>();

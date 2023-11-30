@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 @Service
-public class UserImpl implements UserService {
+public class UserServImpl implements UserService {
     
     @Autowired
     UserRepository userRepository;
@@ -90,8 +90,8 @@ public class UserImpl implements UserService {
     public List<User> getAllAdmin() {
         // TODO Auto-generated method stub
         //Set<Role> rechList=new HashSet<>(); 
-        Role admin=roleRepository.findByName(ERole.ROLE_ADMIN1);
-     Role superadmin=roleRepository.findByName(ERole.ROLE_SUPERADMIN);
+        Role admin=roleRepository.findByName(ERole.ADMINIVEAU1);
+     Role superadmin=roleRepository.findByName(ERole.SUPERADMIN);
 
             List<User>  list=new ArrayList<>();
             list.addAll(admin.getUsers());
@@ -112,8 +112,8 @@ public class UserImpl implements UserService {
     @Override
     public Long NombreAdmin() {
         // TODO Auto-generated method stub
-        Role admin=roleRepository.findByName(ERole.ROLE_ADMIN1);
-        Role superadmin=roleRepository.findByName(ERole.ROLE_SUPERADMIN);
+        Role admin=roleRepository.findByName(ERole.ADMINIVEAU1);
+        Role superadmin=roleRepository.findByName(ERole.SUPERADMIN);
 
         return  (long) (admin.getUsers().size() + superadmin.getUsers().size());
     }

@@ -2,7 +2,6 @@ package com.BackendIkcard.IkcardBackend;
 
 import com.BackendIkcard.IkcardBackend.Models.ERole;
 import com.BackendIkcard.IkcardBackend.Models.Role;
-import com.BackendIkcard.IkcardBackend.Models.User;
 import com.BackendIkcard.IkcardBackend.Repository.RoleRepository;
 import com.BackendIkcard.IkcardBackend.Service.UserService;
 import org.springframework.boot.SpringApplication;
@@ -23,29 +22,52 @@ public class IkcardBackendApplication {
 		PasswordEncoder encoder=ctx.getBean(PasswordEncoder.class);
 
 		///creation des roles
-		if(roleRepos.findByName(ERole.ROLE_USER)==null){
+
+		if(roleRepos.findByName(ERole.SUPERADMIN)==null){
 			// TODO: handle exception
 			Role userRole = new Role();
 			// userRole.setId(1L);
-			userRole.setName(ERole.ROLE_USER);
+			userRole.setName(ERole.SUPERADMIN);
+			roleRepos.save(userRole);
+		};
+		if(roleRepos.findByName(ERole.ADMINIVEAU1)==null){
+			// TODO: handle exception
+			Role userRole = new Role();
+			// userRole.setId(1L);
+			userRole.setName(ERole.ADMINIVEAU1);
+			roleRepos.save(userRole);
+		};
+		if(roleRepos.findByName(ERole.ADMINIVEAU2)==null){
+			// TODO: handle exception
+			Role userRole = new Role();
+			// userRole.setId(1L);
+			userRole.setName(ERole.ADMINIVEAU2);
 			roleRepos.save(userRole);
 		};
 
-		if(roleRepos.findByName(ERole.ROLE_ADMIN1)==null){
+		if(roleRepos.findByName(ERole.ENTREPRISE)==null){
 			// TODO: handle exception
 			Role userRole = new Role();
 			// userRole.setId(1L);
-			userRole.setName(ERole.ROLE_ADMIN1);
+			userRole.setName(ERole.ENTREPRISE);
+			roleRepos.save(userRole);
+		};
+		if(roleRepos.findByName(ERole.AMBASSADEUR)==null){
+			// TODO: handle exception
+			Role userRole = new Role();
+			// userRole.setId(1L);
+			userRole.setName(ERole.AMBASSADEUR);
 			roleRepos.save(userRole);
 		};
 
-		if(roleRepos.findByName(ERole.ROLE_SUPERADMIN)==null){
+		if(roleRepos.findByName(ERole.USER)==null){
 			// TODO: handle exception
 			Role userRole = new Role();
 			// userRole.setId(1L);
-			userRole.setName(ERole.ROLE_SUPERADMIN);
+			userRole.setName(ERole.USER);
 			roleRepos.save(userRole);
 		};
+
 
 
 		//creation du super Admin

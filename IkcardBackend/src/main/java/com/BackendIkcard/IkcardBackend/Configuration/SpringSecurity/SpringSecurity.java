@@ -63,14 +63,14 @@ public class SpringSecurity {
                 // .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 // .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
-                // .antMatchers("/user/get/**").permitAll()
-                // .antMatchers("/admin/get/**").permitAll()
+                .antMatchers("/user/**").permitAll()
+                 .antMatchers("/admin/signup").permitAll()
                 .antMatchers("/user/login").permitAll()
                 .antMatchers("/user/signup").permitAll()
-                .antMatchers("/user/getuser/**").permitAll()
+                .antMatchers("/ambassadeur/**").permitAll()
 
 
-                //.antMatchers("/user/").permitAll()
+                .antMatchers("/user/").permitAll()
                 .antMatchers("/logout").permitAll()
                 .antMatchers("/v2/api-docs",
                         "/configuration/ui",
@@ -80,8 +80,8 @@ public class SpringSecurity {
                         "/webjars/**").permitAll()
                 .antMatchers("/problematique/**").permitAll()
 
-                //.antMatchers("/swagger").permitAll()
-                //.antMatchers("/swagger-ui.html").permitAll()
+                .antMatchers("/swagger").permitAll()
+                .antMatchers("/swagger-ui.html").permitAll()
 
 
                 .anyRequest().authenticated();
