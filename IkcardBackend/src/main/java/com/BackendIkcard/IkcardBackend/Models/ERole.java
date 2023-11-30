@@ -2,11 +2,10 @@ package com.BackendIkcard.IkcardBackend.Models;
 
 public enum ERole {
     ROLE_SUPERADMIN,
-    ROLE_ADMIN,
-    ROLE_CITOYEN,
-    ADMINISTRATEUR,
+    ROLE_ADMIN1,
+    ROLE_AMBASSADEUR,
+    ROLE_ADMIN2,
     Admin,
-    USER,
-    AMBASSATEUR,
-    ADMINSRATEURNIVEAU4
+    ROLE_USER,
+    ROLE_ENTREPRISE
 }

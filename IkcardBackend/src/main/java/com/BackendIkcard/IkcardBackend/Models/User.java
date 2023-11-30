@@ -12,40 +12,33 @@ import java.util.Set;
 @Setter
 // @ToString
 @Entity
-@Data
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@Table(name = "utilisateurs",
-        uniqueConstraints = {
-                @UniqueConstraint(columnNames = "username"),
-                @UniqueConstraint(columnNames = "email")
-        })
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public long idUtilisateur;
+    private Long id;
     public String nom;
-    @Column(unique = true)
+   @Column(unique = true)
     public String email;
     public String numero;
     @Column(unique = true)
-    public String userName;
+    public String username;
     @Lob
     private String password;
-
-
-
-
-
+    public String prenom;
+    public boolean etat;
+    private String Pays;
+    private String ville;
+    private String adresse;
 
 
 
     @ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
     @JoinTable(  name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
+            joinColumns = @JoinColumn(name = "idUtilisateur"),
+            inverseJoinColumns = @JoinColumn(name = "id"))
     private Set<Role> roles = new HashSet<>();
 
-    public User(Object o, String nom, String username, String email, String telephone, String encode) {
+    public User(Object o, String nom, String username, String email, String numero, String encode) {
     }
 }

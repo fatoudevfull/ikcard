@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ExceptionRecupereur {
 
     @ExceptionHandler({Exception.class})
-    ResponseEntity<?> traiterException(Exception e){
-        return  ResponseMessage.generateResponse("exeption", HttpStatus.EXPECTATION_FAILED, e.getMessage());
+    ResponseEntity<?> traiterException(Exception e) {
+        return ResponseMessage.generateResponse("exeption", HttpStatus.EXPECTATION_FAILED, e.getMessage());
     }
-    
+
 }

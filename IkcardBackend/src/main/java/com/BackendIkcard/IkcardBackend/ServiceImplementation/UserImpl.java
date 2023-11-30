@@ -37,9 +37,9 @@ public class UserImpl implements UserService {
     public User updateUser(User a) {
         // TODO Auto-generated method stub
 
-        User User = userRepository.findById(a.getIdUtilisateur()).get();
+        User User = userRepository.findById(a.getId()).get();
 
-        User log = userRepository.findByUsernameAndPassword(a.getUserName(), a.getPassword());
+        User log = userRepository.findByUsernameAndPassword(a.getUsername(), a.getPassword());
 
         if (log == null) {
             System.out.println("non null");
@@ -57,9 +57,9 @@ public class UserImpl implements UserService {
     }
 
     @Override
-    public User getUser(Long id) {
+    public User getUser(Long idUtilisateur) {
         // TODO Auto-generated method stub
-        return userRepository.findById(id).get();
+        return userRepository.findById(idUtilisateur).get();
     }
 
     @Override
@@ -75,7 +75,7 @@ public class UserImpl implements UserService {
     }
 
     @Override
-    public User getByUsername(String username) {
+    public User getByUserName(String username) {
         // TODO Auto-generated method stub
         return userRepository.findByUsername(username).orElseThrow(() ->null);
     }
@@ -90,7 +90,7 @@ public class UserImpl implements UserService {
     public List<User> getAllAdmin() {
         // TODO Auto-generated method stub
         //Set<Role> rechList=new HashSet<>(); 
-        Role admin=roleRepository.findByName(ERole.ROLE_ADMIN);
+        Role admin=roleRepository.findByName(ERole.ROLE_ADMIN1);
      Role superadmin=roleRepository.findByName(ERole.ROLE_SUPERADMIN);
 
             List<User>  list=new ArrayList<>();
@@ -100,37 +100,37 @@ public class UserImpl implements UserService {
         return list;
     }
 
-    @Override
+/*    @Override
     public List<User> getAllCitoyen() {
         // TODO Auto-generated method stub
         //Set<Role> rechList=new HashSet<>(); 
-        Role citoyen=roleRepository.findByName(ERole.ROLE_CITOYEN);
+        Role citoyen=roleRepository.findByName(ERole.ROLE_USER);
         //rechList.add(citoyen);
         return citoyen.getUsers(); 
-    }
+    }*/
 
     @Override
     public Long NombreAdmin() {
         // TODO Auto-generated method stub
-        Role admin=roleRepository.findByName(ERole.ROLE_ADMIN);
+        Role admin=roleRepository.findByName(ERole.ROLE_ADMIN1);
         Role superadmin=roleRepository.findByName(ERole.ROLE_SUPERADMIN);
 
         return  (long) (admin.getUsers().size() + superadmin.getUsers().size());
     }
 
-    @Override
+/*    @Override
     public Long NombreCitoyen() {
         // TODO Auto-generated method stub
-        Role citoyen=roleRepository.findByName(ERole.ROLE_CITOYEN);
+        Role citoyen=roleRepository.findByName(ERole.ROLE_USER);
         return (long) citoyen.getUsers().size(); 
-    }
+    }*/
 
 
 
     @Override
-    public User getByTelephone(String telephone) {
+    public User getByNumero(String numero) {
         // TODO Auto-generated method stub
-        return userRepository.findByTelephone(telephone);
+        return userRepository.findByNumero(numero);
     }
     
 }

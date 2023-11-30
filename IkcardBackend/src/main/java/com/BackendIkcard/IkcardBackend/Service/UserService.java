@@ -19,10 +19,10 @@ public interface UserService {
 
     // Methode pour la recuperation d'un user
     /**
-     * @param id
+     * @param idUtilisateur
      * @return
      */
-    User getUser(Long id);
+    User getUser(Long idUtilisateur);
 
     // Methode pour la surpression d'un user à partir d'un user
     /**
@@ -41,14 +41,14 @@ public interface UserService {
      * @param username
      * @return
      */
-    User getByUsername(String username);
+    User getByUserName(String username);
 
     // Methode pour retrouver un user a travers son telephone
     /**
-     * @param telephone
+     * @param numero
      * @return
      */
-    User getByTelephone(String telephone);
+    User getByNumero(String numero);
 
     // Methode pour retrouver un user a travers son adresse email
     /**
@@ -64,10 +64,10 @@ public interface UserService {
     Long NombreAdmin();
 
     //Liste des citoyens
-    List<User> getAllCitoyen();
+   // List<User> getAllCitoyen();
 
     //Nombre de citoyen
-    Long NombreCitoyen();
+   // Long NombreCitoyen();
 
     
     // // methode pour la recuperation du nombre de citoyen ayany deja joues aux jeux

@@ -13,40 +13,34 @@ public class JwtResponse {
     private String refreshToken;
 
     private String type = "Bearer";
-    private Long id;
-    private String username;
+    private Long idUtilisateur;
+    private String userName;
     private String email;
     private String photo;
     private String nom;
     private String prenom;
-    private String telephone;
+    private String numero;
 
-    private Long point;
-    private Long niveau;
-    private Date dateSouscription;
     private String Pays;
     private String ville;
     private String adresse;
 
     private List<String> roles;
 
-    public JwtResponse(String accessToken,String refreshToken, Long id, String username,String email,String telephone, String nom,String prenom, String photo,Long point, Long niveau,Date dateSouscription,String Pays, String ville,String adresse,List<String> roles) {
+    public JwtResponse(String accessToken,String refreshToken, Long id, String userName,String email,String numero, String nom,String prenom, String photo,String Pays, String ville,String adresse,List<String> roles) {
         this.token = accessToken;
         this.refreshToken = refreshToken;
-        this.id = id;
-        this.username = username;
+        this.idUtilisateur = id;
+        this.userName = userName;
         this.email = email;
         this.photo = photo;
         this.nom = nom;
         this.prenom = prenom;
         this.roles = roles;
-        this.point=point;
-        this.niveau=niveau;
-        this.dateSouscription=dateSouscription;
         this.adresse=adresse;
         this.Pays=Pays;
         this.ville=ville;
-        this.telephone=telephone;
+        this.numero=numero;
       }
 
     public JwtResponse(String jwt, String token, Long idUtilisateur, String username, String email, String telephone, String nom, List<String> roles) {

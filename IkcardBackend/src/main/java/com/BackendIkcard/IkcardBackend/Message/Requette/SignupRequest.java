@@ -9,7 +9,7 @@ import java.util.Set;
 public class SignupRequest {
     private String nom;
     private String username;
-    private String telephone;
+    private String numero;
 
     private String email;
    // private String photo;

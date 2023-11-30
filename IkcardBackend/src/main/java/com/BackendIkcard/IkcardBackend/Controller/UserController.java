@@ -77,7 +77,7 @@ public class UserController {
                 .map(refreshTokenService::verifyExpiration)
                 .map(RefreshToken::getUser)
                 .map(user -> {
-                    String token = jwtUtils.generateTokenFromUsername(user.getUserName());
+                    String token = jwtUtils.generateTokenFromUsername(user.getUsername());
                     return ResponseEntity.ok(new TokenRefreshResponse(token, requestRefreshToken));
                 })
                 .orElseThrow(() -> new TokenRefreshException(requestRefreshToken,
@@ -98,14 +98,14 @@ public class UserController {
             return ResponseMessage.generateResponse("Erreur", HttpStatus.BAD_REQUEST, "Erreur: Cet email existe déjà!");
         }
 
-        if (userRepository.existsByTelephone(signUpRequest.getTelephone())) {
+        if (userRepository.existsByNumero(signUpRequest.getNumero())) {
             return ResponseMessage.generateResponse("Erreur", HttpStatus.BAD_REQUEST, "Erreur: Cet numero de telephone existe déjà!");
         }
 
 
         // Create new user's account
         User user = new User(null,signUpRequest.getNom(),signUpRequest.getUsername(),
-                signUpRequest.getEmail(),signUpRequest.getTelephone(),
+                signUpRequest.getEmail(),signUpRequest.getNumero(),
                 encoder.encode(signUpRequest.getPassword()));
 
         log.info("Utilisateur crée" + user);
@@ -113,7 +113,7 @@ public class UserController {
         Set<Role> roles = new HashSet<>();
 
         if (strRoles == null) {
-            Role citoyenRole = roleRepository.findByName(ERole.ROLE_CITOYEN);
+            Role citoyenRole = roleRepository.findByName(ERole.ROLE_USER);
             if (citoyenRole == null) {
                 log.info("role non trouvé" + citoyenRole);
                 return ResponseMessage.generateResponse("Erreur", HttpStatus.BAD_REQUEST, "Erreur: Role nom trouver.");
@@ -132,7 +132,7 @@ public class UserController {
                         }
                         break;
                     case "admin":
-                        Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN);
+                        Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN1);
                         if (adminRole == null) {
                             //return  ResponseMessage.generateResponse("Erreur",HttpStatus.BAD_REQUEST,"Erreur: Role nom trouver.");
                         } else {
@@ -145,7 +145,7 @@ public class UserController {
                     // roles.add(adminRole);
                     // break;
                     default:
-                        Role userRole = roleRepository.findByName(ERole.ROLE_CITOYEN);
+                        Role userRole = roleRepository.findByName(ERole.ROLE_USER);
                         if (userRole == null) {
                             //return  ResponseMessage.generateResponse("Erreur",HttpStatus.BAD_REQUEST,"Erreur: Role nom trouver.");
                         } else {
@@ -157,7 +157,7 @@ public class UserController {
 
         user.setRoles(roles);
         userRepository.save(user);
-        log.info("Utilisateur crée " + user.getUserName());
+        log.info("Utilisateur crée " + user.getUsername());
 
         return ResponseMessage.generateResponse("ok", HttpStatus.OK, userRepository.save(user));
     }
@@ -179,11 +179,11 @@ public class UserController {
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
 
-        RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getIdUtilisateur());
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
 
 
         /////////////////
-        return ResponseEntity.ok(new JwtResponse(jwt, refreshToken.getToken(), userDetails.getIdUtilisateur(), userDetails.getUsername(), userDetails.getEmail(), userDetails.getTelephone(), userDetails.getNom(), roles));
+        return ResponseEntity.ok(new JwtResponse(jwt, refreshToken.getToken(), userDetails.getId(), userDetails.getUsername(), userDetails.getEmail(), userDetails.getNumero(), userDetails.getNom(), roles));
     }
     // Fin
 
@@ -208,7 +208,7 @@ public class UserController {
 
         String newPassword = encoder.encode(user.getPassword());
 
-        User Updateuser = userRepository.findById(user.getIdUtilisateur()).get();
+        User Updateuser = userRepository.findById(user.getId()).get();
 
         Updateuser.setPassword(newPassword);
         User userUpdated = userService.updateUser(Updateuser);
@@ -221,9 +221,9 @@ public class UserController {
     //@PreAuthorize ("hasRole('ROLE_ADMIN','ROLE_CITOYEN')")
     @ApiOperation(value = "recuperation d'un user a travers son id.")
     @GetMapping("/get/{id}")
-    public ResponseEntity<Object> getUser(@PathVariable("id") Long id) {
+    public ResponseEntity<Object> getUser(@PathVariable("id") Long idUtilisateur) {
         try {
-            return ResponseMessage.generateResponse("ok", HttpStatus.OK, userService.getUser(id));
+            return ResponseMessage.generateResponse("ok", HttpStatus.OK, userService.getUser(idUtilisateur));
 
         } catch (Exception e) {
             return ResponseMessage.generateResponse("erreur", HttpStatus.OK, "Erreur lors de la recuperation.");
@@ -237,7 +237,7 @@ public class UserController {
     @GetMapping("/getuser/{numero}")
     public ResponseEntity<Object> getUserByNumero(@PathVariable("numero") String numero) {
         try {
-            return ResponseMessage.generateResponse("ok", HttpStatus.OK, userService.getByTelephone(numero));
+            return ResponseMessage.generateResponse("ok", HttpStatus.OK, userService.getByNumero(numero));
 
         } catch (Exception e) {
             return ResponseMessage.generateResponse("erreur", HttpStatus.OK, "Erreur lors de la recuperation.");
@@ -249,10 +249,10 @@ public class UserController {
     //@PreAuthorize ("hasRole('ROLE_ADMIN')")
     @ApiOperation(value = "Surpression d'un user.")
     @DeleteMapping("/delete/{idUser}")
-    public ResponseEntity<Object> SuprimerUser(@PathVariable Long idUser) {
+    public ResponseEntity<Object> SuprimerUser(@PathVariable Long idUtilisateur) {
 
         try {
-            User user = userRepository.findById(idUser).get();
+            User user = userRepository.findById(idUtilisateur).get();
             userService.deleteUser(user);
             return ResponseMessage.generateResponse("ok", HttpStatus.OK, "Utilisarteur suprimer!");
 
@@ -311,7 +311,7 @@ public class UserController {
     }
     // Fin
 
-    // Nombre de citoyen
+/*    // Nombre de citoyen
     @ApiOperation(value = "Récuperation du nombre de citoyen.")
     //@PreAuthorize ("hasRole('ROLE_ADMIN')")
     @GetMapping("/nbre/citoyen")
@@ -342,7 +342,7 @@ public class UserController {
         }
 
     }
-    // Fin
+    // Fin*/
 
 
 }

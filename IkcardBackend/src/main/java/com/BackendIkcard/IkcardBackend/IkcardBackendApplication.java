@@ -23,19 +23,19 @@ public class IkcardBackendApplication {
 		PasswordEncoder encoder=ctx.getBean(PasswordEncoder.class);
 
 		///creation des roles
-		if(roleRepos.findByName(ERole.ROLE_CITOYEN)==null){
+		if(roleRepos.findByName(ERole.ROLE_USER)==null){
 			// TODO: handle exception
 			Role userRole = new Role();
 			// userRole.setId(1L);
-			userRole.setName(ERole.ROLE_CITOYEN);
+			userRole.setName(ERole.ROLE_USER);
 			roleRepos.save(userRole);
 		};
 
-		if(roleRepos.findByName(ERole.ROLE_ADMIN)==null){
+		if(roleRepos.findByName(ERole.ROLE_ADMIN1)==null){
 			// TODO: handle exception
 			Role userRole = new Role();
 			// userRole.setId(1L);
-			userRole.setName(ERole.ROLE_ADMIN);
+			userRole.setName(ERole.ROLE_ADMIN1);
 			roleRepos.save(userRole);
 		};
 
@@ -49,14 +49,14 @@ public class IkcardBackendApplication {
 
 
 		//creation du super Admin
-		try {
-			userService.getByUsername("Ballo");
+	/*	try {
+			userService.getByUserName("fs");
 		} catch (Exception e) {
 			// TODO: handle exception
 			User admin=new User();
 
 			admin.setNom("Fatoumata sy");
-			admin.setUserName("fs");
+			admin.setUsername("fs");
 			//	admin.setPrenom("Ballo");
 			admin.setPassword(encoder.encode("syfatou") );
 			//admin.setPoint(0l);
@@ -65,6 +65,6 @@ public class IkcardBackendApplication {
 			admin.getRoles().add(roleRepos.findByName(ERole.ROLE_SUPERADMIN));
 
 			userService.saveUser(admin);
-		}
+		}*/
 	}
 }

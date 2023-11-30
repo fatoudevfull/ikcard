@@ -19,11 +19,11 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 public class UserDetailsImpl implements UserDetails{
-    
-    private Long idUtilisateur;
+
+    private Long id;
     private String nom;
     private String username;
-    private String telephone;
+    private String numero;
     private String email;
     @JsonIgnore
     private String password;
@@ -37,8 +37,8 @@ public class UserDetailsImpl implements UserDetails{
             .collect(Collectors.toList());
 
         return new UserDetailsImpl(
-                user.getIdUtilisateur(),
-                user.getUserName(),
+                user.getId(),
+                user.getUsername(),
                 user.getEmail(),
                 user.getNom(),
                 user.getNumero(),
@@ -74,6 +74,6 @@ public class UserDetailsImpl implements UserDetails{
         if (o == null || getClass() != o.getClass())
         return false;
         UserDetailsImpl user = (UserDetailsImpl) o;
-        return Objects.equals(idUtilisateur, user.idUtilisateur);
+        return Objects.equals(id, user.id);
     }
 }
