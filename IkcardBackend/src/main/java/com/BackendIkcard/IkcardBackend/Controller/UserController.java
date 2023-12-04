@@ -7,6 +7,7 @@ import com.BackendIkcard.IkcardBackend.Configuration.SpringSecurity.Services.Ref
 import com.BackendIkcard.IkcardBackend.Configuration.SpringSecurity.Services.UserDetailsImpl;
 import com.BackendIkcard.IkcardBackend.Message.Exeption.TokenRefreshException;
 import com.BackendIkcard.IkcardBackend.Message.Reponse.JwtResponse;
+import com.BackendIkcard.IkcardBackend.Message.Reponse.MessageResponse;
 import com.BackendIkcard.IkcardBackend.Message.Reponse.ResponseMessage;
 import com.BackendIkcard.IkcardBackend.Message.Reponse.TokenRefreshResponse;
 import com.BackendIkcard.IkcardBackend.Message.Requette.LoginRequest;
@@ -34,6 +35,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -87,9 +89,11 @@ public class UserController {
 
     ////
     ////pour la creation dun user
-    @ApiOperation(value = "Pour la creation d'un user.")
-    @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@RequestBody SignupRequest signUpRequest) {
+/*    @ApiOperation(value = "Pour la creation d'un user.")
+    @PostMapping("/signup")*/
+   /* public ResponseEntity<?> registerUser(@RequestBody SignupRequest signUpRequest) {
+
+        System.out.println("debut");
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
             return ResponseMessage.generateResponse("Erreur", HttpStatus.BAD_REQUEST, "Erreur: Cet nom d'utilisateur existe déjà!");
         }
@@ -107,18 +111,23 @@ public class UserController {
         User user = new User(null,signUpRequest.getNom(),signUpRequest.getUsername(),
                 signUpRequest.getEmail(),signUpRequest.getNumero(),
                 encoder.encode(signUpRequest.getPassword()));
+        System.out.println("milieu");
+        System.out.println(user.email);
+        System.out.println(user.numero);
+        System.out.println(user.nom);
+        System.out.println(user.username);
 
         log.info("Utilisateur crée" + user);
         Set<String> strRoles = signUpRequest.getRole();
         Set<Role> roles = new HashSet<>();
 
         if (strRoles == null) {
-            Role citoyenRole = roleRepository.findByName(ERole.USER);
-            if (citoyenRole == null) {
-                log.info("role non trouvé" + citoyenRole);
+            Role UserRole = roleRepository.findByName(ERole.USER);
+            if (UserRole == null) {
+                log.info("role non trouvé" + UserRole);
                 return ResponseMessage.generateResponse("Erreur", HttpStatus.BAD_REQUEST, "Erreur: Role nom trouver.");
             } else {
-                roles.add(citoyenRole);
+                roles.add(UserRole);
             }
         } else {
             strRoles.forEach(role -> {
@@ -158,14 +167,61 @@ public class UserController {
         user.setRoles(roles);
         userRepository.save(user);
         log.info("Utilisateur crée " + user.getUsername());
+        System.out.println("fin");
+        System.out.println(user.email);
+        System.out.println(user.numero);
+        System.out.println(user.nom);
+        System.out.println(user.username);
 
         return ResponseMessage.generateResponse("ok", HttpStatus.OK, userRepository.save(user));
-    }
+    }*/
     /////fin creation user
 
     // methode pour le login d'un Admin
-    @ApiOperation(value = "Le login d'un user.")
+  /*  @ApiOperation(value = "Le login d'un user.")
     @PostMapping("/login")
+*/
+    @PostMapping("/save")
+    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signupRequest) {
+        if (userRepository.existsByEmail(signupRequest.getUsername())) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Erreur: Ce nom d'utilisateur existe déjà!"));
+        }
+
+        if (userRepository.existsByEmail(signupRequest.getEmail())) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Erreur: Cet email est déjà utilisé!"));
+        }
+
+        // Create new patient's account
+        User user = new User();
+        System.out.println(user.email);
+
+
+        user.setUsername(signupRequest.getUsername());
+        user.setEmail(signupRequest.getEmail());
+        encoder.encode(signupRequest.getPassword());
+        System.out.println(user.email);
+        user.setNom(signupRequest.getNom());
+        user.setNumero(signupRequest.getNumero());
+        user.setPassword(encoder.encode(signupRequest.getPassword()));
+        System.out.println(user.email);
+        Role AminRole = roleRepository.findByName(ERole.ADMINIVEAU2);
+      //  user.setRole(AminRole);
+        System.out.println(user.email);
+
+
+
+        System.out.println(user);
+
+        userRepository.save(user);
+        System.out.println(user);
+
+        return ResponseEntity.ok(new MessageResponse("utilisateur enregistré avec succès!"));
+    }
+
     public ResponseEntity<Object> Login(@RequestBody LoginRequest loginRequest) {
 
         Authentication authentication = authenticationManager.authenticate(

@@ -30,7 +30,7 @@ public class AdminController {
     PasswordEncoder encoder;
 
     @PostMapping("/save")
-    public ResponseEntity<?> registerMedecin(@Valid @RequestBody SignupRequest signupRequest) {
+    public ResponseEntity<?> registerAdmin(@Valid @RequestBody SignupRequest signupRequest) {
         if (adminnistrateurRepository.existsByEmail(signupRequest.getUsername())) {
             return ResponseEntity
                     .badRequest()
@@ -45,25 +45,24 @@ public class AdminController {
 
         // Create new patient's account
         Administrateur administrateur = new Administrateur();
+        System.out.println(administrateur.email);
 
 
         administrateur.setUsername(signupRequest.getUsername());
         administrateur.setEmail(signupRequest.getEmail());
         encoder.encode(signupRequest.getPassword());
+        System.out.println(administrateur.email);
         administrateur.setNom(signupRequest.getNom());
-      //  medecin.setPrenom(signupRequest.getPrenom());
-      //  medecin.setPhoto(signupMedecinRequest.getPhoto());
         administrateur.setNumero(signupRequest.getNumero());
         administrateur.setPassword(encoder.encode(signupRequest.getPassword()));
-        // patient.setRole(roleRepository.findByName(PATIENT));
+        System.out.println(administrateur.email);
         Role AminRole = roleRepository.findByName(ERole.ADMINIVEAU2);
-        // .orElseThrow(() -> new RuntimeException("Erreur: le rôle n'est pas trouvé."));
         administrateur.setRole(AminRole);
+        System.out.println(administrateur.email);
 
 
 
         System.out.println(administrateur);
-        // mailSender.send(emailMedecinConstructor.constructNewMedecinEmail(medecin,medecin.getPassword()));
 
         adminnistrateurRepository.save(administrateur);
         System.out.println(administrateur);
