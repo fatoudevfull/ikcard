@@ -16,7 +16,7 @@ import javax.persistence.*;
 public class Entreprise {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public long idAdmim;
+    private Long id;
     public String nom;
     private String password;
     public String photo;

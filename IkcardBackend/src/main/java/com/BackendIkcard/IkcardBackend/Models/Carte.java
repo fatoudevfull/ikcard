@@ -13,13 +13,13 @@ import javax.persistence.*;
 public class Carte {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  public long  idCarte;
+  public long  id;
 
     public String nomComplet;
 
     public String UserName;
 
-    public String email1;
+    public String email;
 
     public String Email2;
 

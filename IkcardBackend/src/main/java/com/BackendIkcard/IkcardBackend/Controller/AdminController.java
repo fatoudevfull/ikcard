@@ -1,6 +1,7 @@
 package com.BackendIkcard.IkcardBackend.Controller;
 
 import com.BackendIkcard.IkcardBackend.Message.Reponse.MessageResponse;
+import com.BackendIkcard.IkcardBackend.Message.ReponseMessage;
 import com.BackendIkcard.IkcardBackend.Message.Requette.SignupRequest;
 import com.BackendIkcard.IkcardBackend.Models.Administrateur;
 import com.BackendIkcard.IkcardBackend.Models.ERole;
@@ -61,15 +62,20 @@ public class AdminController {
         System.out.println(administrateur.email);
 
 
-
         System.out.println(administrateur);
 
         adminnistrateurRepository.save(administrateur);
         System.out.println(administrateur);
+        System.out.println(administrateur.email);
+        System.out.println(administrateur.id);
+        System.out.println(administrateur.numero);
 
         return ResponseEntity.ok(new MessageResponse("Adminnistrateur enregistré avec succès!"));
     }
 
-
-
+    //modifier
+    @GetMapping("/modifier")
+    public ReponseMessage Modifier(@RequestBody Administrateur administrateur) {
+        return administrateurService.modifierAdministrateur(administrateur);
+    }
 }

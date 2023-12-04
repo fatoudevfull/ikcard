@@ -209,8 +209,10 @@ public class UserController {
         user.setPassword(encoder.encode(signupRequest.getPassword()));
         System.out.println(user.email);
         Role AminRole = roleRepository.findByName(ERole.ADMINIVEAU2);
-      //  user.setRole(AminRole);
+       // user.setRoles(AminRole);
         System.out.println(user.email);
+        System.out.println(user.nom);
+        System.out.println(user.getId());
 
 
 

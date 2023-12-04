@@ -22,7 +22,7 @@ public interface Carteservice {
     List<Carte> afficherToutLesCarte ();
 
     //Suppression d'un Annonce
-    ReponseMessage SupprimerCarte (Long idCarte );
+    ReponseMessage SupprimerCarte (Long id );
 
 
     Carte saveOrUpdateCarte(Carte carte);

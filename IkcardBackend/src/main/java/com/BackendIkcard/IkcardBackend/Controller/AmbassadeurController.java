@@ -75,6 +75,47 @@ public class AmbassadeurController {
 
         return ResponseEntity.ok(new MessageResponse("Ambassadeur enregistré avec succès!"));
     }
+    ///////////////////************************/////////////////////*****************
+    @PostMapping("/save")
+    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signupRequest) {
+        if (ambassadeurRepositoty.existsByEmail(signupRequest.getUsername())) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Erreur: Ce nom d'utilisateur existe déjà!"));
+        }
+
+        if (ambassadeurRepositoty.existsByEmail(signupRequest.getEmail())) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Erreur: Cet email est déjà utilisé!"));
+        }
+
+        // Create new patient's account
+        Ambassadeur user = new Ambassadeur();
+        System.out.println(user.email);
+
+
+        user.setUsername(signupRequest.getUsername());
+        user.setEmail(signupRequest.getEmail());
+        encoder.encode(signupRequest.getPassword());
+        System.out.println(user.email);
+        user.setNom(signupRequest.getNom());
+        user.setNumero(signupRequest.getNumero());
+        user.setPassword(encoder.encode(signupRequest.getPassword()));
+        System.out.println(user.email);
+        Role userRole = roleRepository.findByName(ERole.ADMINIVEAU2);
+        user.setRole(userRole);
+        System.out.println(user.email);
+
+
+
+        System.out.println(user);
+
+        ambassadeurRepositoty.save(user);
+        System.out.println(user);
+
+        return ResponseEntity.ok(new MessageResponse("utilisateur enregistré avec succès!"));
+    }
     @GetMapping("/afficher")
     public List<Ambassadeur> Afficher(){
 

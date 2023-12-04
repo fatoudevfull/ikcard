@@ -21,7 +21,7 @@ public interface AdministrateurService {
     List<Administrateur > afficherToutLesAdministrateur ();
 
     //Suppression d'un Administrateur
-    ReponseMessage SupprimerAdministrateur (Long idAdministrateur );
+    ReponseMessage SupprimerAdministrateur (Long id );
 
 
     Administrateur saveOrUpdateAdministrateur(Administrateur administrateur);

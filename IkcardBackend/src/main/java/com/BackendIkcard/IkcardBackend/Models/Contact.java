@@ -13,15 +13,15 @@ import javax.persistence.*;
 public class Contact {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-   public long idContact;
+    public long id;
 
-public String nomComplet;
+    public String nomComplet;
 
-public String email1;
+    public String email;
 
-public String email2;
+    public String email1;
 
-public String photoProfil;
+    public String photoProfil;
 
     public String mobile1;
 
@@ -32,6 +32,7 @@ public String photoProfil;
     public String fixe1;
 
     public String fixe2;
+    public boolean etat;
 
     public String compagnie;
 
@@ -47,7 +48,7 @@ public String photoProfil;
 
     public String instagramLink;
 
-    public String tweeterLink;
+    public String tweetterLink;
 
     public String linkedinLink;
 

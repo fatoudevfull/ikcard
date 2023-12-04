@@ -68,6 +68,11 @@ public class SpringSecurity {
                 .antMatchers("/user/login").permitAll()
                 .antMatchers("/user/signup").permitAll()
                 .antMatchers("/ambassadeur/**").permitAll()
+                .antMatchers("/contact/**").permitAll()
+                .antMatchers("/entreprise/**").permitAll()
+                .antMatchers("/user/login").permitAll()
+                .antMatchers("/user/**").permitAll()
+                .antMatchers("/anonce/**").permitAll()
 
 
                 .antMatchers("/user/").permitAll()

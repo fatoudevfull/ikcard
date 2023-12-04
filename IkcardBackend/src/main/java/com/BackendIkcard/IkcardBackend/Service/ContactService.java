@@ -21,7 +21,7 @@ public interface ContactService {
     List<Contact> afficherToutLesContact ();
 
     //Suppression d'un Contact
-    ReponseMessage SupprimerContact (Long idContact );
+    ReponseMessage SupprimerContact (Long id);
 
 
     Contact saveOrUpdateContact(Contact contact);

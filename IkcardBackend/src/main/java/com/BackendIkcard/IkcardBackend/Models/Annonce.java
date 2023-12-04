@@ -17,9 +17,9 @@ import javax.persistence.*;
 public class Annonce {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public long IdAnnonce;
+    public long id;
 
-    public String TitreAnnonce;
+    public String titre;
 
     public String Image;
 

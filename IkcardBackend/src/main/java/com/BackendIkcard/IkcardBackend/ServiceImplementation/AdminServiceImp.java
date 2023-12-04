@@ -51,12 +51,22 @@ public class AdminServiceImp  implements AdministrateurService {
 
     @Override
     public List<Administrateur> afficherToutLesAdministrateur() {
-        return null;
+        return adminnistrateurRepository.findAll();
     }
 
     @Override
-    public ReponseMessage SupprimerAdministrateur(Long idAdministrateur) {
-        return null;
+    public ReponseMessage SupprimerAdministrateur(Long id) {
+            final  Administrateur administrateur = null;
+            if (adminnistrateurRepository.findById(id) != null) {
+                administrateur.setEtat(false);
+                ReponseMessage message = new ReponseMessage("Administrateur supprimée avec succes", true);
+                return message;
+            }
+            else {
+                ReponseMessage message = new ReponseMessage("Administrateur non trouvée", false);
+                return message;
+            }
+
     }
 
     @Override
@@ -71,7 +81,7 @@ public class AdminServiceImp  implements AdministrateurService {
 
     @Override
     public List<Administrateur> getAdministrateur() {
-        return null;
+        return adminnistrateurRepository.findAll();
     }
 
     @Override
