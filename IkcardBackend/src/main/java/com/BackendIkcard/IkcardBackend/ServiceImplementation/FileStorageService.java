@@ -13,8 +13,12 @@ import java.nio.file.Paths;
 @Service
 public class FileStorageService {
 
+  /*  @Value("${file.upload-dir}")
+    private String uploadDir; // C’est le répertoire dans lequel les fichiers seront sauvegardés*/
+
     @Value("${file.upload-dir}")
-    private String uploadDir; // C’est le répertoire dans lequel les fichiers seront sauvegardés
+    private String uploadDir;
+
 
     public String saveFile(MultipartFile file, String imageName) throws IOException {
         String fileName = generateUniqueFileName(file.getOriginalFilename());

@@ -39,7 +39,7 @@ public class AnnonceController {
             System.out.println(annonce.Contenu);
             return annonceService.createAnnonce(annonce);
         }*/
-       @PostMapping("ajout")
+       @PostMapping("/ajout")
        public Annonce createAnnonce(
                @RequestParam("titre") String titre,
                @RequestParam("contenu") String contenu,

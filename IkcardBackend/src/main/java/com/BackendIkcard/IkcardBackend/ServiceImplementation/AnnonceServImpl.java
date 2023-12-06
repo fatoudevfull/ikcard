@@ -20,18 +20,21 @@ public class AnnonceServImpl implements AnnonceService {
     @Autowired
     private AnnonceRepository annonceRepository;
 
+   @Override
     public List<Annonce> getAllAnnonces() {
         return annonceRepository.findAll();
     }
-
+    @Override
     public Optional<Annonce> getAnnonceById(Long id) {
         return annonceRepository.findById(id);
     }
 
+    @Override
     public Annonce createAnnonce(Annonce annonce) {
         return annonceRepository.save(annonce);
     }
 
+    @Override
     public Annonce updateAnnonce(Long id, Annonce updatedAnnonce) {
         if (annonceRepository.existsById(id)) {
             updatedAnnonce.setId(id);
@@ -40,6 +43,7 @@ public class AnnonceServImpl implements AnnonceService {
         return null; // Handle not found case
     }
 
+   @Override
     public void deleteAnnonce(Long id) {
         annonceRepository.deleteById(id);
     }

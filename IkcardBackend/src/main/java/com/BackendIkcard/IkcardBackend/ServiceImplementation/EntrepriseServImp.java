@@ -2,6 +2,7 @@ package com.BackendIkcard.IkcardBackend.ServiceImplementation;
 
 import com.BackendIkcard.IkcardBackend.Message.ReponseMessage;
 import com.BackendIkcard.IkcardBackend.Models.Entreprise;
+import com.BackendIkcard.IkcardBackend.Models.User;
 import com.BackendIkcard.IkcardBackend.Repository.EntrepriseRepository;
 import com.BackendIkcard.IkcardBackend.Service.EntrepriseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import java.util.Optional;
 
 @Service
 public class EntrepriseServImp implements EntrepriseService {
+
     @Autowired
     EntrepriseRepository entrepriseRepository;
 
@@ -20,17 +22,38 @@ public class EntrepriseServImp implements EntrepriseService {
     public ReponseMessage creerEntreprise(Entreprise entreprise) {
         if (entrepriseRepository.findByNom(entreprise.getNom()) == null) {
             entrepriseRepository.save(entreprise);
-            ReponseMessage message = new ReponseMessage("Entreprise ajouté avec succes", true);
-            return message;
+            return new ReponseMessage("Entreprise ajoutée avec succès", true);
         } else {
-            ReponseMessage message = new ReponseMessage("Cet entreprise existe déjà ", false);
-
-            return message;
+            return new ReponseMessage("Cette entreprise existe déjà", false);
         }
     }
 
     @Override
+    public void activerEntreprise(Long id) {
+        Optional<Entreprise> existingAdmin = entrepriseRepository.findById(id);
+        existingAdmin.ifPresent(administrateur -> {
+            // Set etat to true
+            administrateur.setEtat(true);
+
+            // Save the updated entity
+            entrepriseRepository.save(administrateur);
+        });
+    }
+
+
+    @Override
+    public Entreprise saveUser(Entreprise entreprise) {
+        return entrepriseRepository.save(entreprise);
+    }
+
+    @Override
+    public Entreprise saveEntreprise(Entreprise entreprise) {
+        return null;
+    }
+
+    @Override
     public ReponseMessage modifierEntreprise(Entreprise entreprise) {
+        // Implement modification logic
         return null;
     }
 
@@ -39,33 +62,36 @@ public class EntrepriseServImp implements EntrepriseService {
         return entrepriseRepository.findAll();
     }
 
-    @Override
+ /*   @Override
     public void activerEntreprise(Long id) {
+        try {
             Entreprise entreprise = entrepriseRepository.findById(id)
-                    .orElseThrow(() -> new NoSuchElementException("Médecin introuvable"));
+                    .orElseThrow(() -> new NoSuchElementException("Entreprise introuvable"));
             entreprise.setEtat(true);
             entrepriseRepository.save(entreprise);
+        } catch (Exception e) {
+            // Log or handle the exception
+            e.printStackTrace();
+            // Provide a meaningful error message in the response
+            throw new RuntimeException("Erreur lors de l'activation de l'entreprise");
+        }
+    }*/
 
-    }
-
-    @Override
-    public Entreprise saveEntreprise(Entreprise entreprise) {
-        // TODO Auto-generated method stub
-        return entrepriseRepository.save(entreprise);
-    }
     @Override
     public ReponseMessage SupprimerEntreprise(Long idEntreprise) {
-        final Entreprise entreprise = null;
-        if (entrepriseRepository.findById(idEntreprise) != null) {
-            entreprise.setEtat(false);
-            ReponseMessage message = new ReponseMessage("Entreprise supprimée avec succes", true);
-            return message;
-        } else {
-            ReponseMessage message = new ReponseMessage("Entreprise non trouvée", false);
-            return message;
+        try {
+            entrepriseRepository.findById(idEntreprise)
+                    .ifPresent(entreprise -> {
+                        entreprise.setEtat(false);
+                        entrepriseRepository.save(entreprise);
+                    });
+            return new ReponseMessage("Entreprise supprimée avec succès", true);
+        } catch (Exception e) {
+            // Log or handle the exception
+            e.printStackTrace();
+            // Provide a meaningful error message in the response
+            return new ReponseMessage("Erreur lors de la suppression de l'entreprise", false);
         }
-
-
     }
 
     @Override
@@ -82,4 +108,7 @@ public class EntrepriseServImp implements EntrepriseService {
     public List<Entreprise> getAllEntreprise() {
         return null;
     }
+
+    // Implementations for other methods...
+
 }

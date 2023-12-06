@@ -14,7 +14,7 @@ public interface AdministrateurService {
     ReponseMessage creerAdministrateur(Administrateur administrateur);
 
     // Mise à jour d'un Administrateur
-    ReponseMessage modifierAdministrateur (Administrateur administrateur);
+    ReponseMessage modifierAdministrateur (Long id,Administrateur administrateur);
 
     //affichage d'un Administrateur
 
@@ -22,13 +22,14 @@ public interface AdministrateurService {
 
     //Suppression d'un Administrateur
     ReponseMessage SupprimerAdministrateur (Long id );
+    public void activerAdmin(Long id);
 
 
-    Administrateur saveOrUpdateAdministrateur(Administrateur administrateur);
+ /*   Administrateur saveOrUpdateAdministrateur(Administrateur administrateur);
 
     Optional<Administrateur> getAdministrateur(Long id);
 
     List<Administrateur> getAdministrateur();
 
-    void deleteAdministrateurById(Long id);
+    void deleteAdministrateurById(Long id);*/
 }

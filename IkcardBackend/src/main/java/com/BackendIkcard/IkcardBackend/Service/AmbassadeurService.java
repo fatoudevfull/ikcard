@@ -7,20 +7,24 @@ import java.util.List;
 
 public interface AmbassadeurService {
     // Création d'un Ambassadeur
-    ReponseMessage creerAmbassadeur(Ambassadeur ambassadeur);
+  //  ReponseMessage creerAmbassadeur(Ambassadeur ambassadeur);
+    Ambassadeur saveUser(Ambassadeur ambassadeur);
 
     // Mise à jour d'un Ambassadeur
     ReponseMessage modifierAmbassadeur(Ambassadeur ambassadeur);
 
-    //affichage d'un Ambassadeur
-
+    // Affichage de tous les Ambassadeurs
     List<Ambassadeur> afficherToutLesAmbassadeur();
 
-    //Suppression d'un Ambassadeur
+    // Suppression d'un Ambassadeur
     ReponseMessage SupprimerAmbassadeur(Long id);
 
+    // Obtention du nombre d'Ambassadeurs
     int NombreAmbassadeur();
-    List<Object> NombreAmbassadeurParVille();
-    List<Ambassadeur> NouveauAmbassadeur();
 
+    // Obtention du nombre d'Ambassadeurs par ville
+    List<Object> NombreAmbassadeurParVille();
+
+    // Obtention de la liste des nouveaux Ambassadeurs
+    List<Ambassadeur> NouveauAmbassadeur();
 }
