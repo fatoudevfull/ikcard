@@ -6,6 +6,7 @@ import com.BackendIkcard.IkcardBackend.Models.User;
 import com.BackendIkcard.IkcardBackend.Repository.ContactRepository;
 import com.BackendIkcard.IkcardBackend.Repository.UserRepository;
 import com.BackendIkcard.IkcardBackend.Service.ContactService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,22 +15,13 @@ import java.util.Optional;
 
 @Service
 public class ContactservImp implements ContactService {
+    @Autowired
     private ContactRepository contactRepository;
+
+    @Autowired
     private UserRepository userRepository;
 
-  /*  @Override
-    public ReponseMessage creerContact(Contact contact) {
-        if (contactRepository.findByEmail(contact.getEmail()) == null) {
-            contactRepository.save(contact);
-            ReponseMessage message = new ReponseMessage("Contact ajouté avec succes", true);
-            return message;
-        } else {
-            ReponseMessage message = new ReponseMessage("le Contact existe déjà ", false);
-
-            return message;
-        }
-    }*/
-    public void enregistrerContact(Long userId, Contact nouveauContact) {
+    public ReponseMessage enregistrerContact(Contact nouveauContact, long userId) {
         User utilisateur = userRepository.findById(userId)
                 .orElseThrow(() -> new NoSuchElementException("Utilisateur introuvable"));
 
@@ -37,65 +29,37 @@ public class ContactservImp implements ContactService {
         utilisateur.getContacts().add(nouveauContact);
 
         userRepository.save(utilisateur);
+
+        return new ReponseMessage("Contact enregistré avec succès", true);
     }
 
-    @Override
-    public ReponseMessage modifierContact(Contact contact) {
-        if (contactRepository.findById(contact.getId()) != null) {
-            return contactRepository.findById(contact.getId())
-                    .map(contact1 -> {
-                        contact1.setAddresse(contact.getAddresse());
-                        contact1.setFixe1(contact.getFixe1());
-                        contact1.setEmail1(contact.getEmail1());
-                        contact1.setFixe1(contact.getFixe1());
-                        contact1.setInstagramLink(contact.getInstagramLink());
-                        contact1.setLinkedinLink(contact.getLinkedinLink());
-                        contactRepository.save(contact);
-                        ReponseMessage message = new ReponseMessage("Contat modifié avec succes", true);
-                        return message;
-                    }).orElseThrow(() -> new RuntimeException("Désole, contact non trouvée"));
+    public ReponseMessage modifierContact(long contactId, Contact contactModifie) {
+        Contact contactExistant = contactRepository.findById(contactId)
+                .orElseThrow(() -> new NoSuchElementException("Contact introuvable"));
+
+        // Mettez à jour les champs du contact existant avec les nouvelles valeurs
+        contactExistant.setNomComplet(contactModifie.getNomComplet());
+        contactExistant.setEmail(contactModifie.getEmail());
+        // Ajoutez d'autres champs à mettre à jour
+
+        contactRepository.save(contactExistant);
+
+        return new ReponseMessage("Contact modifié avec succès", true);
+    }
+
+    public List<Contact> afficherTousLesContacts(long userId) {
+        User utilisateur = userRepository.findById(userId)
+                .orElseThrow(() -> new NoSuchElementException("Utilisateur introuvable"));
+
+        return utilisateur.getContacts();
+    }
+
+    public ReponseMessage supprimerContact(long contactId) {
+        if (contactRepository.existsById(contactId)) {
+            contactRepository.deleteById(contactId);
+            return new ReponseMessage("Contact supprimé avec succès", true);
         } else {
-            ReponseMessage message = new ReponseMessage("Désole, contact non trouvée", false);
-
-            return message;
+            return new ReponseMessage("Contact non trouvé", false);
         }
-    }
-
-    @Override
-    public List<Contact> afficherToutLesContact() {
-        return contactRepository.findAll();
-    }
-
-    @Override
-    public ReponseMessage SupprimerContact(Long id) {
-        final Contact contact = null;
-        if (contactRepository.findById(id) != null) {
-            contact.setEtat(false);
-            ReponseMessage message = new ReponseMessage("Contact supprimée avec succes", true);
-            return message;
-        } else {
-            ReponseMessage message = new ReponseMessage("Contact non trouvée", false);
-            return message;
-        }
-    }
-
-    @Override
-    public Contact saveOrUpdateContact(Contact contact) {
-        return null;
-    }
-
-    @Override
-    public Optional<Contact> getContact(Long id) {
-        return Optional.empty();
-    }
-
-    @Override
-    public List<Contact> getAnnonce() {
-        return null;
-    }
-
-    @Override
-    public void deleteContactById(Long id) {
-
     }
 }
