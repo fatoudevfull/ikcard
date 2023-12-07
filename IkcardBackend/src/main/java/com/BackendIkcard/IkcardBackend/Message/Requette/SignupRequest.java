@@ -22,6 +22,12 @@ public class SignupRequest {
 
 
     private String password;
+    private String roleName;
+
+
+    public String getRoleName() {
+        return roleName;
+    }
 
 
     private Set<String> role;

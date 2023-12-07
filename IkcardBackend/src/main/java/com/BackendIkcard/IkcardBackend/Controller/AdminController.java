@@ -67,7 +67,7 @@ public class AdminController {
                     .body(new MessageResponse("Erreur: Cet email est déjà utilisé!"));
         }
 
-        // Create new patient's account
+        // Create new administrator's account
         Administrateur administrateur = new Administrateur();
         administrateur.setUsername(signupRequest.getUsername());
         administrateur.setEmail(signupRequest.getEmail());
@@ -77,14 +77,27 @@ public class AdminController {
         administrateur.setNom(signupRequest.getNom());
         administrateur.setNumero(signupRequest.getNumero());
 
-        Role adminRole = roleRepository.findByName(ERole.ADMINIVEAU2);
+        // Set role based on the specified roleName
+        Role adminRole = roleRepository.findByName(getRoleByName(signupRequest.getRoleName()));
         administrateur.setRole(adminRole);
 
-        adminnistrateurRepository.save(administrateur);
-// Set etat to true before updating
+        // Set etat to true before updating
         administrateur.setEtat(true);
+
+        adminnistrateurRepository.save(administrateur);
+
         return ResponseEntity.ok(new MessageResponse("Adminnistrateur enregistré avec succès!"));
     }
+
+    // Helper method to get role by name
+    private ERole getRoleByName(String roleName) {
+        try {
+            return ERole.valueOf(roleName);
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("Role not found: " + roleName);
+        }
+    }
+
 
     @PutMapping("/activer/{id}")
     public ResponseEntity<String> activerActiver(@PathVariable("id") Long id) {
