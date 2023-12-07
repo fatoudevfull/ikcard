@@ -2,18 +2,22 @@ package com.BackendIkcard.IkcardBackend.ServiceImplementation;
 
 import com.BackendIkcard.IkcardBackend.Message.ReponseMessage;
 import com.BackendIkcard.IkcardBackend.Models.Contact;
+import com.BackendIkcard.IkcardBackend.Models.User;
 import com.BackendIkcard.IkcardBackend.Repository.ContactRepository;
+import com.BackendIkcard.IkcardBackend.Repository.UserRepository;
 import com.BackendIkcard.IkcardBackend.Service.ContactService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
 public class ContactservImp implements ContactService {
     private ContactRepository contactRepository;
+    private UserRepository userRepository;
 
-    @Override
+  /*  @Override
     public ReponseMessage creerContact(Contact contact) {
         if (contactRepository.findByEmail(contact.getEmail()) == null) {
             contactRepository.save(contact);
@@ -24,6 +28,15 @@ public class ContactservImp implements ContactService {
 
             return message;
         }
+    }*/
+    public void enregistrerContact(Long userId, Contact nouveauContact) {
+        User utilisateur = userRepository.findById(userId)
+                .orElseThrow(() -> new NoSuchElementException("Utilisateur introuvable"));
+
+        nouveauContact.setUser(utilisateur);
+        utilisateur.getContacts().add(nouveauContact);
+
+        userRepository.save(utilisateur);
     }
 
     @Override

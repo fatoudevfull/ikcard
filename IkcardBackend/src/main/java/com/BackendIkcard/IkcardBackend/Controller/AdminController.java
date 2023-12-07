@@ -37,17 +37,13 @@ import java.util.stream.Collectors;
 public class AdminController {
 
     @Autowired
-    private AdminnistrateurRepository adminnistrateurRepository;
-
-    @Autowired
     AuthenticationManager authenticationManager;
-
     @Autowired
     RefreshTokenService refreshTokenService;
-
     @Autowired
     JwtUtils jwtUtils;
-
+    @Autowired
+    private AdminnistrateurRepository adminnistrateurRepository;
     @Autowired
     private AdministrateurService administrateurService;
 
@@ -114,7 +110,7 @@ public class AdminController {
     }
 
     // methode pour le login d'un Admin
-    @ApiOperation(value = "Le login d'un user.")
+/*    @ApiOperation(value = "Le login d'un user.")
     @PostMapping("/login")
     public ResponseEntity<Object> Login(@RequestBody LoginRequest loginRequest) {
 
@@ -134,6 +130,25 @@ public class AdminController {
 
         /////////////////
         return ResponseEntity.ok(new JwtResponse(jwt, refreshToken.getToken(), userDetails.getId(), userDetails.getUsername(), userDetails.getEmail(), userDetails.getNumero(), userDetails.getNom(), roles));
-    }
+    }*/
     // Fin
+    @ApiOperation(value = "Le login d'un admin.")
+    @PostMapping("/login")
+    public ResponseEntity<Object> loginAdmin(@RequestBody LoginRequest loginRequest) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String jwt = jwtUtils.generateJwtToken(authentication);
+
+        UserDetailsImpl adminDetails = (UserDetailsImpl) authentication.getPrincipal();
+        List<String> roles = adminDetails.getAuthorities().stream()
+                .map(item -> item.getAuthority())
+                .collect(Collectors.toList());
+
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(adminDetails.getId());
+
+        return ResponseEntity.ok(new JwtResponse(jwt, refreshToken.getToken(), adminDetails.getId(), adminDetails.getUsername(), adminDetails.getEmail(), adminDetails.getNumero(), adminDetails.getNom(), roles));
+    }
+
 }

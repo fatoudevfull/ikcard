@@ -11,7 +11,8 @@ import java.util.Optional;
 
 public interface ContactService {
     // Création d'un Contact
-    ReponseMessage creerContact(Contact contact);
+   // ReponseMessage creerContact(Contact contact);
+    void enregistrerContact(Long userId, Contact nouveauContact);
 
     // Mise à jour d'un Contact
     ReponseMessage modifierContact (Contact contact);

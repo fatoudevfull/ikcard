@@ -1,12 +1,9 @@
 package com.BackendIkcard.IkcardBackend.ServiceImplementation;
 
 import com.BackendIkcard.IkcardBackend.Message.ReponseMessage;
-import com.BackendIkcard.IkcardBackend.Models.Administrateur;
-import com.BackendIkcard.IkcardBackend.Models.UserSimple;
-import com.BackendIkcard.IkcardBackend.Repository.AdminnistrateurRepository;
-import com.BackendIkcard.IkcardBackend.Repository.UserSimpleRepository;
-import com.BackendIkcard.IkcardBackend.Service.AdministrateurService;
-import com.BackendIkcard.IkcardBackend.Service.UserSimpleService;
+import com.BackendIkcard.IkcardBackend.Models.User;
+import com.BackendIkcard.IkcardBackend.Repository.UserRepository;
+import com.BackendIkcard.IkcardBackend.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,13 +11,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserSimpleServiceImp implements UserSimpleService {
+public class UserServiceImp implements UserService {
 
     @Autowired
-    private UserSimpleRepository userSimpleRepository;
+    private UserRepository userSimpleRepository;
 
     @Override
-    public ReponseMessage creerUserSimple(UserSimple userSimple) {
+    public ReponseMessage creerUserSimple(User userSimple) {
         if (userSimpleRepository.findByEmail(userSimple.getEmail()) == null) {
             // Set etat to true before saving
             userSimple.setEtat(true);
@@ -32,11 +29,11 @@ public class UserSimpleServiceImp implements UserSimpleService {
     }
 
     @Override
-    public ReponseMessage modifierUserSimple(Long id, UserSimple userSimple) {
-        Optional<UserSimple> existingAdminOptional = userSimpleRepository.findById(id);
+    public ReponseMessage modifierUserSimple(Long id, User userSimple) {
+        Optional<User> existingAdminOptional = userSimpleRepository.findById(id);
 
         if (existingAdminOptional.isPresent()) {
-            UserSimple existingAdmin = existingAdminOptional.get();
+            User existingAdmin = existingAdminOptional.get();
             // Set etat to true before updating
             userSimple.setEtat(true);
             existingAdmin.setNom(userSimple.getNom());
@@ -65,7 +62,7 @@ public class UserSimpleServiceImp implements UserSimpleService {
 
     @Override
     public void activerUserSimple(Long id) {
-        Optional<UserSimple> existingAdmin = userSimpleRepository.findById(id);
+        Optional<User> existingAdmin = userSimpleRepository.findById(id);
         existingAdmin.ifPresent(userSimple -> {
             // Set etat to true
             userSimple.setEtat(true);
@@ -80,15 +77,15 @@ public class UserSimpleServiceImp implements UserSimpleService {
 
 
     @Override
-    public List<UserSimple> afficherToutLesUserSimple() {
+    public List<User> afficherToutLesUserSimple() {
         return userSimpleRepository.findAll();
     }
 
     @Override
     public ReponseMessage SupprimerUserSimple(Long id) {
-        Optional<UserSimple> adminOptional = userSimpleRepository.findById(id);
+        Optional<User> adminOptional = userSimpleRepository.findById(id);
         if (adminOptional.isPresent()) {
-            UserSimple userSimple = adminOptional.get();
+            User userSimple = adminOptional.get();
             userSimple.setEtat(false);
             userSimpleRepository.save(userSimple);
             return new ReponseMessage("Utilisateur supprimé avec succès", true);
