@@ -1,13 +1,12 @@
 package com.BackendIkcard.IkcardBackend.Repository;
 
 
-import com.BackendIkcard.IkcardBackend.Models.Administrateur;
-import com.BackendIkcard.IkcardBackend.Models.Ambassadeur;
+import com.BackendIkcard.IkcardBackend.Models.UserSimple;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface AmbassadeurRepository extends JpaRepository<Ambassadeur, Long> {
+public interface UserSimpleRepository extends JpaRepository<UserSimple, Long> {
 
-    Ambassadeur findByEmail(String email);
+    UserSimple findByEmail(String email);
 
    // boolean existsByUsername(String username);
     boolean existsByEmail(String email);

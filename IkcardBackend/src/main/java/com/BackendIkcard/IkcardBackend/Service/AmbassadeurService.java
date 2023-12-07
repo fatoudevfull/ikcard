@@ -1,30 +1,28 @@
 package com.BackendIkcard.IkcardBackend.Service;
 
+
+
 import com.BackendIkcard.IkcardBackend.Message.ReponseMessage;
+import com.BackendIkcard.IkcardBackend.Models.Administrateur;
 import com.BackendIkcard.IkcardBackend.Models.Ambassadeur;
 
 import java.util.List;
 
 public interface AmbassadeurService {
+
     // Création d'un Ambassadeur
-  //  ReponseMessage creerAmbassadeur(Ambassadeur ambassadeur);
-    Ambassadeur saveUser(Ambassadeur ambassadeur);
+    ReponseMessage creerAmbassadeur(Ambassadeur ambassadeur);
 
     // Mise à jour d'un Ambassadeur
-    ReponseMessage modifierAmbassadeur(Ambassadeur ambassadeur);
+    ReponseMessage modifierAmbassadeur (Long id,Ambassadeur ambassadeur);
 
-    // Affichage de tous les Ambassadeurs
-    List<Ambassadeur> afficherToutLesAmbassadeur();
+    //affichage d'un Ambassadeur
 
-    // Suppression d'un Ambassadeur
-    ReponseMessage SupprimerAmbassadeur(Long id);
+    List<Ambassadeur> afficherToutLesAmbassadeur ();
 
-    // Obtention du nombre d'Ambassadeurs
-    int NombreAmbassadeur();
+    //Suppression d'un Administrateur
+    ReponseMessage SupprimerAmbassadeur (Long id );
+    public void activerAmbassadeur(Long id);
 
-    // Obtention du nombre d'Ambassadeurs par ville
-    List<Object> NombreAmbassadeurParVille();
 
-    // Obtention de la liste des nouveaux Ambassadeurs
-    List<Ambassadeur> NouveauAmbassadeur();
 }

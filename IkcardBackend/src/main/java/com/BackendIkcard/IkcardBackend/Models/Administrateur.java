@@ -23,7 +23,7 @@ public class Administrateur {
     public String email;
     @Column(unique = true)
     public String username;
-    public boolean etat;
+    public boolean etat=true;
     public String numero;
     @ManyToOne
     private Role role;

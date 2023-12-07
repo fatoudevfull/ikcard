@@ -14,27 +14,31 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class UserDetailsImpl implements UserDetails{
+public class UserDetailsImpl implements UserDetails {
 
     private Long id;
-    private String nom;
     private String username;
-    private String numero;
     private String email;
+    private String nom;
+    private String numero;
+    private String pays;
     @JsonIgnore
     private String password;
+    private String prenom;
+
+
 
     private Collection<? extends GrantedAuthority> authorities;
 
-
     public static UserDetailsImpl build(User user) {
         List<GrantedAuthority> authorities = user.getRoles().stream()
-            .map(role -> new SimpleGrantedAuthority(role.getName().name()))
-            .collect(Collectors.toList());
+                .map(role -> new SimpleGrantedAuthority(role.getName().name()))
+                .collect(Collectors.toList());
 
         return new UserDetailsImpl(
                 user.getId(),
@@ -43,37 +47,36 @@ public class UserDetailsImpl implements UserDetails{
                 user.getNom(),
                 user.getNumero(),
                 user.getPassword(),
+                user.getPays(),
+                user.getPrenom(),
                 authorities
         );
     }
 
+    // Other methods remain the same...
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        return false;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return false;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true;
+        return false;
     }
 
     @Override
     public boolean isEnabled() {
-        return true;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o)
-        return true;
-        if (o == null || getClass() != o.getClass())
         return false;
-        UserDetailsImpl user = (UserDetailsImpl) o;
-        return Objects.equals(id, user.id);
     }
 }

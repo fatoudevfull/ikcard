@@ -21,9 +21,10 @@ public class Entreprise {
     private String password;
     public String photo;
     public String email;
-    public boolean etat;
+    public boolean etat=true;
     public String adresse;
     public String numero;
+    public String imageCouverture;
     @ManyToOne
     private Role role;
 }

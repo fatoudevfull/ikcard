@@ -223,7 +223,9 @@ public class UserController {
 
         return ResponseEntity.ok(new MessageResponse("utilisateur enregistré avec succès!"));
     }
-
+    // methode pour le login d'un Admin
+    @ApiOperation(value = "Le login d'un user.")
+    @PostMapping("/login")
     public ResponseEntity<Object> Login(@RequestBody LoginRequest loginRequest) {
 
         Authentication authentication = authenticationManager.authenticate(

@@ -10,14 +10,16 @@ public class SignupRequest {
     private String nom;
     private String username;
     private String numero;
+    private String prenom;
 
     private String email;
-   // private String photo;
-  //  private String Pays;
- //   private String ville;
-   // private String adresse;
+   private String photo;
+    private String Pays;
+    private String ville;
+    private String adresse;
+    private String imageCouverture;
     
-    //
+
 
     private String password;
 

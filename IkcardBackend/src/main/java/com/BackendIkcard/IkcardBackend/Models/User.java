@@ -24,7 +24,7 @@ public class User {
     @Column(unique = true)
     public String username;
     public String prenom;
-    public boolean etat;
+    public boolean etat=true;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -33,6 +33,7 @@ public class User {
     private String Pays;
     private String ville;
     private String adresse;
+    private String photo;
 
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
@@ -45,4 +46,5 @@ public class User {
 
     public User(Object o, String nom, String username, String email, String numero, String encode) {
     }
+
 }
