@@ -40,6 +40,9 @@ public class ContactservImp implements ContactService {
         // Mettez à jour les champs du contact existant avec les nouvelles valeurs
         contactExistant.setNomComplet(contactModifie.getNomComplet());
         contactExistant.setEmail(contactModifie.getEmail());
+        contactExistant.setFixe1(contactModifie.getFixe1());
+        contactExistant.setInstagramLink(contactModifie.getInstagramLink());
+        contactExistant.setLinkedinLink(contactModifie.getLinkedinLink());
         // Ajoutez d'autres champs à mettre à jour
 
         contactRepository.save(contactExistant);

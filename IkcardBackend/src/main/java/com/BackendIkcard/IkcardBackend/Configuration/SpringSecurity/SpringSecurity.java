@@ -65,7 +65,7 @@ public class SpringSecurity {
                 .authorizeRequests()
                 .antMatchers("/userSimple/**").permitAll()
                 .antMatchers("/admin/**").permitAll()
-                .antMatchers("/user/login").permitAll()
+                .antMatchers("/cartes/**").permitAll()
                 .antMatchers("/user/signup").permitAll()
                 .antMatchers("/ambassadeur/**").permitAll()
                 .antMatchers("/contact/**").permitAll()

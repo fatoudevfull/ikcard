@@ -17,7 +17,7 @@ public class Carte {
 
     public String nomComplet;
 
-    public String Username;
+    public String username;
 
     public String email;
 
@@ -63,4 +63,6 @@ public class Carte {
 
     public String autrelink;
     public boolean etat;
+    @ManyToOne
+  private  User user;
 }
