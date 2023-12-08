@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -64,7 +65,7 @@ public class AmbassadeurServiceImp implements AmbassadeurService {
         adminnistrateurRepository.save(administrateur);
     }*/
 
-    @Override
+/*    @Override
     public void activerAmbassadeur(Long id) {
         Optional<Ambassadeur> existingAdmin = ambassadeurRepository.findById(id);
         existingAdmin.ifPresent(administrateur -> {
@@ -74,6 +75,21 @@ public class AmbassadeurServiceImp implements AmbassadeurService {
             // Save the updated entity
             ambassadeurRepository.save(administrateur);
         });
+    }*/
+public void desactiverCompte(Long userId) {
+    Ambassadeur user = ambassadeurRepository.findById(userId)
+            .orElseThrow(() -> new NoSuchElementException("Utilisateur introuvable"));
+
+    user.setEtat(false); // Mettez à false pour désactiver le compte
+    ambassadeurRepository.save(user);
+}
+
+    public void activerCompte(Long userId) {
+        Ambassadeur user = ambassadeurRepository.findById(userId)
+                .orElseThrow(() -> new NoSuchElementException("Utilisateur introuvable"));
+
+        user.setEtat(true); // Mettez à true pour activer le compte
+        ambassadeurRepository.save(user);
     }
 
 

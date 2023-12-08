@@ -32,7 +32,7 @@ public class Contact {
     public String fixe1;
 
     public String fixe2;
-    public boolean etat;
+    public boolean etat=true;
 
     public String compagnie;
 

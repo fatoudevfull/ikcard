@@ -1,6 +1,7 @@
 package com.BackendIkcard.IkcardBackend.ServiceImplementation;
 
 import com.BackendIkcard.IkcardBackend.Message.ReponseMessage;
+import com.BackendIkcard.IkcardBackend.Models.Administrateur;
 import com.BackendIkcard.IkcardBackend.Models.Carte;
 import com.BackendIkcard.IkcardBackend.Models.Contact;
 import com.BackendIkcard.IkcardBackend.Repository.CarteRepository;
@@ -66,6 +67,34 @@ public class CarteServIpml implements CarteService {
     public List<Carte> getAllCartes() {
         return carteRepository.findAll();
     }
+
+  /*  @Override
+    public void activerCarte(Long id) {
+        Optional<Carte> existingAdmin = carteRepository.findById(id);
+        existingAdmin.ifPresent(carte -> {
+            // Set etat to true
+            carte.setEtat(true);
+
+            // Save the updated entity
+            carteRepository.save(carte);
+        });
+    }*/
+  public void desactiverCompte(Long userId) {
+      Carte carte = carteRepository.findById(userId)
+              .orElseThrow(() -> new NoSuchElementException("Utilisateur introuvable"));
+
+      carte.setEtat(false); // Mettez à false pour désactiver le compte
+      carteRepository.save(carte);
+  }
+
+    public void activerCompte(Long userId) {
+        Carte carte = carteRepository.findById(userId)
+                .orElseThrow(() -> new NoSuchElementException("Utilisateur introuvable"));
+
+        carte.setEtat(true); // Mettez à true pour activer le compte
+        carteRepository.save(carte);
+    }
+
 
 
     // Dans votre CarteService

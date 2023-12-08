@@ -61,7 +61,7 @@ public class AdminServiceImp implements AdministrateurService {
         adminnistrateurRepository.save(administrateur);
     }*/
 
-    @Override
+ /*   @Override
     public void activerAdmin(Long id) {
         Optional<Administrateur> existingAdmin = adminnistrateurRepository.findById(id);
         existingAdmin.ifPresent(administrateur -> {
@@ -72,7 +72,22 @@ public class AdminServiceImp implements AdministrateurService {
             adminnistrateurRepository.save(administrateur);
         });
     }
+*/
+ public void desactiverCompte(Long userId) {
+     Administrateur administrateur = adminnistrateurRepository.findById(userId)
+             .orElseThrow(() -> new NoSuchElementException("Utilisateur introuvable"));
 
+     administrateur.setEtat(false); // Mettez à false pour désactiver le compte
+     adminnistrateurRepository.save(administrateur);
+ }
+
+    public void activerCompte(Long userId) {
+        Administrateur administrateur = adminnistrateurRepository.findById(userId)
+                .orElseThrow(() -> new NoSuchElementException("Utilisateur introuvable"));
+
+        administrateur.setEtat(true); // Mettez à true pour activer le compte
+        adminnistrateurRepository.save(administrateur);
+    }
 
 
 

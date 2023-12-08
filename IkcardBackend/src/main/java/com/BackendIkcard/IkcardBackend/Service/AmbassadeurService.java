@@ -22,7 +22,11 @@ public interface AmbassadeurService {
 
     //Suppression d'un Administrateur
     ReponseMessage SupprimerAmbassadeur (Long id );
-    public void activerAmbassadeur(Long id);
+    //public void activerAmbassadeur(Long id);
+    void desactiverCompte(Long userId);
+
+    void activerCompte(Long userId);
+
 
 
 }

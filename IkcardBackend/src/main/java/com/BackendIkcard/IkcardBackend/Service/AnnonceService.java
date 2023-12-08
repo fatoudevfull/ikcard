@@ -55,7 +55,11 @@ public interface AnnonceService {
     public Annonce createAnnonce(Annonce annonce);
 
     public Annonce updateAnnonce(Long id, Annonce updatedAnnonce) ;
+    void desactiverCompte(Long userId);
 
-    public void deleteAnnonce(Long id);
+    void activerCompte(Long userId);
+
+   public void deleteAnnonce(Long id);
+  //  void activerAnonce(Long id);
     public Annonce createAnnonceWithImage(String titre, String contenu, MultipartFile image, Long administrateurId);
 }

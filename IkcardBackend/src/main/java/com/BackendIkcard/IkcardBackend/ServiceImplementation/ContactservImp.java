@@ -33,6 +33,10 @@ public class ContactservImp implements ContactService {
         return new ReponseMessage("Contact enregistré avec succès", true);
     }
 
+    public List<Contact> getAllCartes() {
+        return contactRepository.findAll();
+    }
+
     public ReponseMessage modifierContact(long contactId, Contact contactModifie) {
         Contact contactExistant = contactRepository.findById(contactId)
                 .orElseThrow(() -> new NoSuchElementException("Contact introuvable"));
@@ -43,6 +47,17 @@ public class ContactservImp implements ContactService {
         contactExistant.setFixe1(contactModifie.getFixe1());
         contactExistant.setInstagramLink(contactModifie.getInstagramLink());
         contactExistant.setLinkedinLink(contactModifie.getLinkedinLink());
+        contactExistant.setFacebookLink(contactModifie.getFacebookLink());
+        contactExistant.setEmail1(contactModifie.getEmail1());
+        contactExistant.setAddresse(contactModifie.getAddresse());
+        contactExistant.setWebSite(contactExistant.getWebSite());
+        contactExistant.setCompagnie(contactModifie.getCompagnie());
+        contactExistant.setMobile3(contactModifie.getMobile3());
+        contactExistant.setMobile1(contactModifie.getMobile1());
+        contactExistant.setAutrelink(contactModifie.getAutrelink());
+        contactExistant.setFixe2(contactModifie.getFixe2());
+        contactExistant.setTweetterLink(contactModifie.getTweetterLink());
+        contactExistant.setTiktoklink(contactModifie.getTiktoklink());
         // Ajoutez d'autres champs à mettre à jour
 
         contactRepository.save(contactExistant);
@@ -55,6 +70,33 @@ public class ContactservImp implements ContactService {
                 .orElseThrow(() -> new NoSuchElementException("Utilisateur introuvable"));
 
         return utilisateur.getContacts();
+    }
+
+ /*   @Override
+    public void activerContact(Long id) {
+        Optional<Contact> existingAdmin = contactRepository.findById(id);
+        existingAdmin.ifPresent(contact -> {
+            // Set etat to true
+            contact.setEtat(true);
+
+            // Save the updated entity
+            contactRepository.save(contact);
+        });
+    }*/
+ public void desactiverCompte(Long userId) {
+     Contact contact = contactRepository.findById(userId)
+             .orElseThrow(() -> new NoSuchElementException("Utilisateur introuvable"));
+
+     contact.setEtat(false); // Mettez à false pour désactiver le compte
+     contactRepository.save(contact);
+ }
+
+    public void activerCompte(Long userId) {
+        Contact contact = contactRepository.findById(userId)
+                .orElseThrow(() -> new NoSuchElementException("Utilisateur introuvable"));
+
+        contact.setEtat(true); // Mettez à true pour activer le compte
+        contactRepository.save(contact);
     }
 
     public ReponseMessage supprimerContact(long contactId) {

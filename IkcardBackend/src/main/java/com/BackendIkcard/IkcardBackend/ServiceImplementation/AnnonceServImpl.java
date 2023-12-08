@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -43,7 +44,34 @@ public class AnnonceServImpl implements AnnonceService {
         return null; // Handle not found case
     }
 
-   @Override
+/*    @Override
+    public void activerAnonce(Long id) {
+        Optional<Annonce> existingAdmin = annonceRepository.findById(id);
+        existingAdmin.ifPresent(annonce -> {
+            // Set etat to true
+            annonce.setEtat(true);
+
+            // Save the updated entity
+            annonceRepository.save(annonce);
+        });
+    }*/
+public void desactiverCompte(Long userId) {
+    Annonce annonce = annonceRepository.findById(userId)
+            .orElseThrow(() -> new NoSuchElementException("Utilisateur introuvable"));
+
+    annonce.setEtat(false); // Mettez à false pour désactiver le compte
+    annonceRepository.save(annonce);
+}
+
+    public void activerCompte(Long userId) {
+        Annonce annonce = annonceRepository.findById(userId)
+                .orElseThrow(() -> new NoSuchElementException("Utilisateur introuvable"));
+
+        annonce.setEtat(true); // Mettez à true pour activer le compte
+        annonceRepository.save(annonce);
+    }
+
+    @Override
     public void deleteAnnonce(Long id) {
         annonceRepository.deleteById(id);
     }

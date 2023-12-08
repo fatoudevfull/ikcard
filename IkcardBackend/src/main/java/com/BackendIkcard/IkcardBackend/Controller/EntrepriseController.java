@@ -24,6 +24,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
+
 
 import javax.validation.Valid;
 import java.util.List;
@@ -89,10 +91,21 @@ public class EntrepriseController {
         return ResponseEntity.ok(new MessageResponse("Entreprise enregistré avec succès!"));
     }
 
-    @PutMapping("/activer/{id}")
+ /*   @PutMapping("/activer/{id}")
     public ResponseEntity<String> activerActiver(@PathVariable("id") Long id) {
         entrepriseService.activerEntreprise(id);
         return ResponseEntity.ok(" activé avec succès.");
+    }*/
+ @PutMapping("/desactiver/{userId}")
+ public ResponseEntity<String> desactiverCompte(@PathVariable Long userId) {
+     entrepriseService.desactiverCompte(userId);
+     return new ResponseEntity<>("Compte désactivé avec succès.", HttpStatus.OK);
+ }
+
+    @PutMapping("/activer/{userId}")
+    public ResponseEntity<String> activerCompte(@PathVariable Long userId) {
+        entrepriseService.activerCompte(userId);
+        return new ResponseEntity<>("Compte activé avec succès.", HttpStatus.OK);
     }
 
     @DeleteMapping("/supprimer/{id}")

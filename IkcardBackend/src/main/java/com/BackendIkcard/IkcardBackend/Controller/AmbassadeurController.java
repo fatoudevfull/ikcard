@@ -25,6 +25,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
+
 
 import javax.validation.Valid;
 import java.util.List;
@@ -90,10 +92,16 @@ public class AmbassadeurController {
         return ResponseEntity.ok(new MessageResponse("Ambassadeur enregistré avec succès!"));
     }
 
-    @PutMapping("/activer/{id}")
-    public ResponseEntity<String> activerActiver(@PathVariable("id") Long id) {
-        ambassadeurService.activerAmbassadeur(id);
-        return ResponseEntity.ok(" activé avec succès.");
+    @PutMapping("/desactiver/{userId}")
+    public ResponseEntity<String> desactiverCompte(@PathVariable Long userId) {
+        ambassadeurService.desactiverCompte(userId);
+        return new ResponseEntity<>("Compte désactivé avec succès.", HttpStatus.OK);
+    }
+
+    @PutMapping("/activer/{userId}")
+    public ResponseEntity<String> activerCompte(@PathVariable Long userId) {
+        ambassadeurService.activerCompte(userId);
+        return new ResponseEntity<>("Compte activé avec succès.", HttpStatus.OK);
     }
 
     @DeleteMapping("/supprimer/{id}")

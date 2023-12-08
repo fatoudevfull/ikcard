@@ -14,4 +14,9 @@ public interface ContactService {
      ReponseMessage modifierContact(long contactId, Contact contactModifie);
     List<Contact> afficherTousLesContacts(long userId);
     ReponseMessage supprimerContact(long contactId);
+    List<Contact> getAllCartes();
+   // void activerContact(Long id);
+    void desactiverCompte(Long userId);
+
+    void activerCompte(Long userId);
 }

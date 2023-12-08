@@ -22,7 +22,10 @@ public interface EntrepriseService {
 
     //Suppression d'un Entreprise
     ReponseMessage SupprimerEntreprise (Long id );
-    public void activerEntreprise(Long id);
+  //  public void activerEntreprise(Long id);
+  void desactiverCompte(Long userId);
+
+    void activerCompte(Long userId);
 
 
 

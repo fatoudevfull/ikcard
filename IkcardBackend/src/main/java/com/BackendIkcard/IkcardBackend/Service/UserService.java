@@ -21,7 +21,11 @@ public interface UserService {
 
     //Suppression d'un UserSimple
     ReponseMessage SupprimerUserSimple (Long id );
-    public void activerUserSimple(Long id);
+  //  public void activerUserSimple(Long id);
+
+    void desactiverCompte(Long userId);
+
+    void activerCompte(Long userId);
 
 
 

@@ -24,6 +24,7 @@ public class Annonce {
     public String Image;
 
     public String Contenu;
+    public boolean etat=true;
     @JsonIgnore
     @ManyToOne
     private Administrateur administrateur;

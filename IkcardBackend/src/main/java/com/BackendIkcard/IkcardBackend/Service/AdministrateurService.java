@@ -22,14 +22,11 @@ public interface AdministrateurService {
 
     //Suppression d'un Administrateur
     ReponseMessage SupprimerAdministrateur (Long id );
-    public void activerAdmin(Long id);
+   // public void activerAdmin(Long id);
+   void desactiverCompte(Long userId);
+
+    void activerCompte(Long userId);
 
 
- /*   Administrateur saveOrUpdateAdministrateur(Administrateur administrateur);
 
-    Optional<Administrateur> getAdministrateur(Long id);
-
-    List<Administrateur> getAdministrateur();
-
-    void deleteAdministrateurById(Long id);*/
 }

@@ -18,4 +18,8 @@ public interface CarteService {
     Optional<Carte> afficherCarteParId(Long id);
    void supprimerCarte(Long id);
     List<Carte> getAllCartes();
+  //  void activerCarte(Long id);
+  void desactiverCompte(Long userId);
+
+    void activerCompte(Long userId);
 }

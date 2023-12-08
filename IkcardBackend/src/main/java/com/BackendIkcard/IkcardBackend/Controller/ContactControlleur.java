@@ -5,6 +5,8 @@ import com.BackendIkcard.IkcardBackend.Models.Contact;
 import com.BackendIkcard.IkcardBackend.Service.ContactService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,4 +46,26 @@ public class ContactControlleur {
     public ReponseMessage supprimerContact(@PathVariable Long contactId) {
         return contactService.supprimerContact(contactId);
     }
+    @GetMapping("/afficher")
+    public ResponseEntity<List<Contact>> afficherTousCartes() {
+        List<Contact> contacts = contactService.getAllCartes();
+        return new ResponseEntity<>(contacts, HttpStatus.OK);
+    }
+
+    @PutMapping("/desactiver/{userId}")
+    public ResponseEntity<String> desactiverCompte(@PathVariable Long userId) {
+        contactService.desactiverCompte(userId);
+        return new ResponseEntity<>("Compte désactivé avec succès.", HttpStatus.OK);
+    }
+
+    @PutMapping("/activer/{userId}")
+    public ResponseEntity<String> activerCompte(@PathVariable Long userId) {
+        contactService.activerCompte(userId);
+        return new ResponseEntity<>("Compte activé avec succès.", HttpStatus.OK);
+    }
+/*    @PutMapping("/activer/{id}")
+    public ResponseEntity<String> activerActiver(@PathVariable("id") Long id) {
+        contactService.activerContact(id);
+        return ResponseEntity.ok(" activé avec succès.");
+    }*/
 }

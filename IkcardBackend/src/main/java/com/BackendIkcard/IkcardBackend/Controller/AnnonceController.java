@@ -4,9 +4,12 @@ import com.BackendIkcard.IkcardBackend.Models.Annonce;
 import com.BackendIkcard.IkcardBackend.Service.AnnonceService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.http.HttpStatus;
+
 
 import java.io.IOException;
 import java.util.List;
@@ -53,6 +56,23 @@ public class AnnonceController {
         public Annonce updateAnnonce(@PathVariable Long id, @RequestBody Annonce updatedAnnonce) {
             return annonceService.updateAnnonce(id, updatedAnnonce);
         }
+
+  /*  @PutMapping("/activer/{id}")
+    public ResponseEntity<String> activerActiver(@PathVariable("id") Long id) {
+        annonceService.activerAnonce(id);
+        return ResponseEntity.ok(" activé avec succès.");
+    }*/
+  @PutMapping("/desactiver/{userId}")
+  public ResponseEntity<String> desactiverCompte(@PathVariable Long userId) {
+      annonceService.desactiverCompte(userId);
+      return new ResponseEntity<>("Compte désactivé avec succès.", HttpStatus.OK);
+  }
+
+    @PutMapping("/activer/{userId}")
+    public ResponseEntity<String> activerCompte(@PathVariable Long userId) {
+        annonceService.activerCompte(userId);
+        return new ResponseEntity<>("Compte activé avec succès.", HttpStatus.OK);
+    }
 
         @DeleteMapping("/{id}")
         public void deleteAnnonce(@PathVariable Long id) {

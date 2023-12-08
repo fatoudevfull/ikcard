@@ -50,7 +50,23 @@ public class CarteController {
         return carteService.modifierCarte(carteId, cartetModifie);
     }
 
+  /*  @PutMapping("/activer/{id}")
+    public ResponseEntity<String> activerActiver(@PathVariable("id") Long id) {
+        carteService.activerCarte(id);
+        return ResponseEntity.ok(" activé avec succès.");
+    }*/
 
+    @PutMapping("/desactiver/{userId}")
+    public ResponseEntity<String> desactiverCompte(@PathVariable Long userId) {
+        carteService.desactiverCompte(userId);
+        return new ResponseEntity<>("Compte désactivé avec succès.", HttpStatus.OK);
+    }
+
+    @PutMapping("/activer/{userId}")
+    public ResponseEntity<String> activerCompte(@PathVariable Long userId) {
+        carteService.activerCompte(userId);
+        return new ResponseEntity<>("Compte activé avec succès.", HttpStatus.OK);
+    }
 
 
 

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -63,7 +64,7 @@ public class EntrepriseServiceImp implements EntrepriseService {
         adminnistrateurRepository.save(administrateur);
     }*/
 
-    @Override
+  /*  @Override
     public void activerEntreprise(Long id) {
         Optional<Entreprise> existingAdmin = entrepriseRepository.findById(id);
         existingAdmin.ifPresent(entreprise -> {
@@ -73,10 +74,23 @@ public class EntrepriseServiceImp implements EntrepriseService {
             // Save the updated entity
             entrepriseRepository.save(entreprise);
         });
+    }*/
+
+    public void desactiverCompte(Long userId) {
+        Entreprise entreprise = entrepriseRepository.findById(userId)
+                .orElseThrow(() -> new NoSuchElementException("Utilisateur introuvable"));
+
+        entreprise.setEtat(false); // Mettez à false pour désactiver le compte
+        entrepriseRepository.save(entreprise);
     }
 
+    public void activerCompte(Long userId) {
+        Entreprise entreprise = entrepriseRepository.findById(userId)
+                .orElseThrow(() -> new NoSuchElementException("Utilisateur introuvable"));
 
-
+        entreprise.setEtat(true); // Mettez à true pour activer le compte
+        entrepriseRepository.save(entreprise);
+    }
 
 
     @Override
