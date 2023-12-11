@@ -94,6 +94,14 @@ public class UserController {
         userSimpleService.activerUserSimple(id);
         return ResponseEntity.ok(" activé avec succès.");
     }*/
+/*  @PostMapping("/saveWithImage")
+  public ResponseEntity<?> registerUserWithImage(@Valid @RequestBody SignupRequest signupRequest,
+                                                 @RequestParam("imageFile") MultipartFile imageFile) {
+      User newUser = new User(signupRequest.getNom(), signupRequest.getEmail(), signupRequest.getUsername(),
+              signupRequest.getNumero(),signupRequest.getPassword(),signupRequest.getPrenom(),signupRequest.getAdresse());
+      User savedUser = userService.saveUserWithImage(newUser, imageFile);
+      return ResponseEntity.ok(new MessageResponse("Utilisateur enregistré avec succès!"));
+  }*/
 
     @PutMapping("/desactiver/{userId}")
     public ResponseEntity<String> DesactiverCompte(@PathVariable Long userId) {

@@ -6,6 +6,7 @@ import com.BackendIkcard.IkcardBackend.Repository.UserRepository;
 import com.BackendIkcard.IkcardBackend.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -28,6 +29,12 @@ public class UserServiceImp implements UserService {
             return new ReponseMessage("Cet utilisateur existe déjà", false);
         }
     }
+ /*   @Override
+    public User saveUserWithImage(User user, MultipartFile imageFile) {
+        String imageFileName = SaveImage.saveImage("user", imageFile, user.getUsername());
+        user.setPhoto(imageFileName);
+        return userSimpleRepository.save(user);
+    }*/
 
     @Override
     public ReponseMessage modifierUserSimple(Long id, User userSimple) {

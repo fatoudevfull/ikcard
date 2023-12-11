@@ -52,7 +52,11 @@ public interface AnnonceService {
 
     public Optional<Annonce> getAnnonceById(Long id) ;
 
+  //  void save(Annonce annonce, MultipartFile imageFile);
+   // void updateImage(Long id, MultipartFile newImage);
+
     public Annonce createAnnonce(Annonce annonce);
+    Annonce saveAnnonce(Annonce annonce) ;
 
     public Annonce updateAnnonce(Long id, Annonce updatedAnnonce) ;
     void desactiverCompte(Long userId);
@@ -61,5 +65,5 @@ public interface AnnonceService {
 
    public void deleteAnnonce(Long id);
   //  void activerAnonce(Long id);
-    public Annonce createAnnonceWithImage(String titre, String contenu, MultipartFile image, Long administrateurId);
+  //  public Annonce createAnnonceWithImage(String titre, String contenu, MultipartFile image, Long administrateurId);
 }

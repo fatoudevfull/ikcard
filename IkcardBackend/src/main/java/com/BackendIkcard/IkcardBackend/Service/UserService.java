@@ -4,6 +4,7 @@ package com.BackendIkcard.IkcardBackend.Service;
 
 import com.BackendIkcard.IkcardBackend.Message.ReponseMessage;
 import com.BackendIkcard.IkcardBackend.Models.User;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -26,6 +27,7 @@ public interface UserService {
     void desactiverCompte(Long userId);
 
     void activerCompte(Long userId);
+   // User saveUserWithImage(User user, MultipartFile imageFile);
 
 
 

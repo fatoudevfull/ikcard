@@ -1,17 +1,18 @@
 package com.BackendIkcard.IkcardBackend.Controller;
 
+import com.BackendIkcard.IkcardBackend.Message.Reponse.MessageResponse;
 import com.BackendIkcard.IkcardBackend.Models.Annonce;
 import com.BackendIkcard.IkcardBackend.Service.AnnonceService;
+import com.BackendIkcard.IkcardBackend.ServiceImplementation.ImageService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.http.HttpStatus;
 
 
-import java.io.IOException;
+import javax.validation.Valid;
 import java.util.List;
 
 @CrossOrigin(origins = {"http://localhost:4200", "http://localhost:8200", "http://localhost:8100"}, maxAge = 3600, allowCredentials = "true")
@@ -22,10 +23,39 @@ import java.util.List;
 public class AnnonceController {
 
 
-        @Autowired
-        private AnnonceService annonceService;
+    private final AnnonceService annonceService;
+    private final ImageService imageService;
 
-        @GetMapping
+    @Autowired
+    public AnnonceController(AnnonceService annonceService, ImageService imageService) {
+        this.annonceService = annonceService;
+        this.imageService = imageService;
+    }
+/*    @PostMapping("/creer")
+    public ResponseEntity<String> creerAnnonce(
+            @RequestParam("titre") String titre,
+            @RequestParam("contenu") String contenu,
+            @RequestParam("imageFile") MultipartFile imageFile
+    ) {
+        Annonce nouvelleAnnonce = new Annonce();
+        nouvelleAnnonce.setTitre(titre);
+        nouvelleAnnonce.setContenu(contenu);
+
+        annonceService.save(nouvelleAnnonce, imageFile);
+
+        return ResponseEntity.ok("Annonce créée avec succès !");
+    }*/
+
+
+
+    @PostMapping("/save")
+    public ResponseEntity<?> saveAnnonce(@Valid @RequestBody Annonce annonce) {
+        Annonce savedAnnonce = annonceService.saveAnnonce(annonce);
+        return ResponseEntity.ok(new MessageResponse("Annonce enregistrée avec succès!"));
+    }
+
+
+    @GetMapping
         public List<Annonce> getAllAnnonces() {
             return annonceService.getAllAnnonces();
         }
@@ -35,33 +65,7 @@ public class AnnonceController {
             return annonceService.getAnnonceById(id).orElse(null); // Handle not found case
         }
 
-       /* @PostMapping("/add")
-        public Annonce createAnnonce(@RequestBody Annonce annonce) {
-            System.out.println("id de l'anonce");
-            System.out.println(annonce.id);
-            System.out.println(annonce.Contenu);
-            return annonceService.createAnnonce(annonce);
-        }*/
-       @PostMapping("/ajout")
-       public Annonce createAnnonce(
-               @RequestParam("titre") String titre,
-               @RequestParam("contenu") String contenu,
-               @RequestParam("image") MultipartFile image,
-               @RequestParam("administrateurId") Long administrateurId
-       ) throws IOException {
-           return annonceService.createAnnonceWithImage(titre, contenu, image, administrateurId);
-       }
 
-        @PutMapping("/{id}")
-        public Annonce updateAnnonce(@PathVariable Long id, @RequestBody Annonce updatedAnnonce) {
-            return annonceService.updateAnnonce(id, updatedAnnonce);
-        }
-
-  /*  @PutMapping("/activer/{id}")
-    public ResponseEntity<String> activerActiver(@PathVariable("id") Long id) {
-        annonceService.activerAnonce(id);
-        return ResponseEntity.ok(" activé avec succès.");
-    }*/
   @PutMapping("/desactiver/{userId}")
   public ResponseEntity<String> desactiverCompte(@PathVariable Long userId) {
       annonceService.desactiverCompte(userId);

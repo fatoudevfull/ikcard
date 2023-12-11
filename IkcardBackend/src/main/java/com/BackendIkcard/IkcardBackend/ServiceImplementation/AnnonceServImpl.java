@@ -1,5 +1,6 @@
 package com.BackendIkcard.IkcardBackend.ServiceImplementation;
 
+import com.BackendIkcard.IkcardBackend.Configuration.ConfigImages;
 import com.BackendIkcard.IkcardBackend.Models.Annonce;
 import com.BackendIkcard.IkcardBackend.Repository.AnnonceRepository;
 import com.BackendIkcard.IkcardBackend.Service.AnnonceService;
@@ -20,8 +21,26 @@ public class AnnonceServImpl implements AnnonceService {
     FileStorageService fileStorageService;
     @Autowired
     private AnnonceRepository annonceRepository;
+    @Autowired
+    private ImageService imageService;
 
-   @Override
+
+    @Override
+    public Annonce saveAnnonce(Annonce annonce) {
+        if (annonce.getImage() != null) {
+            String imageFileContent = annonce.getImage();
+            String imageFileName = ConfigImages.saveImage("annonce", imageFileContent, String.valueOf(annonce.getId()));
+            annonce.setImageFileName(imageFileName);
+        }
+        return annonceRepository.save(annonce);
+    }
+
+
+
+
+
+
+    @Override
     public List<Annonce> getAllAnnonces() {
         return annonceRepository.findAll();
     }
@@ -29,6 +48,8 @@ public class AnnonceServImpl implements AnnonceService {
     public Optional<Annonce> getAnnonceById(Long id) {
         return annonceRepository.findById(id);
     }
+
+
 
     @Override
     public Annonce createAnnonce(Annonce annonce) {
@@ -44,17 +65,7 @@ public class AnnonceServImpl implements AnnonceService {
         return null; // Handle not found case
     }
 
-/*    @Override
-    public void activerAnonce(Long id) {
-        Optional<Annonce> existingAdmin = annonceRepository.findById(id);
-        existingAdmin.ifPresent(annonce -> {
-            // Set etat to true
-            annonce.setEtat(true);
 
-            // Save the updated entity
-            annonceRepository.save(annonce);
-        });
-    }*/
 public void desactiverCompte(Long userId) {
     Annonce annonce = annonceRepository.findById(userId)
             .orElseThrow(() -> new NoSuchElementException("Utilisateur introuvable"));
@@ -76,26 +87,5 @@ public void desactiverCompte(Long userId) {
         annonceRepository.deleteById(id);
     }
 
-    @Override
-    public Annonce createAnnonceWithImage(String titre, String contenu, MultipartFile image, Long administrateurId) {
-        try {
-            String imageName = StringUtils.cleanPath(image.getOriginalFilename());
-            Annonce annonce = new Annonce();
-            annonce.setTitre(titre);
-            annonce.setContenu(contenu);
-            annonce.setImage(imageName);
 
-            // Set other properties and relationships...
-
-            // Save the image to the file system or cloud storage
-
-            fileStorageService.saveFile(image, imageName);
-
-            return annonceRepository.save(annonce);
-        } catch (IOException e) {
-            // Handle or log the IOException
-            e.printStackTrace(); // Change this to proper logging
-            return null; // Indicate failure
-        }
-    }
 }

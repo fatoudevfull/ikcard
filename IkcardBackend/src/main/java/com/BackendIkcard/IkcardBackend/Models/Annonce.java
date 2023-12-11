@@ -21,7 +21,8 @@ public class Annonce {
 
     public String titre;
 
-    public String Image;
+    private String image;
+    private String ImageFileName;
 
     public String Contenu;
     public boolean etat=true;
