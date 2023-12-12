@@ -89,11 +89,7 @@ public class UserController {
         return ResponseEntity.ok(new MessageResponse("Ulilisateur enregistré avec succès!"));
     }
 
-  /*  @PutMapping("/activer/{id}")
-    public ResponseEntity<String> activerActiver(@PathVariable("id") Long id) {
-        userSimpleService.activerUserSimple(id);
-        return ResponseEntity.ok(" activé avec succès.");
-    }*/
+
 /*  @PostMapping("/saveWithImage")
   public ResponseEntity<?> registerUserWithImage(@Valid @RequestBody SignupRequest signupRequest,
                                                  @RequestParam("imageFile") MultipartFile imageFile) {

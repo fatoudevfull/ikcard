@@ -1,18 +1,14 @@
 package com.BackendIkcard.IkcardBackend.Controller;
 
-import com.BackendIkcard.IkcardBackend.Message.Reponse.MessageResponse;
 import com.BackendIkcard.IkcardBackend.Models.Annonce;
 import com.BackendIkcard.IkcardBackend.Service.AnnonceService;
-import com.BackendIkcard.IkcardBackend.ServiceImplementation.ImageService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.http.HttpStatus;
+import org.springframework.web.multipart.MultipartFile;
 
-
-import javax.validation.Valid;
 import java.util.List;
 
 @CrossOrigin(origins = {"http://localhost:4200", "http://localhost:8200", "http://localhost:8100"}, maxAge = 3600, allowCredentials = "true")
@@ -23,65 +19,56 @@ import java.util.List;
 public class AnnonceController {
 
 
-    private final AnnonceService annonceService;
-    private final ImageService imageService;
-
     @Autowired
-    public AnnonceController(AnnonceService annonceService, ImageService imageService) {
-        this.annonceService = annonceService;
-        this.imageService = imageService;
-    }
-/*    @PostMapping("/creer")
-    public ResponseEntity<String> creerAnnonce(
-            @RequestParam("titre") String titre,
-            @RequestParam("contenu") String contenu,
-            @RequestParam("imageFile") MultipartFile imageFile
-    ) {
-        Annonce nouvelleAnnonce = new Annonce();
-        nouvelleAnnonce.setTitre(titre);
-        nouvelleAnnonce.setContenu(contenu);
-
-        annonceService.save(nouvelleAnnonce, imageFile);
-
-        return ResponseEntity.ok("Annonce créée avec succès !");
-    }*/
-
-
-
-    @PostMapping("/save")
-    public ResponseEntity<?> saveAnnonce(@Valid @RequestBody Annonce annonce) {
-        Annonce savedAnnonce = annonceService.saveAnnonce(annonce);
-        return ResponseEntity.ok(new MessageResponse("Annonce enregistrée avec succès!"));
-    }
-
+    private AnnonceService annonceService;
 
     @GetMapping
-        public List<Annonce> getAllAnnonces() {
-            return annonceService.getAllAnnonces();
-        }
-
-        @GetMapping("/{id}")
-        public Annonce getAnnonceById(@PathVariable Long id) {
-            return annonceService.getAnnonceById(id).orElse(null); // Handle not found case
-        }
-
-
-  @PutMapping("/desactiver/{userId}")
-  public ResponseEntity<String> desactiverCompte(@PathVariable Long userId) {
-      annonceService.desactiverCompte(userId);
-      return new ResponseEntity<>("Compte désactivé avec succès.", HttpStatus.OK);
-  }
-
-    @PutMapping("/activer/{userId}")
-    public ResponseEntity<String> activerCompte(@PathVariable Long userId) {
-        annonceService.activerCompte(userId);
-        return new ResponseEntity<>("Compte activé avec succès.", HttpStatus.OK);
+    public List<Annonce> getAllAnnonces() {
+        return annonceService.getAllAnnonces();
     }
 
-        @DeleteMapping("/{id}")
-        public void deleteAnnonce(@PathVariable Long id) {
-            annonceService.deleteAnnonce(id);
-        }
+    @PostMapping("/saveWithFile")
+    public ResponseEntity<Annonce> saveAnnonceWithFile(
+            @RequestBody Annonce annonce,
+            @RequestParam("file") MultipartFile file) {
+        Annonce savedAnnonce = annonceService.saveAnnonceWithFile(annonce, file);
+        return ResponseEntity.ok().body(savedAnnonce);
+    }
 
+/*    @PostMapping("/saveWithFile")
+    public ResponseEntity<Annonce> saveAnnonceWithFile(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("titre") String titre,
+            @RequestParam("dateAnnonce") String dateAnnonce,
+            @RequestParam("contenu") String contenu) {
+        // Your implementation here{
+        Annonce annonce= new Annonce();
+        Annonce savedAnnonce = annonceService.saveAnnonceWithFile(annonce, file);
+        return ResponseEntity.ok().body(savedAnnonce);
 
+    }*/
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Annonce> getAnnonceById(@PathVariable Long id) {
+        Annonce annonce = annonceService.getAnnonceById(id);
+        return ResponseEntity.ok().body(annonce);
+    }
+
+    @PostMapping
+    public ResponseEntity<Annonce> createAnnonce(@RequestBody Annonce annonce) {
+        Annonce createdAnnonce = annonceService.createAnnonce(annonce);
+        return ResponseEntity.ok().body(createdAnnonce);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Annonce> updateAnnonce(@PathVariable Long id, @RequestBody Annonce updatedAnnonce) {
+        Annonce updated = annonceService.updateAnnonce(id, updatedAnnonce);
+        return ResponseEntity.ok().body(updated);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteAnnonce(@PathVariable Long id) {
+        annonceService.deleteAnnonce(id);
+        return ResponseEntity.ok().body("Annonce supprimée avec succès");
+    }
 }

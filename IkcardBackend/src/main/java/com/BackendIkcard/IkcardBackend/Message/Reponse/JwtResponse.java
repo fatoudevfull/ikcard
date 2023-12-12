@@ -45,4 +45,10 @@ public class JwtResponse {
 
     public JwtResponse(String jwt, String token, Long idUtilisateur, String username, String email, String telephone, String nom, List<String> roles) {
     }
+
+    public JwtResponse(String jwt, Long id, String username, String email, String nom, String prenom, List<String> roles) {
+    }
+
+    public JwtResponse(String jwt, String username, List<String> roles) {
+    }
 }

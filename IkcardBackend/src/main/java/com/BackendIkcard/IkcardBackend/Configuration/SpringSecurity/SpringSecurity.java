@@ -66,13 +66,14 @@ public class SpringSecurity {
                 .antMatchers("/userSimple/**").permitAll()
                 .antMatchers("/admin/**").permitAll()
                 .antMatchers("/cartes/**").permitAll()
-                .antMatchers("/user/signup").permitAll()
+                .antMatchers("/auth/**").permitAll()
                 .antMatchers("/ambassadeur/**").permitAll()
                 .antMatchers("/contact/**").permitAll()
                 .antMatchers("/entreprise/**").permitAll()
                 .antMatchers("/contact/**").permitAll()
-                .antMatchers("/user/**").permitAll()
+                .antMatchers("/import/**").permitAll()
                 .antMatchers("/anonce/**").permitAll()
+                .antMatchers("/connexion/**").permitAll()
 
 
                 .antMatchers("/user/").permitAll()
@@ -100,4 +101,5 @@ public class SpringSecurity {
         return http.build();
 
     }
+
 }

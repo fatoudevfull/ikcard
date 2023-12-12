@@ -36,34 +36,29 @@ public interface AnnonceService {
 package com.BackendIkcard.IkcardBackend.Service;
 
 import com.BackendIkcard.IkcardBackend.Models.Annonce;
-import com.BackendIkcard.IkcardBackend.Repository.AnnonceRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Optional;
 
 
 public interface AnnonceService {
 
 
 
-    public List<Annonce> getAllAnnonces() ;
+    List<Annonce> getAllAnnonces();
 
-    public Optional<Annonce> getAnnonceById(Long id) ;
+    Annonce getAnnonceById(Long id);
 
-  //  void save(Annonce annonce, MultipartFile imageFile);
-   // void updateImage(Long id, MultipartFile newImage);
+    Annonce createAnnonce(Annonce annonce);
 
-    public Annonce createAnnonce(Annonce annonce);
-    Annonce saveAnnonce(Annonce annonce) ;
+    Annonce updateAnnonce(Long id, Annonce updatedAnnonce);
 
-    public Annonce updateAnnonce(Long id, Annonce updatedAnnonce) ;
+    void deleteAnnonce(Long id);
     void desactiverCompte(Long userId);
 
     void activerCompte(Long userId);
+    Annonce saveAnnonceWithFile(Annonce annonce, MultipartFile file);
 
-   public void deleteAnnonce(Long id);
-  //  void activerAnonce(Long id);
-  //  public Annonce createAnnonceWithImage(String titre, String contenu, MultipartFile image, Long administrateurId);
+
+
 }

@@ -1,32 +1,31 @@
 package com.BackendIkcard.IkcardBackend.Models;
 
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
+import lombok.Data;
 
 import javax.persistence.*;
-
+import java.util.Date;
 
 @Entity
 @Data
-@Table
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Table(name = "annonce")
 public class Annonce {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public long id;
+    private Long id;
 
-    public String titre;
+    // Other existing attributes...
 
-    private String image;
-    private String ImageFileName;
+    private String titre;
+    private Date dateAnnonce;
+    private String contenu;
+    private boolean etat;
 
-    public String Contenu;
-    public boolean etat=true;
-    @JsonIgnore
-    @ManyToOne
-    private Administrateur administrateur;
+    private String fileName;
+    private String fileType;
+
+    @Lob
+    private byte[] data;
+
+    // Constructors, getters, setters...
 }

@@ -9,10 +9,7 @@ import com.BackendIkcard.IkcardBackend.Service.CarteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class CarteServIpml implements CarteService {
@@ -29,6 +26,8 @@ public class CarteServIpml implements CarteService {
 
     public Carte creerCarte(Carte carte) {
         // Votre logique de création de carte ici
+        // Set the current date
+        carte.setDateCreationCarte(new Date());
         return carteRepository.save(carte);
     }
 

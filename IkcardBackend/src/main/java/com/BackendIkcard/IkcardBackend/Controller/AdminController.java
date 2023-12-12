@@ -100,12 +100,6 @@ public class AdminController {
         }
     }
 
-
- /*   @PutMapping("/activer/{id}")
-    public ResponseEntity<String> activerActiver(@PathVariable("id") Long id) {
-        administrateurService.activerAdmin(id);
-        return ResponseEntity.ok(" activé avec succès.");
-    }*/
  @PutMapping("/desactiver/{userId}")
  public ResponseEntity<String> desactiverCompte(@PathVariable Long userId) {
      administrateurService.desactiverCompte(userId);
@@ -136,27 +130,6 @@ public class AdminController {
     }
 
     // methode pour le login d'un Admin
-/*    @ApiOperation(value = "Le login d'un user.")
-    @PostMapping("/login")
-    public ResponseEntity<Object> Login(@RequestBody LoginRequest loginRequest) {
-
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateJwtToken(authentication);
-
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        List<String> roles = userDetails.getAuthorities().stream()
-                .map(item -> item.getAuthority())
-                .collect(Collectors.toList());
-
-        RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
-
-
-        /////////////////
-        return ResponseEntity.ok(new JwtResponse(jwt, refreshToken.getToken(), userDetails.getId(), userDetails.getUsername(), userDetails.getEmail(), userDetails.getNumero(), userDetails.getNom(), roles));
-    }*/
     // Fin
     @ApiOperation(value = "Le login d'un admin.")
     @PostMapping("/login")

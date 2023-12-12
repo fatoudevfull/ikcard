@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Date;
 
 
 @Entity
@@ -62,6 +63,7 @@ public class Carte {
     public String webSite;
 
     public String autrelink;
+    public Date dateCreationCarte;
     public boolean etat;
     @ManyToOne
   private  User user;
