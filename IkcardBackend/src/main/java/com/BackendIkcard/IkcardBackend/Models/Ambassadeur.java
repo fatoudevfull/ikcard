@@ -17,6 +17,7 @@ public class Ambassadeur extends User {
 
     private String lienReferencement;
 
+
     @ManyToOne
     private Role role;
 }

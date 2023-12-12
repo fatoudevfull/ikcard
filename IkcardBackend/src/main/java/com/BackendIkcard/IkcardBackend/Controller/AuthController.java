@@ -36,6 +36,8 @@ public class AuthController {
 
   private static final Logger Log = LoggerFactory.getLogger(AuthController.class);
   RefreshTokenService refreshTokenService;
+  private static final Logger log = LoggerFactory.getLogger(AuthController.class);
+
 
   // ...
 
@@ -75,10 +77,13 @@ return ResponseEntity.ok(jwtResponse);*/
   @Autowired
   UserRepository utilisateurRepository;
 
+
   //******************* METHODE PERMETTANT D'AUTHENTIFIER UN COLLABORATEUR ***********************************
   @PostMapping("/signin")
   public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
     try {
+      log.debug("Tentative d’authentification de l’utilisateur: {}", loginRequest.getUsername());
+
       // Authenticate the user
       Authentication authentication = authenticationManager.authenticate(
               new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
@@ -94,6 +99,7 @@ return ResponseEntity.ok(jwtResponse);*/
               .map(item -> item.getAuthority())
               .collect(Collectors.toList());
 
+
       // Create and save a refresh token
       RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
 
@@ -105,9 +111,11 @@ return ResponseEntity.ok(jwtResponse);*/
       // Return the ResponseEntity with the JWT response
       return ResponseEntity.ok(jwtResponse);
     } catch (AuthenticationException e) {
+      log.error("Échec de l’authentification de l’utilisateur: {}", loginRequest.getUsername(), e);
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Nom d’utilisateur ou mot de passe non valide");
     }
   }
+//******************************
 
 
 

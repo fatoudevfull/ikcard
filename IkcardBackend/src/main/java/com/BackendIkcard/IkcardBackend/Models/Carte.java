@@ -1,6 +1,7 @@
 package com.BackendIkcard.IkcardBackend.Models;
 
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -65,6 +66,19 @@ public class Carte {
     public String autrelink;
     public Date dateCreationCarte;
     public boolean etat;
-    @ManyToOne
-  private  User user;
+
+
+  @ManyToOne
+  @JoinColumn
+  private User user;
+
+  @Getter
+  @Lob
+  private byte[] qrCode;
+  // Constructors, getters, setters, etc.
+
+  public void setQrCode(byte[] qrCode) {
+    this.qrCode = qrCode;
+  }
+
 }

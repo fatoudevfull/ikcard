@@ -34,10 +34,18 @@ public class User {
     private String adresse;
     private String photo;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "qrcode_data_id", referencedColumnName = "id")
+    private QRCodeData qrCodeData;
+
+    // Other fields and annotations
+
+   /* @OneToMany
+    private List<Carte> cartes = new ArrayList<>();*/
+
     @ManyToOne
     private Role role;
 
-    private String lienReferencement;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinTable(name = "user_roles",

@@ -1,14 +1,14 @@
 package com.BackendIkcard.IkcardBackend.ServiceImplementation;
 
 import com.BackendIkcard.IkcardBackend.Message.ReponseMessage;
-import com.BackendIkcard.IkcardBackend.Models.Administrateur;
-import com.BackendIkcard.IkcardBackend.Models.Carte;
-import com.BackendIkcard.IkcardBackend.Models.Contact;
+import com.BackendIkcard.IkcardBackend.Models.*;
 import com.BackendIkcard.IkcardBackend.Repository.CarteRepository;
 import com.BackendIkcard.IkcardBackend.Service.CarteService;
+import com.google.zxing.WriterException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.*;
 
 @Service
@@ -32,19 +32,7 @@ public class CarteServIpml implements CarteService {
     }
 
     // Dans votre CarteService
- /*   public Carte modifierCarte(Carte carte, Long id) {
-        // Assurez-vous que la carte existe avant de la mettre à jour
-        if (!carteRepository.existsById(id)) {
-            throw new NoSuchElementException("Carte introuvable");
-        }
 
-        // Assurez-vous que l'ID de la carte dans le corps de la requête correspond à l'ID fourni dans l'URL
-        if (!Objects.equals(carte.getId(), id)) {
-            throw new IllegalArgumentException("L'ID de la carte ne correspond pas à l'ID fourni");
-        }
-
-        return carteRepository.save(carte);
-    }*/
     public ReponseMessage modifierCarte(long carteId, Carte cartetModifie) {
         Carte carteExistant = carteRepository.findById(carteId)
                 .orElseThrow(() -> new NoSuchElementException("Carte introuvable"));
@@ -67,17 +55,6 @@ public class CarteServIpml implements CarteService {
         return carteRepository.findAll();
     }
 
-  /*  @Override
-    public void activerCarte(Long id) {
-        Optional<Carte> existingAdmin = carteRepository.findById(id);
-        existingAdmin.ifPresent(carte -> {
-            // Set etat to true
-            carte.setEtat(true);
-
-            // Save the updated entity
-            carteRepository.save(carte);
-        });
-    }*/
   public void desactiverCompte(Long userId) {
       Carte carte = carteRepository.findById(userId)
               .orElseThrow(() -> new NoSuchElementException("Utilisateur introuvable"));
@@ -94,6 +71,35 @@ public class CarteServIpml implements CarteService {
         carteRepository.save(carte);
     }
 
+  /*  public void generateAndStoreQrCodeForUser() {
+        String content = generateContentForUser(user); // Assuming 'this.user' is the user associated with the Carte
+        String filePath = "path/to/your/qrcode/image.png";
+
+        try {
+            String savedFilePath = QrCodeGenerator.generateQrCode(content, filePath);
+            this.setQrCode(savedFilePath);
+        } catch (WriterException | IOException e) {
+            e.printStackTrace(); // Handle the exception appropriately
+        }
+    }*/
+  public String generateContentForUser(User user) {
+        // Logic to generate content for the QR code based on user information
+        // For example, concatenate user details like name, email, etc.
+      String content = generateContentForUser(user); // Assuming 'this.user' is the user associated with the Carte
+        String filePath = "path/to/your/qrcode/image.png";
+
+        try {
+            String savedFilePath = QrCodeGenerator.generateQrCode(content, filePath);
+            this.setQrCode(savedFilePath);
+        } catch (WriterException | IOException e) {
+            e.printStackTrace(); // Handle the exception appropriately
+        }
+        return user.getNom() + "\n" + user.getEmail() + "\n" + user.getUsername();
+
+    }
+
+    private void setQrCode(String savedFilePath) {
+    }
 
 
     // Dans votre CarteService

@@ -3,25 +3,43 @@ package com.BackendIkcard.IkcardBackend.Message.Requette;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.Set;
 @Getter
 @Setter
 public class SignupRequest {
     private String nom;
+    @NotBlank
+    @Size(max = 20)
     private String username;
+    @NotBlank
     private String numero;
+    @NotBlank
     private String prenom;
 
+    @NotBlank
+    @Size(max = 50)
+    @Email
     private String email;
-   private String photo;
+    @NotBlank
+    private String photo;
+    @NotBlank
     private String Pays;
+    @NotBlank
     private String ville;
+    @NotBlank
     private String adresse;
+    @NotBlank
     private String imageCouverture;
-    
 
 
+
+    @NotBlank
+    @Size(min = 6, max = 40)
     private String password;
+    @NotBlank
     private String roleName;
 
 

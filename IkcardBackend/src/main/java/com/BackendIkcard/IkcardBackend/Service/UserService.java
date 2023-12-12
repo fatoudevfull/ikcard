@@ -7,11 +7,14 @@ import com.BackendIkcard.IkcardBackend.Models.User;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserService {
 
     // Création d'un UserSimple
     ReponseMessage creerUserSimple(User userSimple);
+
+    User findById(Long userId);
 
     // Mise à jour d'un UserSimple
     ReponseMessage modifierUserSimple (Long id,User userSimple);

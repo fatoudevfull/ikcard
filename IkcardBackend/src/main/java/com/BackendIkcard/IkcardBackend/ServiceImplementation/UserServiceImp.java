@@ -29,6 +29,11 @@ public class UserServiceImp implements UserService {
             return new ReponseMessage("Cet utilisateur existe déjà", false);
         }
     }
+
+    @Override
+    public User findById(Long userId) {
+        return userSimpleRepository.findById(userId).orElse(null);
+    }
  /*   @Override
     public User saveUserWithImage(User user, MultipartFile imageFile) {
         String imageFileName = SaveImage.saveImage("user", imageFile, user.getUsername());
@@ -60,25 +65,6 @@ public class UserServiceImp implements UserService {
     }
 
 
- /*   @Override
-    public void activerAdmin(Long id) {
-        Administrateur administrateur = adminnistrateurRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Administrateur introuvable"));
-        administrateur.setEtat(true);
-        adminnistrateurRepository.save(administrateur);
-    }*/
-
-/*    @Override
-    public void activerUserSimple(Long id) {
-        Optional<User> existingAdmin = userSimpleRepository.findById(id);
-        existingAdmin.ifPresent(userSimple -> {
-            // Set etat to true
-            userSimple.setEtat(true);
-
-            // Save the updated entity
-            userSimpleRepository.save(userSimple);
-        });
-    }*/
 
     public void desactiverCompte(Long userId) {
         User user = userSimpleRepository.findById(userId)

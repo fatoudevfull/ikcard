@@ -2,6 +2,7 @@ package com.BackendIkcard.IkcardBackend.Service;
 
 import com.BackendIkcard.IkcardBackend.Message.ReponseMessage;
 import com.BackendIkcard.IkcardBackend.Models.Carte;
+import com.BackendIkcard.IkcardBackend.Models.User;
 import com.BackendIkcard.IkcardBackend.Repository.CarteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,4 +23,7 @@ public interface CarteService {
   void desactiverCompte(Long userId);
 
     void activerCompte(Long userId);
+    String generateContentForUser(User user);
+
+   // void setQrCode(String savedFilePath);
 }

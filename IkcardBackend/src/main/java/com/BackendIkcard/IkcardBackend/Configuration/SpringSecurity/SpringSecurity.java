@@ -74,9 +74,7 @@ public class SpringSecurity {
                 .antMatchers("/import/**").permitAll()
                 .antMatchers("/anonce/**").permitAll()
                 .antMatchers("/connexion/**").permitAll()
-
-
-                .antMatchers("/user/").permitAll()
+                .antMatchers("/api/qrcode/**").permitAll()
                 .antMatchers("/logout").permitAll()
                 .antMatchers("/v2/api-docs",
                         "/configuration/ui",
@@ -84,12 +82,8 @@ public class SpringSecurity {
                         "/configuration/security",
                         "/swagger-ui.html",
                         "/webjars/**").permitAll()
-                .antMatchers("/problematique/**").permitAll()
-
                 .antMatchers("/swagger").permitAll()
                 .antMatchers("/swagger-ui.html").permitAll()
-
-
                 .anyRequest().authenticated();
 
         http.formLogin();
