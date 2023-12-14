@@ -57,12 +57,14 @@ public class AdminController {
 
     @PostMapping("/save")
     public ResponseEntity<?> registerAdmin(@Valid @RequestBody SignupRequest signupRequest) {
-        if (adminnistrateurRepository.existsByEmail(signupRequest.getUsername())) {
+        // Check if the username already exists
+        if (adminnistrateurRepository.existsByUsername(signupRequest.getUsername())) {
             return ResponseEntity
                     .badRequest()
                     .body(new MessageResponse("Erreur: Ce nom d'utilisateur existe déjà!"));
         }
 
+        // Check if the email already exists
         if (adminnistrateurRepository.existsByEmail(signupRequest.getEmail())) {
             return ResponseEntity
                     .badRequest()
@@ -85,6 +87,7 @@ public class AdminController {
 
         // Set etat to true before updating
         administrateur.setEtat(true);
+
 
         adminnistrateurRepository.save(administrateur);
 
@@ -116,14 +119,11 @@ public class AdminController {
     public ReponseMessage Supprimer(@PathVariable Long id) {
         return administrateurService.SupprimerAdministrateur(id);
     }
-
-
     //modifier
     @PutMapping("/modifier/{id}")
     public ReponseMessage Modifier(@PathVariable Long id, @RequestBody Administrateur administrateur) {
         return administrateurService.modifierAdministrateur(id, administrateur);
     }
-
     @GetMapping("/afficher")
     public List<Administrateur> Afficher() {
         return administrateurService.afficherToutLesAdministrateur();

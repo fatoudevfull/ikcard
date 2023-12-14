@@ -10,11 +10,16 @@ import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
+import net.glxn.qrgen.QRCode;
+import net.glxn.qrgen.image.ImageType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,18 +48,9 @@ public class QRCodeService {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         MatrixToImageWriter.writeToStream(bitMatrix, "PNG", outputStream);
 
-        byte[] qrCodeData = outputStream.toByteArray();
-
-        // Save the QR code data in the database
-        QRCodeData qrCodeDataEntity = new QRCodeData();
-        qrCodeDataEntity.setQrCode(qrCodeData);
-        qrCodeDataRepository.save(qrCodeDataEntity);
-
-        // Associate the QR code data with the user
-        user.setQrCodeData(qrCodeDataEntity);
-
-        // Save the user entity with the associated QR code data
-        userRepository.save(user);
-        return qrCodeData;
+        return outputStream.toByteArray();
     }
+
+
+
 }

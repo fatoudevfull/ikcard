@@ -10,6 +10,7 @@ import com.BackendIkcard.IkcardBackend.Service.EntrepriseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -25,6 +26,8 @@ public class EntrepriseServiceImp implements EntrepriseService {
         if (entrepriseRepository.findByEmail(entreprise.getEmail()) == null) {
             // Set etat to true before saving
             entreprise.setEtat(true);
+            // Set the current date
+            entreprise.setDateCreationCompte(new Date());
             entrepriseRepository.save(entreprise);
             return new ReponseMessage("Entreprise ajouté avec succès", true);
         } else {

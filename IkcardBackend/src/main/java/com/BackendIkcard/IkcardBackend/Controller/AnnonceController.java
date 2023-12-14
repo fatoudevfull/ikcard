@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Date;
 import java.util.List;
 
 @CrossOrigin(origins = {"http://localhost:4200", "http://localhost:8200", "http://localhost:8100"}, maxAge = 3600, allowCredentials = "true")
@@ -34,19 +35,12 @@ public class AnnonceController {
         Annonce savedAnnonce = annonceService.saveAnnonceWithFile(annonce, file);
         return ResponseEntity.ok().body(savedAnnonce);
     }
-
-/*    @PostMapping("/saveWithFile")
-    public ResponseEntity<Annonce> saveAnnonceWithFile(
-            @RequestParam("file") MultipartFile file,
-            @RequestParam("titre") String titre,
-            @RequestParam("dateAnnonce") String dateAnnonce,
-            @RequestParam("contenu") String contenu) {
-        // Your implementation here{
-        Annonce annonce= new Annonce();
-        Annonce savedAnnonce = annonceService.saveAnnonceWithFile(annonce, file);
-        return ResponseEntity.ok().body(savedAnnonce);
-
-    }*/
+    @PostMapping("/save")
+    public Annonce saveAnnonce(@RequestBody Annonce annonce){
+        // Set the current date
+        annonce.setDateAnnonce(new Date());
+        return annonceService.createAnnonce(annonce);
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<Annonce> getAnnonceById(@PathVariable Long id) {

@@ -29,6 +29,7 @@ import org.springframework.http.HttpStatus;
 
 
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -85,6 +86,8 @@ public class AmbassadeurController {
 
         Role ambRole = roleRepository.findByName(ERole.AMBASSADEUR);
         ambassadeur.setRole(ambRole);
+        // Set the current date
+        ambassadeur.setDateCreationCompte(new Date());
 
         ambassadeurRepository.save(ambassadeur);
 // Set etat to true before updating

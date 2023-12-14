@@ -26,6 +26,7 @@ import org.springframework.http.HttpStatus;
 
 
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -58,19 +59,21 @@ public class UserController {
 
     @PostMapping("/save")
     public ResponseEntity<?> registerAdmin(@Valid @RequestBody SignupRequest signupRequest) {
-        if (userSimpleRepository.existsByEmail(signupRequest.getUsername())) {
+        // Check if the username already exists
+        if (userSimpleRepository.existsByUsername(signupRequest.getUsername())) {
             return ResponseEntity
                     .badRequest()
                     .body(new MessageResponse("Erreur: Ce nom d'utilisateur existe déjà!"));
         }
 
+        // Check if the email already exists
         if (userSimpleRepository.existsByEmail(signupRequest.getEmail())) {
             return ResponseEntity
                     .badRequest()
                     .body(new MessageResponse("Erreur: Cet email est déjà utilisé!"));
         }
 
-        // Create new patient's account
+        // Create new user's account
         User userSimple = new User();
         userSimple.setUsername(signupRequest.getUsername());
         userSimple.setEmail(signupRequest.getEmail());
@@ -80,24 +83,21 @@ public class UserController {
         userSimple.setNom(signupRequest.getNom());
         userSimple.setNumero(signupRequest.getNumero());
 
-        Role UserRole = roleRepository.findByName(ERole.USER);
-        userSimple.setRole(UserRole);
+        Role userRole = roleRepository.findByName(ERole.USER);
+        userSimple.setRole(userRole);
 
-        userSimpleRepository.save(userSimple);
-// Set etat to true before updating
+        // Set the current date
+        userSimple.setDateCreationCompte(new Date());
+
+        // Set etat to true before updating
         userSimple.setEtat(true);
-        return ResponseEntity.ok(new MessageResponse("Ulilisateur enregistré avec succès!"));
+
+        // Save the user
+        userSimpleRepository.save(userSimple);
+
+        return ResponseEntity.ok(new MessageResponse("Utilisateur enregistré avec succès!"));
     }
 
-
-/*  @PostMapping("/saveWithImage")
-  public ResponseEntity<?> registerUserWithImage(@Valid @RequestBody SignupRequest signupRequest,
-                                                 @RequestParam("imageFile") MultipartFile imageFile) {
-      User newUser = new User(signupRequest.getNom(), signupRequest.getEmail(), signupRequest.getUsername(),
-              signupRequest.getNumero(),signupRequest.getPassword(),signupRequest.getPrenom(),signupRequest.getAdresse());
-      User savedUser = userService.saveUserWithImage(newUser, imageFile);
-      return ResponseEntity.ok(new MessageResponse("Utilisateur enregistré avec succès!"));
-  }*/
 
     @PutMapping("/desactiver/{userId}")
     public ResponseEntity<String> DesactiverCompte(@PathVariable Long userId) {
@@ -115,7 +115,6 @@ public class UserController {
     public ReponseMessage Supprimer(@PathVariable Long id) {
         return userSimpleService.SupprimerUserSimple(id);
     }
-
 
     //modifier
     @PutMapping("/modifier/{id}")
@@ -151,4 +150,20 @@ public class UserController {
         return ResponseEntity.ok(new JwtResponse(jwt, refreshToken.getToken(), userDetails.getId(), userDetails.getUsername(), userDetails.getEmail(), userDetails.getNumero(), userDetails.getNom(), roles));
     }
     // Fin
+    //nombre ambassadeur
+    @GetMapping("/ambamssadeurCunt")
+    public List<Object> nombreAmbassadeur() {
+        return userSimpleService.NombreAmbassadeur();
+    }
+    //nomdre User simple
+    @GetMapping("/userCunt")
+    public List<Object> nombreUser() {
+        return userSimpleService.NombreUser();
+    }
+
+    //Nombre user par pays
+    @GetMapping("/{userpays}")
+    public List<Object> nombreUserparpays(@PathVariable String pays) {
+        return userSimpleService.NombreUserparpays(pays);
+    }
 }

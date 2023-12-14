@@ -15,9 +15,5 @@ public class QRCodeData {
     private Long id;
 
     @Lob
-    private byte[] qrCode;
-
-    // Add any other fields or relationships as needed
-
-    // Getters and setters
+    private String qrCode; // Change the type to String
 }

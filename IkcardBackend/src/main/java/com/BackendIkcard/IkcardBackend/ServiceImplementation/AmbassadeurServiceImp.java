@@ -1,11 +1,8 @@
 package com.BackendIkcard.IkcardBackend.ServiceImplementation;
 
 import com.BackendIkcard.IkcardBackend.Message.ReponseMessage;
-import com.BackendIkcard.IkcardBackend.Models.Administrateur;
 import com.BackendIkcard.IkcardBackend.Models.Ambassadeur;
-import com.BackendIkcard.IkcardBackend.Repository.AdminnistrateurRepository;
 import com.BackendIkcard.IkcardBackend.Repository.AmbassadeurRepository;
-import com.BackendIkcard.IkcardBackend.Service.AdministrateurService;
 import com.BackendIkcard.IkcardBackend.Service.AmbassadeurService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +18,6 @@ public class AmbassadeurServiceImp implements AmbassadeurService {
     private AmbassadeurRepository ambassadeurRepository;
 
 
-
     @Override
     public ReponseMessage creerAmbassadeur(Ambassadeur ambassadeur) {
         if (ambassadeurRepository.findByEmail(ambassadeur.getEmail()) == null) {
@@ -31,8 +27,8 @@ public class AmbassadeurServiceImp implements AmbassadeurService {
             return new ReponseMessage("Ambassadeur ajouté avec succès", true);
         } else {
             return new ReponseMessage("Cet Ambassadeur existe déjà", false);
-        }    }
-
+        }
+    }
     @Override
     public ReponseMessage modifierAmbassadeur(Long id, Ambassadeur ambassadeur) {
         Optional<Ambassadeur> existingAdminOptional = ambassadeurRepository.findById(id);
@@ -46,7 +42,7 @@ public class AmbassadeurServiceImp implements AmbassadeurService {
             existingAdmin.setUsername(ambassadeur.getUsername());
             existingAdmin.setPassword(ambassadeur.getPassword());
             existingAdmin.setPrenom(ambassadeur.getPrenom());
-           // existingAdmin.setPhoto(ambassadeur.getPhoto());
+            // existingAdmin.setPhoto(ambassadeur.getPhoto());
             ambassadeur.setEmail(ambassadeur.getEmail());
             // Set other fields as needed
             ambassadeurRepository.save(existingAdmin);
@@ -56,33 +52,13 @@ public class AmbassadeurServiceImp implements AmbassadeurService {
         }
     }
 
+    public void desactiverCompte(Long userId) {
+        Ambassadeur user = ambassadeurRepository.findById(userId)
+                .orElseThrow(() -> new NoSuchElementException("Utilisateur introuvable"));
 
- /*   @Override
-    public void activerAdmin(Long id) {
-        Administrateur administrateur = adminnistrateurRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Administrateur introuvable"));
-        administrateur.setEtat(true);
-        adminnistrateurRepository.save(administrateur);
-    }*/
-
-/*    @Override
-    public void activerAmbassadeur(Long id) {
-        Optional<Ambassadeur> existingAdmin = ambassadeurRepository.findById(id);
-        existingAdmin.ifPresent(administrateur -> {
-            // Set etat to true
-            administrateur.setEtat(true);
-
-            // Save the updated entity
-            ambassadeurRepository.save(administrateur);
-        });
-    }*/
-public void desactiverCompte(Long userId) {
-    Ambassadeur user = ambassadeurRepository.findById(userId)
-            .orElseThrow(() -> new NoSuchElementException("Utilisateur introuvable"));
-
-    user.setEtat(false); // Mettez à false pour désactiver le compte
-    ambassadeurRepository.save(user);
-}
+        user.setEtat(false); // Mettez à false pour désactiver le compte
+        ambassadeurRepository.save(user);
+    }
 
     public void activerCompte(Long userId) {
         Ambassadeur user = ambassadeurRepository.findById(userId)
@@ -92,15 +68,10 @@ public void desactiverCompte(Long userId) {
         ambassadeurRepository.save(user);
     }
 
-
-
-
-
     @Override
     public List<Ambassadeur> afficherToutLesAmbassadeur() {
         return ambassadeurRepository.findAll();
     }
-
     @Override
     public ReponseMessage SupprimerAmbassadeur(Long id) {
         Optional<Ambassadeur> adminOptional = ambassadeurRepository.findById(id);
@@ -114,6 +85,6 @@ public void desactiverCompte(Long userId) {
         }
     }
 
-    // Other methods...
+
 
 }

@@ -28,6 +28,7 @@ import org.springframework.http.HttpStatus;
 
 
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -59,20 +60,22 @@ public class EntrepriseController {
     private PasswordEncoder encoder;
 
     @PostMapping("/save")
-    public ResponseEntity<?> registerAdmin(@Valid @RequestBody SignupRequest signupRequest) {
-        if (entrepriseRepository.existsByEmail(signupRequest.getUsername())) {
+    public ResponseEntity<?> registerEntreprise(@Valid @RequestBody SignupRequest signupRequest) {
+        // Check if the username already exists
+        if (entrepriseRepository.existsByNom(signupRequest.getNom())) {
             return ResponseEntity
                     .badRequest()
-                    .body(new MessageResponse("Erreur: Ce nom d'utilisateur existe déjà!"));
+                    .body(new MessageResponse("Erreur: Cet entreprise existe déjà Veuillez choisir un autre nom!"));
         }
 
+        // Check if the email already exists
         if (entrepriseRepository.existsByEmail(signupRequest.getEmail())) {
             return ResponseEntity
                     .badRequest()
-                    .body(new MessageResponse("Erreur: Cet email est déjà utilisé!"));
+                    .body(new MessageResponse("Erreur: Cet email est déjà utilisé Veuillez choisir un autre addresse mail!"));
         }
 
-        // Create new entreprise's account
+        // Create new enterprise's account
         Entreprise entreprise = new Entreprise();
         entreprise.setImageCouverture(signupRequest.getImageCouverture());
         entreprise.setEmail(signupRequest.getEmail());
@@ -82,20 +85,21 @@ public class EntrepriseController {
         entreprise.setNom(signupRequest.getNom());
         entreprise.setNumero(signupRequest.getNumero());
 
-        Role adminRole = roleRepository.findByName(ERole.ENTREPRISE);
-        entreprise.setRole(adminRole);
+        Role entrepriseRole = roleRepository.findByName(ERole.ENTREPRISE);
+        entreprise.setRole(entrepriseRole);
 
+        // Set the current date
+        entreprise.setDateCreationCompte(new Date());
+
+        // Save the enterprise
         entrepriseRepository.save(entreprise);
-// Set etat to true before updating
+
+        // Set etat to true after saving
         entreprise.setEtat(true);
-        return ResponseEntity.ok(new MessageResponse("Entreprise enregistré avec succès!"));
+
+        return ResponseEntity.ok(new MessageResponse("Entreprise"+" "+ entreprise.getNom()+" "+"est enregistrée avec succès!"));
     }
 
- /*   @PutMapping("/activer/{id}")
-    public ResponseEntity<String> activerActiver(@PathVariable("id") Long id) {
-        entrepriseService.activerEntreprise(id);
-        return ResponseEntity.ok(" activé avec succès.");
-    }*/
  @PutMapping("/desactiver/{userId}")
  public ResponseEntity<String> desactiverCompte(@PathVariable Long userId) {
      entrepriseService.desactiverCompte(userId);

@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Date;
 
 
 @Entity
@@ -25,6 +26,8 @@ public class Entreprise {
     public String adresse;
     public String numero;
     public String imageCouverture;
+    public Date dateCreationCompte;
+
     @ManyToOne
     private Role role;
 }

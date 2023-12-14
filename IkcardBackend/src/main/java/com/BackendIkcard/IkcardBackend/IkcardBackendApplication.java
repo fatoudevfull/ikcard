@@ -68,23 +68,22 @@ public class IkcardBackendApplication {
 			roleRepos.save(userRole);
 		};
 
-
-
+/*		//creation du super Admin
 		//creation du super Admin
-	/*	try {
-			userService.getByUserName("fs");
+		try {
+			userService.getByUsername("Ballo");
 		} catch (Exception e) {
 			// TODO: handle exception
 			User admin=new User();
 
-			admin.setNom("Fatoumata sy");
-			admin.setUsername("fs");
-			//	admin.setPrenom("Ballo");
-			admin.setPassword(encoder.encode("syfatou") );
-			//admin.setPoint(0l);
-			//admin.setNiveau(0l);
+			admin.setNom("Sy");
+			admin.setPrenom("Fatoumata");
+			admin.setUsername("syfatou");
+			admin.setPassword(encoder.encode("Fatou123") );
+			admin.setPoint(0l);
+			admin.setNiveau(0l);
 
-			admin.getRoles().add(roleRepos.findByName(ERole.ROLE_SUPERADMIN));
+			admin.getRoles().add(roleRepos.findByName(ERole.USER));
 
 			userService.saveUser(admin);
 		}*/

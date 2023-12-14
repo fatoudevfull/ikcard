@@ -6,10 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Getter
@@ -33,6 +30,8 @@ public class User {
     private String ville;
     private String adresse;
     private String photo;
+    public Date dateCreationCompte;
+
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "qrcode_data_id", referencedColumnName = "id")
@@ -55,4 +54,8 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Contact> contacts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Carte> carte = new ArrayList<>();
+
 }

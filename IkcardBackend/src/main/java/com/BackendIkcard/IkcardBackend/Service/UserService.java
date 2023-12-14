@@ -28,9 +28,14 @@ public interface UserService {
   //  public void activerUserSimple(Long id);
 
     void desactiverCompte(Long userId);
+    Optional<User> findByUsername(String username);
+
 
     void activerCompte(Long userId);
    // User saveUserWithImage(User user, MultipartFile imageFile);
+   List<Object> NombreAmbassadeur();
+   List<Object> NombreUser();
+   List<Object> NombreUserparpays(String pays);
 
 
 

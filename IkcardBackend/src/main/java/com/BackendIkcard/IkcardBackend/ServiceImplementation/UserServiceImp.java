@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -26,20 +27,17 @@ public class UserServiceImp implements UserService {
             userSimpleRepository.save(userSimple);
             return new ReponseMessage("Utilisateur ajouté avec succès", true);
         } else {
+            // Set the current date
+            userSimple.setDateCreationCompte(new Date());
             return new ReponseMessage("Cet utilisateur existe déjà", false);
         }
     }
+
 
     @Override
     public User findById(Long userId) {
         return userSimpleRepository.findById(userId).orElse(null);
     }
- /*   @Override
-    public User saveUserWithImage(User user, MultipartFile imageFile) {
-        String imageFileName = SaveImage.saveImage("user", imageFile, user.getUsername());
-        user.setPhoto(imageFileName);
-        return userSimpleRepository.save(user);
-    }*/
 
     @Override
     public ReponseMessage modifierUserSimple(Long id, User userSimple) {
@@ -51,11 +49,13 @@ public class UserServiceImp implements UserService {
             userSimple.setEtat(true);
             existingAdmin.setNom(userSimple.getNom());
             existingAdmin.setNumero(userSimple.getNumero());
-            existingAdmin.setUsername(userSimple.getUsername());
+            existingAdmin.setAdresse(userSimple.getAdresse());
             existingAdmin.setPassword(userSimple.getPassword());
             existingAdmin.setPrenom(userSimple.getPrenom());
-          //  existingAdmin.setPhoto(userSimple.getPhoto());
+            existingAdmin.setPhoto(userSimple.getPhoto());
             userSimple.setEmail(userSimple.getEmail());
+            userSimple.setVille(userSimple.getVille());
+            userSimple.setPays(userSimple.getPays());
             // Set other fields as needed
             userSimpleRepository.save(existingAdmin);
             return new ReponseMessage("Utilisateur modifié avec succès", true);
@@ -63,8 +63,6 @@ public class UserServiceImp implements UserService {
             return new ReponseMessage("Désolé, Utilisateur non trouvé", false);
         }
     }
-
-
 
     public void desactiverCompte(Long userId) {
         User user = userSimpleRepository.findById(userId)
@@ -74,6 +72,11 @@ public class UserServiceImp implements UserService {
         userSimpleRepository.save(user);
     }
 
+    @Override
+    public Optional<User> findByUsername(String username) {
+        return userSimpleRepository.findByUsername(username);
+    }
+
     public void activerCompte(Long userId) {
         User user = userSimpleRepository.findById(userId)
                 .orElseThrow(() -> new NoSuchElementException("Utilisateur introuvable"));
@@ -81,10 +84,6 @@ public class UserServiceImp implements UserService {
         user.setEtat(true); // Mettez à true pour activer le compte
         userSimpleRepository.save(user);
     }
-
-
-
-
 
     @Override
     public List<User> afficherToutLesUserSimple() {
@@ -102,6 +101,20 @@ public class UserServiceImp implements UserService {
         } else {
             return new ReponseMessage("Utilisateur non trouvé", false);
         }
+    }
+    @Override
+    public List<Object> NombreAmbassadeur() {
+        return userSimpleRepository.NombreAmbassadeur();
+    }
+
+    @Override
+    public List<Object> NombreUser() {
+        return userSimpleRepository.NombreUser();
+    }
+
+    @Override
+    public List<Object> NombreUserparpays(String pays) {
+        return userSimpleRepository.NombreUserParPays(pays);
     }
 
     // Other methods...
