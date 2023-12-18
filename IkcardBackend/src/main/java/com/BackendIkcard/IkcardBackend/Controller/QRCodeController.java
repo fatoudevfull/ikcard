@@ -60,8 +60,9 @@ public class QRCodeController {
             }
 
             User user = userOptional.get();
-            System.out.println("email "+user.getEmail());
-            System.out.println("nom "+user.getNom());
+            System.out.println("email: "+user.getEmail());
+            System.out.println("nom: "+user.getNom());
+            System.out.println(user.getUsername());
 
             // Generate QR code based on user information
             byte[] qrCode = qrCodeGeneratorService.generateAndSaveQRCode(user);

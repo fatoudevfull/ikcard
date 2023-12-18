@@ -19,6 +19,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
    // User findByUsername(String username);
     boolean existsByEmail(String email);
     boolean existsByUsername(String username);
+    boolean existsByNumero(String numero);
     List<User> findByEtat(Boolean status);
     @Query(value = "SELECT COUNT(*) FROM `user` WHERE user.dtype='ambassadeur';",nativeQuery = true)
     List<Object> NombreAmbassadeur();

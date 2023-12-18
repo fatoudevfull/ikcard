@@ -23,6 +23,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 import javax.validation.Valid;
@@ -53,27 +54,58 @@ public class UserController {
 
     @Autowired
     private RoleRepository roleRepository;
-
     @Autowired
-    private PasswordEncoder encoder;
+    PasswordEncoder encoder;
+
 
     @PostMapping("/save")
     public ResponseEntity<?> registerAdmin(@Valid @RequestBody SignupRequest signupRequest) {
-        // Check if the username already exists
+        // Vérifier si le nom d'utilisateur existe déjà
         if (userSimpleRepository.existsByUsername(signupRequest.getUsername())) {
             return ResponseEntity
                     .badRequest()
                     .body(new MessageResponse("Erreur: Ce nom d'utilisateur existe déjà!"));
         }
 
-        // Check if the email already exists
+        // Vérifier si l'e-mail existe déjà
         if (userSimpleRepository.existsByEmail(signupRequest.getEmail())) {
             return ResponseEntity
                     .badRequest()
-                    .body(new MessageResponse("Erreur: Cet email est déjà utilisé!"));
+                    .body(new MessageResponse("Erreur: Cet e-mail est déjà utilisé!"));
         }
 
-        // Create new user's account
+        // Vérifier si le numéro existe déjà
+        if (userSimpleRepository.existsByNumero(signupRequest.getNumero())) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Erreur: Ce numéro est déjà utilisé!"));
+        }
+
+        // Vérifier si les champs requis ne sont pas vides
+        // Vérifier si le numéro existe déjà
+        if (userSimpleRepository.existsByNumero(signupRequest.getNumero())) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Erreur: Ce numéro est déjà utilisé!"));
+        }
+        // Vérifier si le nom d'utilisateur existe déjà
+        if (signupRequest.getUsername()=="")  {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Erreur: Le nom t'utilisateur ne peut etre null!"));
+        }
+        if (signupRequest.getEmail()=="")  {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Erreur: L'email ne peut etre null!"));
+        }
+        if (signupRequest.getNumero()=="")  {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Erreur: Le numero ne peut etre null!"));
+        }
+
+        // Créer un nouveau compte utilisateur
         User userSimple = new User();
         userSimple.setUsername(signupRequest.getUsername());
         userSimple.setEmail(signupRequest.getEmail());
@@ -86,17 +118,18 @@ public class UserController {
         Role userRole = roleRepository.findByName(ERole.USER);
         userSimple.setRole(userRole);
 
-        // Set the current date
+        // Définir la date actuelle
         userSimple.setDateCreationCompte(new Date());
 
-        // Set etat to true before updating
+        // Définir l'état sur true avant la mise à jour
         userSimple.setEtat(true);
 
-        // Save the user
+        // Enregistrer l'utilisateur
         userSimpleRepository.save(userSimple);
 
         return ResponseEntity.ok(new MessageResponse("Utilisateur enregistré avec succès!"));
     }
+
 
 
     @PutMapping("/desactiver/{userId}")

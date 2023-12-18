@@ -4,10 +4,11 @@ package com.BackendIkcard.IkcardBackend.Controller;
 import com.BackendIkcard.IkcardBackend.Configuration.SpringSecurity.Jwt.JwtUtils;
 import com.BackendIkcard.IkcardBackend.Configuration.SpringSecurity.Services.RefreshTokenService;
 import com.BackendIkcard.IkcardBackend.Configuration.SpringSecurity.Services.UserDetailsImpl;
+import com.BackendIkcard.IkcardBackend.Configuration.SpringSecurity.Services.UserDetailsServiceImpl;
 import com.BackendIkcard.IkcardBackend.Message.Reponse.JwtResponse;
 import com.BackendIkcard.IkcardBackend.Message.Reponse.MessageResponse;
+import com.BackendIkcard.IkcardBackend.Message.Reponse.UserInfoResponse;
 import com.BackendIkcard.IkcardBackend.Message.Requette.LoginRequest;
-import com.BackendIkcard.IkcardBackend.Models.RefreshToken;
 import com.BackendIkcard.IkcardBackend.Models.User;
 import com.BackendIkcard.IkcardBackend.Repository.UserRepository;
 import io.swagger.annotations.Api;
@@ -15,16 +16,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,31 +37,17 @@ public class AuthController {
   private static final Logger Log = LoggerFactory.getLogger(AuthController.class);
   RefreshTokenService refreshTokenService;
   private static final Logger log = LoggerFactory.getLogger(AuthController.class);
+  @Autowired
+  JwtUtils jwtUtils;
 
+  @Autowired
+  UserRepository utilisateurRepository;
 
-  // ...
+  // This assumes JwtResponse is a simple POJO
+  private JwtResponse jwtResponse = new JwtResponse();
 
-/*  // Generate JWT token
-  String jwt = jwtUtils.generateJwtToken(authentication);
-
-  // Get user details from authentication
-  UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-  List<String> roles = userDetails.getAuthorities().stream()
-          .map(item -> item.getAuthority())
-          .collect(Collectors.toList());
-
-  // Create and save a refresh token
-  RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
-
-  // Return JWT response
-  JwtResponse jwtResponse = new JwtResponse(jwt, refreshToken.getToken(), userDetails.getId(),
-          userDetails.getUsername(), userDetails.getEmail(), userDetails.getNumero(),
-          userDetails.getNom(), roles);
-
-// Return the ResponseEntity with the JWT response
-return ResponseEntity.ok(jwtResponse);*/
-
-
+  @Autowired
+  private UserDetailsServiceImpl userDetailsService;
 
   //**************************** DECLATION DES DIFFERENTES INSTANCE ******************************************
 
@@ -71,53 +57,59 @@ return ResponseEntity.ok(jwtResponse);*/
 
   //CETTE CLASSE CONTIENT DES INFORMATIONS NECCESSAIRE PERMETTANT LA GENERATION DES TOKEN ET LEURS STOCKAGE
   // DANS LES COOKIES
-  @Autowired
-  JwtUtils jwtUtils;
 
-  @Autowired
-  UserRepository utilisateurRepository;
 
 
   //******************* METHODE PERMETTANT D'AUTHENTIFIER UN COLLABORATEUR ***********************************
   @PostMapping("/signin")
   public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
-    try {
-      log.debug("Tentative d’authentification de l’utilisateur: {}", loginRequest.getUsername());
 
-      // Authenticate the user
-      Authentication authentication = authenticationManager.authenticate(
-              new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+    //LA METHODE AUTHENTICATE PERMET D'AUTHENFIER UN UTILISATEUR EN FONCTION DU TYPE D'AUTHENTIFICATION
+    //DANS NOTRE CAS ON S'AUTHENTIFIE PAR MOT DE PASSE ET LE NOM D'UTILISATEUR
+    Authentication authentication = authenticationManager
+            .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
-      SecurityContextHolder.getContext().setAuthentication(authentication);
+    //C'EST GRACE A SECURITYCONTEXTHOLDER QUE SPRING SECURITY STOCKE LES DETAILS DE CELUI QUI CEST AUTHENTIFIE
+    SecurityContextHolder.getContext().setAuthentication(authentication);
 
-      // Generate JWT token
-      String jwt = jwtUtils.generateJwtToken(authentication);
+    //ICI NOUS CREEONS UNE INSTANCE DE CELUI QUI S'EST AUTHENTIFIER EN UTILISANT LA CLASSE USERDETAILSIMPL
+    UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-      // Get user details from authentication
-      UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-      List<String> roles = userDetails.getAuthorities().stream()
-              .map(item -> item.getAuthority())
-              .collect(Collectors.toList());
+    //ON GENERE LE TOKEN EN LE STOCKANT DIRECTEMENT DANS UN COOKIE
+    ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(userDetails);
+    String jwt = jwtUtils.generateJwtToken(authentication);
+    List<String> roles = userDetails.getAuthorities().stream()
+            .map(item -> item.getAuthority())
+            .collect(Collectors.toList());
 
+    List<String> entite = new ArrayList<>();
 
-      // Create and save a refresh token
-      RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
+    roles.forEach(role ->{
+      entite.add(role);
+    });
 
-      // Create JWT response
-      JwtResponse jwtResponse = new JwtResponse(jwt, refreshToken.getToken(), userDetails.getId(),
-              userDetails.getUsername(), userDetails.getEmail(), userDetails.getNumero(),
-              userDetails.getNom(), roles);
+    Log.info("VOUS ETES AUTHENTIFIE AVEC SUCCESS");
 
-      // Return the ResponseEntity with the JWT response
-      return ResponseEntity.ok(jwtResponse);
-    } catch (AuthenticationException e) {
-      log.error("Échec de l’authentification de l’utilisateur: {}", loginRequest.getUsername(), e);
-      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Nom d’utilisateur ou mot de passe non valide");
-    }
+    //METHODE PERMETTANT DE RETOURNER LES INFOS DE USER ET DE STOCKER LE JWT DANS LE COOKIES DE POSTMAN
+    ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+            .body(new UserInfoResponse(userDetails.getId(),
+                    userDetails.getUsername(),
+                    userDetails.getEmail(),
+                    roles));
+
+    //CHANGEMENT DE LA STATUS DE L'UTILISATEUR
+    User utilisateur = utilisateurRepository.getReferenceById(userDetails.getId());
+    utilisateur.setEtat(true);
+    utilisateurRepository.save(utilisateur);
+    //On RETOURNE LE TOKEN ET LES INFOS DE UTILISATEURS
+    return ResponseEntity.ok(new JwtResponse(jwt,
+            userDetails.getId(),
+            userDetails.getUsername(),
+            userDetails.getEmail(),
+
+            roles));
+
   }
-//******************************
-
-
 
   //************************************** MEHTODE PERMETTANT DE CE DECONNECTER ****************************
   @PostMapping("/signout")

@@ -9,6 +9,7 @@ import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.Collection;
 import java.util.List;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 public class UserDetailsImpl implements UserDetails {
+
 
     private Long id;
     private String username;
@@ -54,6 +56,11 @@ public class UserDetailsImpl implements UserDetails {
     }
 
     // Other methods remain the same...
+   /* public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        // Fetch user details from the database and return a UserDetails object
+        return null;
+    }*/
+
 
     @Override
     public int hashCode() {

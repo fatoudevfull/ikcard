@@ -55,4 +55,7 @@ public class JwtResponse {
 
     public JwtResponse(String jwt, String username, List<String> roles) {
     }
+
+    public JwtResponse(String jwt, Long id, String username, String email, List<String> roles) {
+    }
 }

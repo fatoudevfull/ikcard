@@ -7,22 +7,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
+
     @Autowired
-    UserRepository userRepository;
+    UserRepository utilisateurRepository;
 
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        // Find the user by username
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Utilisateur introuvable avec nom d’utilisateur: " + username));
+        User utilisateur = utilisateurRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Utilisateur introuvable avec le nom: " + username));
 
-        // Build and return UserDetailsImpl
-        return UserDetailsImpl.build(user);
+        return UserDetailsImpl.build(utilisateur);
     }
+
 }
