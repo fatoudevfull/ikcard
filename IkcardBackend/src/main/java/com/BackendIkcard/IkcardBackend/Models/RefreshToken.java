@@ -22,7 +22,7 @@ public class RefreshToken {
   @OneToOne
   @JsonIgnore
   @JoinColumn(name = "user_id", referencedColumnName = "id")
-  private User user;
+  private Users user;
 
   @Column(nullable = false, unique = true)
   private String token;

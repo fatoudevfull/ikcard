@@ -1,6 +1,6 @@
 package com.BackendIkcard.IkcardBackend.ServiceImplementation;
 
-import com.BackendIkcard.IkcardBackend.Models.User;
+import com.BackendIkcard.IkcardBackend.Models.Users;
 import com.BackendIkcard.IkcardBackend.Repository.QRCodeDataRepository;
 import com.BackendIkcard.IkcardBackend.Repository.UserSimpleRepository;
 import com.google.zxing.BarcodeFormat;
@@ -29,7 +29,7 @@ public class QRCodeService {
     @Autowired
     private QRCodeDataRepository qrCodeDataRepository;
 
-    public byte[] generateAndSaveQRCode(User user) throws WriterException, IOException {
+    public byte[] generateAndSaveQRCode(Users user) throws WriterException, IOException {
         int width = 300;
         int height = 300;
 

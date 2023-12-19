@@ -9,9 +9,8 @@ import com.BackendIkcard.IkcardBackend.Message.Reponse.JwtResponse;
 import com.BackendIkcard.IkcardBackend.Message.Reponse.MessageResponse;
 import com.BackendIkcard.IkcardBackend.Message.Reponse.UserInfoResponse;
 import com.BackendIkcard.IkcardBackend.Message.Requette.LoginRequest;
-import com.BackendIkcard.IkcardBackend.Models.User;
-import com.BackendIkcard.IkcardBackend.Repository.UserRepository;
-import com.BackendIkcard.IkcardBackend.Repository.UserSimpleRepository;
+import com.BackendIkcard.IkcardBackend.Models.Users;
+import com.BackendIkcard.IkcardBackend.Repository.UsersRepository;
 import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +41,7 @@ public class AuthController {
   JwtUtils jwtUtils;
 
   @Autowired
-  UserRepository utilisateurRepository;
+  UsersRepository utilisateurRepository;
 
   // This assumes JwtResponse is a simple POJO
   private JwtResponse jwtResponse = new JwtResponse();
@@ -99,7 +98,7 @@ public class AuthController {
                     roles));
 
     //CHANGEMENT DE LA STATUS DE L'UTILISATEUR
-    User utilisateur = utilisateurRepository.getReferenceById(userDetails.getId());
+    Users utilisateur = utilisateurRepository.getReferenceById(userDetails.getId());
     utilisateur.setEtat(true);
     utilisateurRepository.save(utilisateur);
     //On RETOURNE LE TOKEN ET LES INFOS DE UTILISATEURS
@@ -125,7 +124,7 @@ public class AuthController {
   }
 
   @GetMapping("/getAuserConnected")
-  public List<User> getAllUserConnected(){
+  public List<Users> getAllUserConnected(){
     return utilisateurRepository.findByEtat(true);
   }
 

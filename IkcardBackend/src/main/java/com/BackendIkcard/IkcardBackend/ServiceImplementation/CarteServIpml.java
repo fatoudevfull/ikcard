@@ -5,11 +5,9 @@ import com.BackendIkcard.IkcardBackend.Models.*;
 import com.BackendIkcard.IkcardBackend.Repository.CarteRepository;
 import com.BackendIkcard.IkcardBackend.Repository.UserSimpleRepository;
 import com.BackendIkcard.IkcardBackend.Service.CarteService;
-import com.google.zxing.WriterException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.*;
 
 @Service
@@ -60,7 +58,7 @@ public Carte creerCarte(Carte carte, String username) {
     Optional<UserSimple> userOptional = userRepository.findByUsername(username);
 
     if (userOptional.isPresent()) {
-        User user = userOptional.get();
+        Users user = userOptional.get();
 
         // Vérifier si l'utilisateur a déjà une carte
         if (user.getCarte() != null) {
@@ -91,7 +89,7 @@ public Carte creerCarte(Carte carte, String username) {
         Optional<UserSimple> userOptional = userRepository.findByUsername(username);
 
         if (userOptional.isPresent()) {
-            User user = userOptional.get();
+            Users user = userOptional.get();
 
             // Vérifier si l'utilisateur a déjà une carte
             if (user.getCarte() != null) {

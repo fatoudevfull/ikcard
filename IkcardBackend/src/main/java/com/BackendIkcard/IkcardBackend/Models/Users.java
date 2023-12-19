@@ -12,7 +12,7 @@ import java.util.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public abstract class User {
+public abstract class Users {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public long id;
@@ -31,22 +31,22 @@ public abstract class User {
     public Date dateCreationCompte;
 
 
-
-
-    // Other fields and annotations
-
-   /* @OneToMany
-    private List<Carte> cartes = new ArrayList<>();*/
-
     @ManyToOne
     private Role role;
 
 
+/*    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @JoinTable(name = "user_roles",
+            joinColumns = @JoinColumn(name = "idUtilisateur"),
+            inverseJoinColumns = @JoinColumn(name = "role_name"))
+    private Set<Role> roles = new HashSet<>();*/
+
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "idUtilisateur"),
-            inverseJoinColumns = @JoinColumn(name = "id"))
+            inverseJoinColumns = @JoinColumn(name = "role_name"))
     private Set<Role> roles = new HashSet<>();
+
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Contact> contacts = new ArrayList<>();

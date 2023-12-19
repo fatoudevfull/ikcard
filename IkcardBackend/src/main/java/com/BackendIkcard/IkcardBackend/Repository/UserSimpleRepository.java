@@ -1,7 +1,6 @@
 package com.BackendIkcard.IkcardBackend.Repository;
 
 
-import com.BackendIkcard.IkcardBackend.Models.User;
 import com.BackendIkcard.IkcardBackend.Models.UserSimple;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

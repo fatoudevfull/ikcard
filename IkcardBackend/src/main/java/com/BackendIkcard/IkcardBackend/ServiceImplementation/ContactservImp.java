@@ -2,7 +2,7 @@ package com.BackendIkcard.IkcardBackend.ServiceImplementation;
 
 import com.BackendIkcard.IkcardBackend.Message.ReponseMessage;
 import com.BackendIkcard.IkcardBackend.Models.Contact;
-import com.BackendIkcard.IkcardBackend.Models.User;
+import com.BackendIkcard.IkcardBackend.Models.Users;
 import com.BackendIkcard.IkcardBackend.Models.UserSimple;
 import com.BackendIkcard.IkcardBackend.Repository.ContactRepository;
 import com.BackendIkcard.IkcardBackend.Repository.UserSimpleRepository;
@@ -66,7 +66,7 @@ public class ContactservImp implements ContactService {
     }
 
     public List<Contact> afficherTousLesContacts(long userId) {
-        User utilisateur = userRepository.findById(userId)
+        Users utilisateur = userRepository.findById(userId)
                 .orElseThrow(() -> new NoSuchElementException("Utilisateur introuvable"));
 
         return utilisateur.getContacts();

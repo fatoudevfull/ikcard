@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Date;
 
 
 @Entity
@@ -14,7 +13,7 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Entreprise extends User {
+public class Entreprise extends Users {
     private String adresse;
     private String imageCouverture;
 }

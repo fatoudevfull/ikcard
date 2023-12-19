@@ -2,7 +2,6 @@ package com.BackendIkcard.IkcardBackend.Service;
 
 import com.BackendIkcard.IkcardBackend.Message.ReponseMessage;
 import com.BackendIkcard.IkcardBackend.Models.Carte;
-import com.BackendIkcard.IkcardBackend.Models.User;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

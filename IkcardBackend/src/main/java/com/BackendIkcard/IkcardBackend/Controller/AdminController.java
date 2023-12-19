@@ -13,7 +13,9 @@ import com.BackendIkcard.IkcardBackend.Models.ERole;
 import com.BackendIkcard.IkcardBackend.Models.RefreshToken;
 import com.BackendIkcard.IkcardBackend.Models.Role;
 import com.BackendIkcard.IkcardBackend.Repository.AdminnistrateurRepository;
+import com.BackendIkcard.IkcardBackend.Repository.AmbassadeurRepository;
 import com.BackendIkcard.IkcardBackend.Repository.RoleRepository;
+import com.BackendIkcard.IkcardBackend.Repository.UserSimpleRepository;
 import com.BackendIkcard.IkcardBackend.Service.AdministrateurService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -47,6 +49,10 @@ public class AdminController {
     @Autowired
     private AdminnistrateurRepository adminnistrateurRepository;
     @Autowired
+    private AmbassadeurRepository ambassadeurRepository;
+    @Autowired
+    private UserSimpleRepository userSimpleRepository;
+    @Autowired
     private AdministrateurService administrateurService;
 
     @Autowired
@@ -58,11 +64,19 @@ public class AdminController {
     @PostMapping("/save")
     public ResponseEntity<?> registerAdmin(@Valid @RequestBody SignupRequest signupRequest) {
         // Check if the username already exists
-        if (adminnistrateurRepository.existsByUsername(signupRequest.getUsername())) {
+      /*  if (adminnistrateurRepository.existsByUsername(signupRequest.getUsername())) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Erreur: Ce nom d'utilisateur existe déjà!"));
+        }*/
+        if (adminnistrateurRepository.existsByUsername(signupRequest.getUsername()) ||
+                userSimpleRepository.existsByUsername(signupRequest.getUsername()) ||
+                ambassadeurRepository.existsByUsername(signupRequest.getUsername())) {
             return ResponseEntity
                     .badRequest()
                     .body(new MessageResponse("Erreur: Ce nom d'utilisateur existe déjà!"));
         }
+
 
         // Check if the email already exists
         if (adminnistrateurRepository.existsByEmail(signupRequest.getEmail())) {

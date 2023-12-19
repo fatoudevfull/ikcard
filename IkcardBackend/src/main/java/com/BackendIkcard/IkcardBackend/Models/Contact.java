@@ -58,5 +58,5 @@ public class Contact {
 
     public String autrelink;
     @ManyToOne
-    private User user;
+    private Users user;
 }

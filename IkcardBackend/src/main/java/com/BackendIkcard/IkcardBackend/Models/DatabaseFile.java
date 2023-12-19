@@ -65,6 +65,6 @@ public class DatabaseFile {
 	@ManyToOne
 	private Entreprise entreprise;
 	@ManyToOne
-	private  User utilisateus;
+	private Users utilisateus;
 
 }

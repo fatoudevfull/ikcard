@@ -2,7 +2,7 @@ package com.BackendIkcard.IkcardBackend.Controller;
 
 import com.BackendIkcard.IkcardBackend.Message.ReponseMessage;
 import com.BackendIkcard.IkcardBackend.Models.Carte;
-import com.BackendIkcard.IkcardBackend.Models.User;
+import com.BackendIkcard.IkcardBackend.Models.Users;
 import com.BackendIkcard.IkcardBackend.Models.UserSimple;
 import com.BackendIkcard.IkcardBackend.Repository.CarteRepository;
 import com.BackendIkcard.IkcardBackend.Repository.UserSimpleRepository;
@@ -150,7 +150,7 @@ public class CarteController {
         }
 
         // Associer la carte à l'utilisateur
-        User user = userOptional.get();
+        Users user = userOptional.get();
         carte.setUser(user);
 
         // Set the current date

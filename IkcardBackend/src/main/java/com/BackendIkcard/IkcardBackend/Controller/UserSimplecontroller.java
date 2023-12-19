@@ -63,21 +63,18 @@ public class UserSimplecontroller {
                     .badRequest()
                     .body(new MessageResponse("Erreur: Ce nom d'utilisateur existe déjà!"));
         }
-
         // Vérifier si l'e-mail existe déjà
         if (userSimpleRepository.existsByEmail(signupRequest.getEmail())) {
             return ResponseEntity
                     .badRequest()
                     .body(new MessageResponse("Erreur: Cet e-mail est déjà utilisé!"));
         }
-
         // Vérifier si le numéro existe déjà
         if (userSimpleRepository.existsByNumero(signupRequest.getNumero())) {
             return ResponseEntity
                     .badRequest()
                     .body(new MessageResponse("Erreur: Ce numéro est déjà utilisé!"));
         }
-
         // Vérifier si les champs requis ne sont pas vides
         // Vérifier si le numéro existe déjà
         if (userSimpleRepository.existsByNumero(signupRequest.getNumero())) {

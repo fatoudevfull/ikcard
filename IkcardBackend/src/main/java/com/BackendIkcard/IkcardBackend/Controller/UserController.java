@@ -7,10 +7,11 @@ import com.BackendIkcard.IkcardBackend.Message.Requette.SignupRequest;
 import com.BackendIkcard.IkcardBackend.Models.ERole;
 import com.BackendIkcard.IkcardBackend.Models.Role;
 import com.BackendIkcard.IkcardBackend.Models.UserSimple;
+import com.BackendIkcard.IkcardBackend.Repository.AdminnistrateurRepository;
+import com.BackendIkcard.IkcardBackend.Repository.AmbassadeurRepository;
 import com.BackendIkcard.IkcardBackend.Repository.RoleRepository;
 import com.BackendIkcard.IkcardBackend.Repository.UserSimpleRepository;
-import com.BackendIkcard.IkcardBackend.Service.UserService;
-import com.BackendIkcard.IkcardBackend.Service.UserSimpleService;
+import com.BackendIkcard.IkcardBackend.Service.UsersService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +30,10 @@ public class UserController {
 
     @Autowired
     private UserSimpleRepository userSimpleRepository;
+    @Autowired
+    private AdminnistrateurRepository adminnistrateurRepository;
+    @Autowired
+    private AmbassadeurRepository ambassadeurRepository;
 
     @Autowired
     AuthenticationManager authenticationManager;
@@ -40,7 +45,7 @@ public class UserController {
     JwtUtils jwtUtils;
 
     @Autowired
-    private UserService userService;
+    private UsersService userService;
 
     @Autowired
     private RoleRepository roleRepository;
@@ -50,7 +55,14 @@ public class UserController {
     @PostMapping("/save")
     public ResponseEntity<?> registerAdmin(@Valid @RequestBody SignupRequest signupRequest) {
         // Vérifier si le nom d'utilisateur existe déjà
-        if (userSimpleRepository.existsByUsername(signupRequest.getUsername())) {
+     /*   if (userSimpleRepository.existsByUsername(signupRequest.getUsername())) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Erreur: Ce nom d'utilisateur existe déjà!"));
+        }*/
+        if (adminnistrateurRepository.existsByUsername(signupRequest.getUsername()) ||
+                userSimpleRepository.existsByUsername(signupRequest.getUsername()) ||
+                ambassadeurRepository.existsByUsername(signupRequest.getUsername())) {
             return ResponseEntity
                     .badRequest()
                     .body(new MessageResponse("Erreur: Ce nom d'utilisateur existe déjà!"));
@@ -62,14 +74,12 @@ public class UserController {
                     .badRequest()
                     .body(new MessageResponse("Erreur: Cet e-mail est déjà utilisé!"));
         }
-
         // Vérifier si le numéro existe déjà
         if (userSimpleRepository.existsByNumero(signupRequest.getNumero())) {
             return ResponseEntity
                     .badRequest()
                     .body(new MessageResponse("Erreur: Ce numéro est déjà utilisé!"));
         }
-
         // Vérifier si les champs requis ne sont pas vides
         // Vérifier si le numéro existe déjà
         if (userSimpleRepository.existsByNumero(signupRequest.getNumero())) {
@@ -93,7 +103,6 @@ public class UserController {
                     .badRequest()
                     .body(new MessageResponse("Erreur: Le numero ne peut etre null!"));
         }
-
         // Create new patient's account
         UserSimple user = new UserSimple();
         user.setUsername(signupRequest.getUsername());
@@ -103,12 +112,10 @@ public class UserController {
         user.setPassword(encoder.encode(signupRequest.getPassword()));
         user.setNom(signupRequest.getNom());
         user.setNumero(signupRequest.getNumero());
-
         Role userRole = roleRepository.findByName(ERole.USER);
         user.setRole(userRole);
         // Set the current date
         user.setDateCreationCompte(new Date());
-
         userSimpleRepository.save(user);
 // Set etat to true before updating
         user.setEtat(true);

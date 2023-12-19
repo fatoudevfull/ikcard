@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Ambassadeur extends User {
+public class Ambassadeur extends Users {
 
     private String lienReferencement;
     @OneToOne(cascade = CascadeType.ALL)

@@ -45,7 +45,7 @@ public class Carte {
 
 
     @ManyToOne
-    private User user;
+    private Users user;
 
 
 

@@ -1,14 +1,12 @@
 package com.BackendIkcard.IkcardBackend.Controller;
 
 import com.BackendIkcard.IkcardBackend.Models.QRCodeData;
-import com.BackendIkcard.IkcardBackend.Models.User;
+import com.BackendIkcard.IkcardBackend.Models.Users;
 import com.BackendIkcard.IkcardBackend.Models.UserSimple;
 import com.BackendIkcard.IkcardBackend.Repository.QRCodeDataRepository;
-import com.BackendIkcard.IkcardBackend.Repository.UserRepository;
-import com.BackendIkcard.IkcardBackend.Repository.UserSimpleRepository;
+import com.BackendIkcard.IkcardBackend.Repository.UsersRepository;
 import com.BackendIkcard.IkcardBackend.Service.CarteService;
-import com.BackendIkcard.IkcardBackend.Service.UserService;
-import com.BackendIkcard.IkcardBackend.Service.UserSimpleService;
+import com.BackendIkcard.IkcardBackend.Service.UsersService;
 import com.BackendIkcard.IkcardBackend.ServiceImplementation.QRCodeService;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
@@ -43,9 +41,9 @@ public class QRCodeController {
     private CarteService carteService; // Assuming you have a CarteService
 
     @Autowired
-    private UserService userService; // Inject your user service
+    private UsersService userService; // Inject your user service
     @Autowired
-    private UserRepository userRepository;
+    private UsersRepository userRepository;
     @Autowired
     private QRCodeDataRepository qrCodeDataRepository;
 
@@ -53,7 +51,7 @@ public class QRCodeController {
     public ResponseEntity<byte[]> generateQRCode(@PathVariable String username) {
         try {
             // Retrieve user information
-            Optional<User> userOptional = userService.findByUsername(username);
+            Optional<Users> userOptional = userService.findByUsername(username);
             System.out.println(username);
 
             if (userOptional.isEmpty()) {
@@ -61,7 +59,7 @@ public class QRCodeController {
                 return ResponseEntity.notFound().build();
             }
 
-            User user = userOptional.get();
+            Users user = userOptional.get();
             System.out.println("email: "+user.getEmail());
             System.out.println("nom: "+user.getNom());
             System.out.println(user.getUsername());
