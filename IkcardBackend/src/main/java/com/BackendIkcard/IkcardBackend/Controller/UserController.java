@@ -32,9 +32,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @CrossOrigin(origins = {"http://localhost:4200", "http://localhost:8200", "http://localhost:8100"}, maxAge = 3600, allowCredentials = "true")
-@Api(value = "userSimple", description = "Les actions reslisables par les admin du systeme.")
+@Api(value = "user", description = "Les actions reslisables par les admin du systeme.")
 @RestController
-@RequestMapping("/userSimple")
+@RequestMapping("/user")
 public class UserController {
 
     @Autowired
@@ -106,29 +106,42 @@ public class UserController {
         }
 
         // Créer un nouveau compte utilisateur
-        User userSimple = new User();
-        userSimple.setUsername(signupRequest.getUsername());
-        userSimple.setEmail(signupRequest.getEmail());
-        userSimple.setPrenom(signupRequest.getPrenom());
-        userSimple.setPhoto(signupRequest.getPhoto());
-        userSimple.setPassword(encoder.encode(signupRequest.getPassword()));
-        userSimple.setNom(signupRequest.getNom());
-        userSimple.setNumero(signupRequest.getNumero());
+        // Créer un nouveau compte utilisateur
+        User user;
+        if (signupRequest.isAmbassadeur()) {
+            Ambassadeur ambassadeur = new Ambassadeur();
+            // Configurer les propriétés spécifiques à Ambassadeur si nécessaire
+            ambassadeur.setLienReferencement(signupRequest.getLienReferencement());
+            user = ambassadeur;
+        } else {
+            user = new User();
+        }
 
-        Role userRole = roleRepository.findByName(ERole.USER);
-        userSimple.setRole(userRole);
+        user.setUsername(signupRequest.getUsername());
+        user.setEmail(signupRequest.getEmail());
+        user.setPrenom(signupRequest.getPrenom());
+        user.setPhoto(signupRequest.getPhoto());
+      //  user.setPassword(encoder.encode(signupRequest.getPassword()));
+        user.setPassword(encoder.encode(signupRequest.getPassword()));
+        user.setNom(signupRequest.getNom());
+        user.setNumero(signupRequest.getNumero());
+
+        // Définir le rôle en fonction du type d'utilisateur
+        Role userRole = signupRequest.isAmbassadeur() ? roleRepository.findByName(ERole.AMBASSADEUR) : roleRepository.findByName(ERole.USER);
+        user.setRole(userRole);
 
         // Définir la date actuelle
-        userSimple.setDateCreationCompte(new Date());
+        user.setDateCreationCompte(new Date());
 
         // Définir l'état sur true avant la mise à jour
-        userSimple.setEtat(true);
+        user.setEtat(true);
 
         // Enregistrer l'utilisateur
-        userSimpleRepository.save(userSimple);
+        userSimpleRepository.save(user);
 
         return ResponseEntity.ok(new MessageResponse("Utilisateur enregistré avec succès!"));
     }
+
 
 
 

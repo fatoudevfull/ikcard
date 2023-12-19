@@ -66,7 +66,7 @@ public class SpringSecurity {
                 // .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 // .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
-                .antMatchers("/userSimple/**").permitAll()
+                .antMatchers("/user/**").permitAll()
                 .antMatchers("/admin/**").permitAll()
                 .antMatchers("/cartes/**").permitAll()
                 .antMatchers("/auth/**").permitAll()

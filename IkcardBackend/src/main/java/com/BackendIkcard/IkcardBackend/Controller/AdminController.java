@@ -71,6 +71,37 @@ public class AdminController {
                     .body(new MessageResponse("Erreur: Cet email est déjà utilisé!"));
         }
 
+        // Vérifier si le numéro existe déjà
+        if (adminnistrateurRepository.existsByNumero(signupRequest.getNumero())) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Erreur: Ce numéro est déjà utilisé!"));
+        }
+
+        // Vérifier si les champs requis ne sont pas vides
+        // Vérifier si le numéro existe déjà
+        if (adminnistrateurRepository.existsByNumero(signupRequest.getNumero())) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Erreur: Ce numéro est déjà utilisé!"));
+        }
+        // Vérifier si le nom d'utilisateur existe déjà
+        if (signupRequest.getUsername()=="")  {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Erreur: Le nom t'utilisateur ne peut etre null!"));
+        }
+        if (signupRequest.getEmail()=="")  {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Erreur: L'email ne peut etre null!"));
+        }
+        if (signupRequest.getNumero()=="")  {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Erreur: Le numero ne peut etre null!"));
+        }
+
         // Create new administrator's account
         Administrateur administrateur = new Administrateur();
         administrateur.setUsername(signupRequest.getUsername());
@@ -80,6 +111,8 @@ public class AdminController {
         administrateur.setPassword(encoder.encode(signupRequest.getPassword()));
         administrateur.setNom(signupRequest.getNom());
         administrateur.setNumero(signupRequest.getNumero());
+        System.out.println(administrateur.getPassword());
+        System.out.println(administrateur.getUsername());
 
         // Set role based on the specified roleName
         Role adminRole = roleRepository.findByName(getRoleByName(signupRequest.getRoleName()));
