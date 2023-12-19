@@ -14,20 +14,7 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Entreprise {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    public String nom;
-    private String password;
-    public String photo;
-    public String email;
-    public boolean etat=true;
-    public String adresse;
-    public String numero;
-    public String imageCouverture;
-    public Date dateCreationCompte;
-
-    @ManyToOne
-    private Role role;
+public class Entreprise extends User {
+    private String adresse;
+    private String imageCouverture;
 }

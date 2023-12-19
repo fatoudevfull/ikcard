@@ -11,6 +11,7 @@ import com.BackendIkcard.IkcardBackend.Message.Reponse.UserInfoResponse;
 import com.BackendIkcard.IkcardBackend.Message.Requette.LoginRequest;
 import com.BackendIkcard.IkcardBackend.Models.User;
 import com.BackendIkcard.IkcardBackend.Repository.UserRepository;
+import com.BackendIkcard.IkcardBackend.Repository.UserSimpleRepository;
 import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

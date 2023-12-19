@@ -1,17 +1,14 @@
 package com.BackendIkcard.IkcardBackend.ServiceImplementation;
 
-import com.BackendIkcard.IkcardBackend.Models.QRCodeData;
 import com.BackendIkcard.IkcardBackend.Models.User;
 import com.BackendIkcard.IkcardBackend.Repository.QRCodeDataRepository;
-import com.BackendIkcard.IkcardBackend.Repository.UserRepository;
+import com.BackendIkcard.IkcardBackend.Repository.UserSimpleRepository;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
-import net.glxn.qrgen.QRCode;
-import net.glxn.qrgen.image.ImageType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,7 +24,7 @@ import java.util.Map;
 public class QRCodeService {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserSimpleRepository userRepository;
 
     @Autowired
     private QRCodeDataRepository qrCodeDataRepository;

@@ -1,12 +1,11 @@
 package com.BackendIkcard.IkcardBackend.ServiceImplementation;
 
 import com.BackendIkcard.IkcardBackend.Message.ReponseMessage;
-import com.BackendIkcard.IkcardBackend.Models.User;
-import com.BackendIkcard.IkcardBackend.Repository.UserRepository;
-import com.BackendIkcard.IkcardBackend.Service.UserService;
+import com.BackendIkcard.IkcardBackend.Models.UserSimple;
+import com.BackendIkcard.IkcardBackend.Repository.UserSimpleRepository;
+import com.BackendIkcard.IkcardBackend.Service.UserSimpleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 import java.util.List;
@@ -14,13 +13,13 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
-public class UserServiceImp implements UserService {
+public class UserSimpleServiceImp implements UserSimpleService {
 
     @Autowired
-    private UserRepository userSimpleRepository;
+    private UserSimpleRepository userSimpleRepository;
 
     @Override
-    public ReponseMessage creerUserSimple(User userSimple) {
+    public ReponseMessage creerUserSimple(UserSimple userSimple) {
         if (userSimpleRepository.findByEmail(userSimple.getEmail()) == null) {
             // Set etat to true before saving
             userSimple.setEtat(true);
@@ -37,16 +36,16 @@ public class UserServiceImp implements UserService {
 
 
     @Override
-    public User findById(Long userId) {
+    public UserSimple findById(Long userId) {
         return userSimpleRepository.findById(userId).orElse(null);
     }
 
     @Override
-    public ReponseMessage modifierUserSimple(Long id, User userSimple) {
-        Optional<User> existingAdminOptional = userSimpleRepository.findById(id);
+    public ReponseMessage modifierUserSimple(Long id, UserSimple userSimple) {
+        Optional<UserSimple> existingAdminOptional = userSimpleRepository.findById(id);
 
         if (existingAdminOptional.isPresent()) {
-            User existingAdmin = existingAdminOptional.get();
+            UserSimple existingAdmin = existingAdminOptional.get();
             // Set etat to true before updating
             userSimple.setEtat(true);
             existingAdmin.setNom(userSimple.getNom());
@@ -67,7 +66,7 @@ public class UserServiceImp implements UserService {
     }
 
     public void desactiverCompte(Long userId) {
-        User user = userSimpleRepository.findById(userId)
+        UserSimple user = userSimpleRepository.findById(userId)
                 .orElseThrow(() -> new NoSuchElementException("Utilisateur introuvable"));
 
         user.setEtat(false); // Mettez à false pour désactiver le compte
@@ -75,12 +74,12 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public Optional<User> findByUsername(String username) {
+    public Optional<UserSimple> findByUsername(String username) {
         return userSimpleRepository.findByUsername(username);
     }
 
     public void activerCompte(Long userId) {
-        User user = userSimpleRepository.findById(userId)
+        UserSimple user = userSimpleRepository.findById(userId)
                 .orElseThrow(() -> new NoSuchElementException("Utilisateur introuvable"));
 
         user.setEtat(true); // Mettez à true pour activer le compte
@@ -88,15 +87,15 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public List<User> afficherToutLesUserSimple() {
+    public List<UserSimple> afficherToutLesUserSimple() {
         return userSimpleRepository.findAll();
     }
 
     @Override
     public ReponseMessage SupprimerUserSimple(Long id) {
-        Optional<User> adminOptional = userSimpleRepository.findById(id);
+        Optional<UserSimple> adminOptional = userSimpleRepository.findById(id);
         if (adminOptional.isPresent()) {
-            User userSimple = adminOptional.get();
+            UserSimple userSimple = adminOptional.get();
             userSimple.setEtat(false);
             userSimpleRepository.save(userSimple);
             return new ReponseMessage("Utilisateur supprimé avec succès", true);

@@ -1,20 +1,18 @@
 package com.BackendIkcard.IkcardBackend.Models;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.*;
 
 @Entity
-@Getter
-@Setter
+@Inheritance(strategy = InheritanceType.JOINED) // Utilisation de l'héritage JOINED
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
-
+public abstract class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public long id;
@@ -33,9 +31,7 @@ public class User {
     public Date dateCreationCompte;
 
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "qrcode_data_id", referencedColumnName = "id")
-    private QRCodeData qrCodeData;
+
 
     // Other fields and annotations
 
@@ -57,5 +53,6 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Carte> carte = new ArrayList<>();
+
 
 }

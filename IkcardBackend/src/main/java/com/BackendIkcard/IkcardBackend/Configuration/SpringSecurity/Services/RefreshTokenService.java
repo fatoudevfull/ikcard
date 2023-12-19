@@ -4,7 +4,7 @@ package com.BackendIkcard.IkcardBackend.Configuration.SpringSecurity.Services;
 import com.BackendIkcard.IkcardBackend.Message.Exeption.TokenRefreshException;
 import com.BackendIkcard.IkcardBackend.Models.RefreshToken;
 import com.BackendIkcard.IkcardBackend.Repository.RefreshTokenRepository;
-import com.BackendIkcard.IkcardBackend.Repository.UserRepository;
+import com.BackendIkcard.IkcardBackend.Repository.UserSimpleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -24,7 +24,7 @@ public class RefreshTokenService {
     private RefreshTokenRepository refreshTokenRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private UserSimpleRepository userRepository;
 
     public Optional<RefreshToken> findByToken(String token) {
         return refreshTokenRepository.findByToken(token);

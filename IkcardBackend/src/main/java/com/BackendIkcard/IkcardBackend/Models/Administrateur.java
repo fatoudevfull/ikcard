@@ -1,31 +1,10 @@
 package com.BackendIkcard.IkcardBackend.Models;
 
+import com.BackendIkcard.IkcardBackend.Models.User;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
+import javax.persistence.Entity;
 import java.util.Date;
 
 @Entity
-@Table
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class Administrateur {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public long id;
-    public String nom;
-    public String prenom;
-    private String password;
-    public String photo;
-    public String email;
-    @Column(unique = true)
-    public String username;
-    public boolean etat=true;
-    public String numero;
-    @ManyToOne
-    private Role role;
+public class Administrateur extends User {
 }

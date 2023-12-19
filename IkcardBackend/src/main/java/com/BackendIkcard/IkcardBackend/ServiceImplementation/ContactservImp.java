@@ -3,15 +3,15 @@ package com.BackendIkcard.IkcardBackend.ServiceImplementation;
 import com.BackendIkcard.IkcardBackend.Message.ReponseMessage;
 import com.BackendIkcard.IkcardBackend.Models.Contact;
 import com.BackendIkcard.IkcardBackend.Models.User;
+import com.BackendIkcard.IkcardBackend.Models.UserSimple;
 import com.BackendIkcard.IkcardBackend.Repository.ContactRepository;
-import com.BackendIkcard.IkcardBackend.Repository.UserRepository;
+import com.BackendIkcard.IkcardBackend.Repository.UserSimpleRepository;
 import com.BackendIkcard.IkcardBackend.Service.ContactService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 public class ContactservImp implements ContactService {
@@ -19,10 +19,10 @@ public class ContactservImp implements ContactService {
     private ContactRepository contactRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private UserSimpleRepository userRepository;
 
     public ReponseMessage enregistrerContact(Contact nouveauContact, long userId) {
-        User utilisateur = userRepository.findById(userId)
+        UserSimple utilisateur = userRepository.findById(userId)
                 .orElseThrow(() -> new NoSuchElementException("Utilisateur introuvable"));
 
         nouveauContact.setUser(utilisateur);

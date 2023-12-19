@@ -1,28 +1,23 @@
 package com.BackendIkcard.IkcardBackend.Controller;
 
-import com.BackendIkcard.IkcardBackend.Message.Exeption.NotFoundException;
 import com.BackendIkcard.IkcardBackend.Message.ReponseMessage;
 import com.BackendIkcard.IkcardBackend.Models.Carte;
-import com.BackendIkcard.IkcardBackend.Models.Contact;
 import com.BackendIkcard.IkcardBackend.Models.User;
+import com.BackendIkcard.IkcardBackend.Models.UserSimple;
 import com.BackendIkcard.IkcardBackend.Repository.CarteRepository;
-import com.BackendIkcard.IkcardBackend.Repository.UserRepository;
+import com.BackendIkcard.IkcardBackend.Repository.UserSimpleRepository;
 import com.BackendIkcard.IkcardBackend.Service.CarteService;
-import com.BackendIkcard.IkcardBackend.Service.UserService;
+import com.BackendIkcard.IkcardBackend.Service.UserSimpleService;
 import com.BackendIkcard.IkcardBackend.ServiceImplementation.QRCodeService;
-import com.google.zxing.WriterException;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @CrossOrigin(origins = {"http://localhost:4200", "http://localhost:8200", "http://localhost:8100"}, maxAge = 3600, allowCredentials = "true")
@@ -35,11 +30,11 @@ public class CarteController {
     @Autowired
     private CarteService carteService;
     @Autowired
-    private UserRepository userRepository;
+    private UserSimpleRepository userRepository;
     @Autowired
     private CarteRepository carteRepository;
     @Autowired
-    private UserService userService;
+    private UserSimpleService userSimpleService;
     @Autowired
     private QRCodeService qrCodeService;
 
@@ -71,7 +66,7 @@ public class CarteController {
         }
 
         // Recherche de l'utilisateur par nom d'utilisateur
-        Optional<User> userOptional = userRepository.findByUsername(username);
+        Optional<UserSimple> userOptional = userRepository.findByUsername(username);
 
         // Vérifier si l'utilisateur existe
         if (userOptional.isEmpty()) {
@@ -79,7 +74,7 @@ public class CarteController {
         }
 
         // Associer la carte à l'utilisateur
-        User user = userOptional.get();
+        UserSimple user = userOptional.get();
         carte.setUser(user);
 
         // Votre logique de création de carte ici
@@ -147,7 +142,7 @@ public class CarteController {
         }
 
         // Recherche de l'utilisateur par nom d'utilisateur
-        Optional<User> userOptional = userRepository.findByUsername(username);
+        Optional<UserSimple> userOptional = userRepository.findByUsername(username);
 
         // Vérifier si l'utilisateur existe
         if (userOptional.isEmpty()) {

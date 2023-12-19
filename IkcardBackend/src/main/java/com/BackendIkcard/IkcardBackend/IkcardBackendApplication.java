@@ -3,7 +3,7 @@ package com.BackendIkcard.IkcardBackend;
 import com.BackendIkcard.IkcardBackend.Models.ERole;
 import com.BackendIkcard.IkcardBackend.Models.Role;
 import com.BackendIkcard.IkcardBackend.Repository.RoleRepository;
-import com.BackendIkcard.IkcardBackend.Service.UserService;
+import com.BackendIkcard.IkcardBackend.Service.UserSimpleService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
@@ -17,7 +17,7 @@ public class IkcardBackendApplication {
 
 		RoleRepository roleRepos = ctx.getBean(RoleRepository.class);
 
-		UserService userService = ctx.getBean(UserService.class);
+		UserSimpleService userSimpleService = ctx.getBean(UserSimpleService.class);
 
 		PasswordEncoder encoder=ctx.getBean(PasswordEncoder.class);
 

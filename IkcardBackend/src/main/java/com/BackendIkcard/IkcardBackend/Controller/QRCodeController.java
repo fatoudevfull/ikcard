@@ -1,12 +1,14 @@
 package com.BackendIkcard.IkcardBackend.Controller;
 
-import com.BackendIkcard.IkcardBackend.Models.Carte;
 import com.BackendIkcard.IkcardBackend.Models.QRCodeData;
 import com.BackendIkcard.IkcardBackend.Models.User;
+import com.BackendIkcard.IkcardBackend.Models.UserSimple;
 import com.BackendIkcard.IkcardBackend.Repository.QRCodeDataRepository;
 import com.BackendIkcard.IkcardBackend.Repository.UserRepository;
+import com.BackendIkcard.IkcardBackend.Repository.UserSimpleRepository;
 import com.BackendIkcard.IkcardBackend.Service.CarteService;
 import com.BackendIkcard.IkcardBackend.Service.UserService;
+import com.BackendIkcard.IkcardBackend.Service.UserSimpleService;
 import com.BackendIkcard.IkcardBackend.ServiceImplementation.QRCodeService;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
@@ -80,7 +82,7 @@ public class QRCodeController {
 
 
 
-    public byte[] generateAndSaveQRCode(User user) throws WriterException, IOException {
+    public byte[] generateAndSaveQRCode(UserSimple user) throws WriterException, IOException {
         // Vérifier si l'utilisateur est null
         if (user == null) {
             throw new IllegalArgumentException("L'utilisateur ne peut pas être null");
@@ -122,13 +124,13 @@ public class QRCodeController {
 
 
 
-    @PostMapping("/generateBy/{userId}")
+  /*  @PostMapping("/generateBy/{userId}")
     public ResponseEntity<String> generateQrCodeForUser(@PathVariable Long userId) {
         try {
-            Optional<User> userOptional = Optional.ofNullable(userService.findById(userId));
+            Optional<Optional<User>> userOptional = Optional.ofNullable(userRepository.findById(userId));
 
             if (userOptional.isPresent()) {
-                User user = userOptional.get();
+                Optional<User> user = userOptional.get();
                 String carte = carteService.generateContentForUser(user);
                 return ResponseEntity.ok("Code QR généré et stocké pour l’utilisateur avec ID: " + userId);
             } else {
@@ -138,7 +140,7 @@ public class QRCodeController {
             e.printStackTrace(); // Handle the exception appropriately
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Echec de la génération du code QR.");
         }
-    }
+    }*/
 }
 
 

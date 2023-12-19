@@ -6,7 +6,7 @@ import com.BackendIkcard.IkcardBackend.Message.Exeption.FileNotFoundException;
 import com.BackendIkcard.IkcardBackend.Models.DatabaseFile;
 import com.BackendIkcard.IkcardBackend.Repository.DatabaseFileRepository;
 import com.BackendIkcard.IkcardBackend.Repository.EntrepriseRepository;
-import com.BackendIkcard.IkcardBackend.Repository.UserRepository;
+import com.BackendIkcard.IkcardBackend.Repository.UserSimpleRepository;
 import com.BackendIkcard.IkcardBackend.Service.DatabaseFileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +21,7 @@ public class DatabaseFileServiceImpl implements DatabaseFileService {
     @Autowired
     private EntrepriseRepository entrepriseRepository;
     @Autowired
-    private UserRepository utilisateusRepository;
+    private UserSimpleRepository utilisateusRepository;
 
 
     @Override

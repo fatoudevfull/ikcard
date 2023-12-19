@@ -3,7 +3,7 @@ package com.BackendIkcard.IkcardBackend.ServiceImplementation;
 import com.BackendIkcard.IkcardBackend.Message.ReponseMessage;
 import com.BackendIkcard.IkcardBackend.Models.*;
 import com.BackendIkcard.IkcardBackend.Repository.CarteRepository;
-import com.BackendIkcard.IkcardBackend.Repository.UserRepository;
+import com.BackendIkcard.IkcardBackend.Repository.UserSimpleRepository;
 import com.BackendIkcard.IkcardBackend.Service.CarteService;
 import com.google.zxing.WriterException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ public class CarteServIpml implements CarteService {
    // private CarteRepository carteRepository;
    private final CarteRepository carteRepository;
    @Autowired
-   private  UserRepository userRepository;
+   private UserSimpleRepository userRepository;
 
 
     // Dans votre CarteService
@@ -57,7 +57,7 @@ public class CarteServIpml implements CarteService {
 
 public Carte creerCarte(Carte carte, String username) {
     // Vérifier si l'utilisateur existe dans la base de données
-    Optional<User> userOptional = userRepository.findByUsername(username);
+    Optional<UserSimple> userOptional = userRepository.findByUsername(username);
 
     if (userOptional.isPresent()) {
         User user = userOptional.get();
@@ -88,7 +88,7 @@ public Carte creerCarte(Carte carte, String username) {
 
     public Carte enregistrerCarte(Carte carte, String username) {
         // Vérifier si l'utilisateur existe dans la base de données
-        Optional<User> userOptional = userRepository.findByUsername(username);
+        Optional<UserSimple> userOptional = userRepository.findByUsername(username);
 
         if (userOptional.isPresent()) {
             User user = userOptional.get();
@@ -167,21 +167,7 @@ public Carte creerCarte(Carte carte, String username) {
         carteRepository.save(carte);
     }
 
-  public String generateContentForUser(User user) {
-        // Logic to generate content for the QR code based on user information
-        // For example, concatenate user details like name, email, etc.
-      String content = generateContentForUser(user); // Assuming 'this.user' is the user associated with the Carte
-        String filePath = "path/to/your/qrcode/image.png";
 
-        try {
-            String savedFilePath = QrCodeGenerator.generateQrCode(content, filePath);
-            this.setQrCode(savedFilePath);
-        } catch (WriterException | IOException e) {
-            e.printStackTrace(); // Handle the exception appropriately
-        }
-        return user.getNom() + "\n" + user.getEmail() + "\n" + user.getUsername();
-
-    }
 
     private void setQrCode(String savedFilePath) {
     }
