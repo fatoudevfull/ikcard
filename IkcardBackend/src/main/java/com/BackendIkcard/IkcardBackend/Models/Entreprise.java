@@ -14,6 +14,6 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Entreprise extends Users {
-    private String adresse;
+
     private String imageCouverture;
 }

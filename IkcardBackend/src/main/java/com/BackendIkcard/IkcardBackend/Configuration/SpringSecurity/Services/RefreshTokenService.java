@@ -4,12 +4,12 @@ package com.BackendIkcard.IkcardBackend.Configuration.SpringSecurity.Services;
 import com.BackendIkcard.IkcardBackend.Message.Exeption.TokenRefreshException;
 import com.BackendIkcard.IkcardBackend.Models.RefreshToken;
 import com.BackendIkcard.IkcardBackend.Repository.RefreshTokenRepository;
-import com.BackendIkcard.IkcardBackend.Repository.UserSimpleRepository;
+import com.BackendIkcard.IkcardBackend.Repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
@@ -24,7 +24,7 @@ public class RefreshTokenService {
     private RefreshTokenRepository refreshTokenRepository;
 
     @Autowired
-    private UserSimpleRepository userRepository;
+    private UsersRepository userRepository;
 
     public Optional<RefreshToken> findByToken(String token) {
         return refreshTokenRepository.findByToken(token);
@@ -43,17 +43,16 @@ public class RefreshTokenService {
 
     public RefreshToken verifyExpiration(RefreshToken token) {
         if (token.getExpiryDate().compareTo(Instant.now()) < 0) {
-        refreshTokenRepository.delete(token);
-        throw new TokenRefreshException(token.getToken(), "Le jeton d’actualisation a expiré. Veuillez faire une nouvelle demande de connexion");
-        //Refresh token was expired. Please make a new signin request
+            refreshTokenRepository.delete(token);
+            throw new TokenRefreshException(token.getToken(), "Refresh token was expired. Please make a new signin request");
         }
 
         return token;
     }
 
     @Transactional
-    public int deleteByUserId(Long id) {
-        return refreshTokenRepository.deleteByUser(userRepository.findById(id).get());
+    public int deleteByUserId(Long userId) {
+        return refreshTokenRepository.deleteByUser(userRepository.findById(userId).get());
     }
 }
     

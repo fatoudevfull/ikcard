@@ -7,8 +7,8 @@ import com.BackendIkcard.IkcardBackend.Configuration.SpringSecurity.Services.Use
 import com.BackendIkcard.IkcardBackend.Configuration.SpringSecurity.Services.UserDetailsServiceImpl;
 import com.BackendIkcard.IkcardBackend.Message.Reponse.JwtResponse;
 import com.BackendIkcard.IkcardBackend.Message.Reponse.MessageResponse;
-import com.BackendIkcard.IkcardBackend.Message.Reponse.UserInfoResponse;
 import com.BackendIkcard.IkcardBackend.Message.Requette.LoginRequest;
+import com.BackendIkcard.IkcardBackend.Models.RefreshToken;
 import com.BackendIkcard.IkcardBackend.Models.Users;
 import com.BackendIkcard.IkcardBackend.Repository.UsersRepository;
 import io.swagger.annotations.Api;
@@ -16,15 +16,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,98 +35,104 @@ import java.util.stream.Collectors;
 @RequestMapping("/auth")
 public class AuthController {
 
-  private static final Logger Log = LoggerFactory.getLogger(AuthController.class);
-  RefreshTokenService refreshTokenService;
-  private static final Logger log = LoggerFactory.getLogger(AuthController.class);
-  @Autowired
-  JwtUtils jwtUtils;
+    private static final Logger Log = LoggerFactory.getLogger(AuthController.class);
+    private static final Logger log = LoggerFactory.getLogger(AuthController.class);
+    @Autowired
+    private RefreshTokenService refreshTokenService;
 
-  @Autowired
-  UsersRepository utilisateurRepository;
+    @Autowired
+    JwtUtils jwtUtils;
 
-  // This assumes JwtResponse is a simple POJO
-  private JwtResponse jwtResponse = new JwtResponse();
+    @Autowired
+    UsersRepository utilisateurRepository;
+    //AUTHENTICATION MANAGER COORDONNE LES DIFFERENTS REQUETTE VERS LES BONS ANDROITS
+    @Autowired
+    AuthenticationManager authenticationManager;
+    // This assumes JwtResponse is a simple POJO
+    private JwtResponse jwtResponse = new JwtResponse();
 
-  @Autowired
-  private UserDetailsServiceImpl userDetailsService;
+    //**************************** DECLATION DES DIFFERENTES INSTANCE ******************************************
+    @Autowired
+    private UserDetailsServiceImpl userDetailsService;
 
-  //**************************** DECLATION DES DIFFERENTES INSTANCE ******************************************
+    //CETTE CLASSE CONTIENT DES INFORMATIONS NECCESSAIRE PERMETTANT LA GENERATION DES TOKEN ET LEURS STOCKAGE
+    // DANS LES COOKIES
 
-  //AUTHENTICATION MANAGER COORDONNE LES DIFFERENTS REQUETTE VERS LES BONS ANDROITS
-  @Autowired
-  AuthenticationManager authenticationManager;
+    //******************* METHODE PERMETTANT D'AUTHENTIFIER UN COLLABORATEUR ***********************************
+    @PostMapping("/signin")
+    public ResponseEntity<Object> login(@RequestBody LoginRequest loginRequest) {
+        try {
+            log.debug("Attempting to authenticate user: {}", loginRequest.getUsername());
 
-  //CETTE CLASSE CONTIENT DES INFORMATIONS NECCESSAIRE PERMETTANT LA GENERATION DES TOKEN ET LEURS STOCKAGE
-  // DANS LES COOKIES
+            // Validate input
+            if (StringUtils.isEmpty(loginRequest.getPassword())) {
+                log.error("Empty password provided for user: {}", loginRequest.getUsername());
+                return ResponseEntity.badRequest().body("Le mot de passe ne peut pas être vide");
+            }
+
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+         //   RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
+            List<String> roles = userDetails.getAuthorities().stream()
+                    .map(item -> item.getAuthority())
+                    .collect(Collectors.toList());
+
+         //   RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
+            RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
 
 
+            log.info("User authenticated successfully: {}", loginRequest.getUsername());
+            System.out.println(userDetails.getEmail());
+            System.out.println(userDetails.getUsername());
+            System.out.println(userDetails.getNom());
 
-  //******************* METHODE PERMETTANT D'AUTHENTIFIER UN COLLABORATEUR ***********************************
-  @PostMapping("/signin")
-  public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
-
-    //LA METHODE AUTHENTICATE PERMET D'AUTHENFIER UN UTILISATEUR EN FONCTION DU TYPE D'AUTHENTIFICATION
-    //DANS NOTRE CAS ON S'AUTHENTIFIE PAR MOT DE PASSE ET LE NOM D'UTILISATEUR
-    Authentication authentication = authenticationManager
-            .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
-
-    //C'EST GRACE A SECURITYCONTEXTHOLDER QUE SPRING SECURITY STOCKE LES DETAILS DE CELUI QUI CEST AUTHENTIFIE
-    SecurityContextHolder.getContext().setAuthentication(authentication);
-
-    //ICI NOUS CREEONS UNE INSTANCE DE CELUI QUI S'EST AUTHENTIFIER EN UTILISANT LA CLASSE USERDETAILSIMPL
-    UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-
-    //ON GENERE LE TOKEN EN LE STOCKANT DIRECTEMENT DANS UN COOKIE
-    ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(userDetails);
-    String jwt = jwtUtils.generateJwtToken(authentication);
-    List<String> roles = userDetails.getAuthorities().stream()
-            .map(item -> item.getAuthority())
-            .collect(Collectors.toList());
-
-    List<String> entite = new ArrayList<>();
-
-    roles.forEach(role ->{
-      entite.add(role);
-    });
-
-    Log.info("VOUS ETES AUTHENTIFIE AVEC SUCCESS");
-
-    //METHODE PERMETTANT DE RETOURNER LES INFOS DE USER ET DE STOCKER LE JWT DANS LE COOKIES DE POSTMAN
-    ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
-            .body(new UserInfoResponse(userDetails.getId(),
+            return ResponseEntity.ok(new JwtResponse(
+                    jwtUtils.generateJwtToken(authentication),
+                    refreshToken.getToken(),
+                    userDetails.getId(),
                     userDetails.getUsername(),
                     userDetails.getEmail(),
-                    roles));
+                    userDetails.getNom(),
+                    userDetails.getPrenom(),
+                    roles
+            ));
 
-    //CHANGEMENT DE LA STATUS DE L'UTILISATEUR
-    Users utilisateur = utilisateurRepository.getReferenceById(userDetails.getId());
-    utilisateur.setEtat(true);
-    utilisateurRepository.save(utilisateur);
-    //On RETOURNE LE TOKEN ET LES INFOS DE UTILISATEURS
-    return ResponseEntity.ok(new JwtResponse(jwt,
-            userDetails.getId(),
-            userDetails.getUsername(),
-            userDetails.getEmail(),
+        } catch (BadCredentialsException e) {
+            log.error("Bad credentials for user: {}", loginRequest.getUsername(), e);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Mauvaises informations d’identification");
+        } catch (LockedException e) {
+            log.error("User account locked: {}", loginRequest.getUsername(), e);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Le compte d’utilisateur est verrouillé");
+        } catch (DisabledException e) {
+            log.error("User account disabled: {}", loginRequest.getUsername(), e);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Le compte d’utilisateur est désactivé");
+        } catch (AuthenticationException e) {
+            log.error("Authentication failed for user: {}", loginRequest.getUsername(), e);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Echec de l’authentification");
+        }
+    }
 
-            roles));
 
-  }
 
-  //************************************** MEHTODE PERMETTANT DE CE DECONNECTER ****************************
-  @PostMapping("/signout")
-  public ResponseEntity<?> logoutUser() {
+    //************************************** MEHTODE PERMETTANT DE CE DECONNECTER ****************************
+    @PostMapping("/signout")
+    public ResponseEntity<?> logoutUser() {
 
-    Log.info("COLLABORATEUR DECONNECTER AVEC SUCCESS");
+        Log.info("COLLABORATEUR DECONNECTER AVEC SUCCESS");
 
-    ResponseCookie cookie = jwtUtils.getCleanJwtCookie();
+        ResponseCookie cookie = jwtUtils.getCleanJwtCookie();
 
-    return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString())
-            .body(new MessageResponse("DECONNEXION REUSSI"));
-  }
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .body(new MessageResponse("DECONNEXION REUSSI"));
+    }
 
-  @GetMapping("/getAuserConnected")
-  public List<Users> getAllUserConnected(){
-    return utilisateurRepository.findByEtat(true);
-  }
+    @GetMapping("/getAuserConnected")
+    public List<Users> getAllUserConnected() {
+        return utilisateurRepository.findByEtat(true);
+    }
 
 }

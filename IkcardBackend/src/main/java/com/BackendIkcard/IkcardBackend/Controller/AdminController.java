@@ -31,6 +31,7 @@ import org.springframework.http.HttpStatus;
 
 
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -134,7 +135,7 @@ public class AdminController {
 
         // Set etat to true before updating
         administrateur.setEtat(true);
-
+        administrateur.setDateCreationCompte(new Date());
 
         adminnistrateurRepository.save(administrateur);
 

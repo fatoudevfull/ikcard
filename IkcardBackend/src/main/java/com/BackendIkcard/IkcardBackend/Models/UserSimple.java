@@ -9,6 +9,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 public class UserSimple extends Users {
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "qrcode_data_id", referencedColumnName = "id")
     private QRCodeData qrCodeData;

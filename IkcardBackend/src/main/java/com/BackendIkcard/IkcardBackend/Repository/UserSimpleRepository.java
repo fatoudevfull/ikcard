@@ -14,9 +14,6 @@ public interface UserSimpleRepository extends JpaRepository<UserSimple, Long> {
     UserSimple findByEmail(String email);
 
     Optional<UserSimple> findByUsername(String username);
-
-   // boolean existsByUsername(String username);
-   // User findByUsername(String username);
     boolean existsByEmail(String email);
     boolean existsByUsername(String username);
     boolean existsByNumero(String numero);

@@ -11,59 +11,50 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class UserDetailsImpl implements UserDetails {
-
-
+public class UserDetailsImpl implements UserDetails{
+    
     private Long id;
-    private String username;
-    private String email;
     private String nom;
+    private String prenom;
+    private String username;
     private String numero;
-    private String pays;
+    private String email;
+    private String photo;
+    private String Pays;
+    private String ville;
+    private String adresse;
     @JsonIgnore
     private String password;
-    private String prenom;
-
-
 
     private Collection<? extends GrantedAuthority> authorities;
 
+
     public static UserDetailsImpl build(Users user) {
         List<GrantedAuthority> authorities = user.getRoles().stream()
-                .map(role -> new SimpleGrantedAuthority(role.getName().name()))
-                .collect(Collectors.toList());
-
+            .map(role -> new SimpleGrantedAuthority(role.getName().name()))
+            .collect(Collectors.toList());
+    
         return new UserDetailsImpl(
-                user.getId(),
-                user.getUsername(),
-                user.getEmail(),
-                user.getNom(),
-                user.getNumero(),
-                user.getPassword(),
-                user.getPays(),
-                user.getPrenom(),
-                authorities
-        );
-    }
-
-    // Other methods remain the same...
-   /* public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        // Fetch user details from the database and return a UserDetails object
-        return null;
-    }*/
-
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
+            user.getId(), 
+            user.getNom(),
+            user.getPrenom(),
+            user.getUsername(), 
+            user.getNumero(),
+            user.getEmail(),
+            user.getPhoto(),
+            user.getPays(),
+            user.getVille(),
+            user.getAdresse(),
+            user.getPassword(),
+            authorities);
     }
 
     @Override
@@ -89,9 +80,9 @@ public class UserDetailsImpl implements UserDetails {
     @Override
     public boolean equals(Object o) {
         if (this == o)
-            return true;
+        return true;
         if (o == null || getClass() != o.getClass())
-            return false;
+        return false;
         UserDetailsImpl user = (UserDetailsImpl) o;
         return Objects.equals(id, user.id);
     }

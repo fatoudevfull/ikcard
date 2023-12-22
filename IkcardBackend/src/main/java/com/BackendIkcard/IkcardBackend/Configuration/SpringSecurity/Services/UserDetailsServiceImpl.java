@@ -1,6 +1,5 @@
 package com.BackendIkcard.IkcardBackend.Configuration.SpringSecurity.Services;
 
-
 import com.BackendIkcard.IkcardBackend.Models.Users;
 import com.BackendIkcard.IkcardBackend.Repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,16 +11,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
-
     @Autowired
-    UsersRepository utilisateurRepository;
+    UsersRepository userRepository;
+    
 
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Users utilisateur = utilisateurRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Utilisateur introuvable avec le nom: " + username));
-
-        return UserDetailsImpl.build(utilisateur);
+      Users user = userRepository.findByUsername(username)
+          .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
+  
+      return UserDetailsImpl.build(user);
     }
-
 }
