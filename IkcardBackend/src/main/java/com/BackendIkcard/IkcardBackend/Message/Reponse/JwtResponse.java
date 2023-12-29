@@ -9,17 +9,15 @@ import java.util.Date;
 import java.util.List;
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class JwtResponse {
-    
     private String token;
-    private String refreshToken;
-
     private String type = "Bearer";
-    private Long idUtilisateur;
-    private String userName;
+    private Long id;
+    private String username;
     private String email;
+    private List<String> roles;
+    private String refreshToken;
+/*
     private String photo;
     private String nom;
     private String prenom;
@@ -29,33 +27,58 @@ public class JwtResponse {
     private String ville;
     private String adresse;
 
-    private List<String> roles;
 
-    public JwtResponse(String accessToken,String refreshToken, Long id, String userName,String email,String numero, String nom,String prenom, String photo,String Pays, String ville,String adresse,List<String> roles) {
+    private List<String> roles;*/
+
+    public JwtResponse(String accessToken, Long id, String username, String email, List<String> roles) {
         this.token = accessToken;
-        this.refreshToken = refreshToken;
-        this.idUtilisateur = id;
-        this.userName = userName;
+        this.id = id;
+        this.username = username;
         this.email = email;
-        this.photo = photo;
-        this.nom = nom;
-        this.prenom = prenom;
         this.roles = roles;
-        this.adresse=adresse;
-        this.Pays=Pays;
-        this.ville=ville;
-        this.numero=numero;
-      }
-
-    public JwtResponse(String jwt, String token, Long idUtilisateur, String username, String email, String telephone, String nom, List<String> roles) {
     }
 
-    public JwtResponse(String jwt, Long id, String username, String email, String nom, String prenom, List<String> roles) {
+    public String getAccessToken() {
+        return token;
     }
 
-    public JwtResponse(String jwt, String username, List<String> roles) {
+    public void setAccessToken(String accessToken) {
+        this.token = accessToken;
     }
 
-    public JwtResponse(String jwt, Long id, String username, String email, List<String> roles) {
+    public String getTokenType() {
+        return type;
+    }
+
+    public void setTokenType(String tokenType) {
+        this.type = tokenType;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public List<String> getRoles() {
+        return roles;
     }
 }

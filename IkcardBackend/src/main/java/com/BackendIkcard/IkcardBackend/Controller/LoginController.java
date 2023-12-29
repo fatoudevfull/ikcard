@@ -97,8 +97,6 @@ public class LoginController {
                     userDetails.getId(),
                     userDetails.getUsername(),
                     userDetails.getEmail(),
-                    userDetails.getNom(),
-                    userDetails.getPrenom(),
                     roles));
         } catch (AuthenticationException e) {
             // Handle authentication failure

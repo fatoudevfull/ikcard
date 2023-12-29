@@ -159,7 +159,7 @@ public class UserSimplecontroller {
     }
 
     // methode pour le login d'un Admin
-    @ApiOperation(value = "Le login d'un user.")
+/*    @ApiOperation(value = "Le login d'un user.")
     @PostMapping("/login")
     public ResponseEntity<Object> Login(@RequestBody LoginRequest loginRequest) {
 
@@ -179,7 +179,7 @@ public class UserSimplecontroller {
 
         /////////////////
         return ResponseEntity.ok(new JwtResponse(jwt, refreshToken.getToken(), userDetails.getId(), userDetails.getUsername(), userDetails.getEmail(), userDetails.getNumero(), userDetails.getNom(), roles));
-    }
+    }*/
     // Fin
     //nombre ambassadeur
     @GetMapping("/ambamssadeurCunt")

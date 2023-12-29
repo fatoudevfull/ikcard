@@ -3,6 +3,7 @@ package com.BackendIkcard.IkcardBackend.Configuration.SpringSecurity.Services;
 
 import com.BackendIkcard.IkcardBackend.Message.Exeption.TokenRefreshException;
 import com.BackendIkcard.IkcardBackend.Models.RefreshToken;
+import com.BackendIkcard.IkcardBackend.Models.Users;
 import com.BackendIkcard.IkcardBackend.Repository.RefreshTokenRepository;
 import com.BackendIkcard.IkcardBackend.Repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,16 +31,31 @@ public class RefreshTokenService {
         return refreshTokenRepository.findByToken(token);
     }
 
-    public RefreshToken createRefreshToken(Long userId) {
+    public RefreshToken createRefreshToken(Long id) {
         RefreshToken refreshToken = new RefreshToken();
 
-        refreshToken.setUser(userRepository.findById(userId).get());
-        refreshToken.setExpiryDate(Instant.now().plusMillis(refreshTokenDurationMs));
+        // Retrieve the user from the repository and set it in the refresh token
+        Users user = userRepository.findById(id).orElse(null);
+        refreshToken.setUser(user);
+
+        // Generate a unique token
         refreshToken.setToken(UUID.randomUUID().toString());
 
+        // Set the expiry date
+        refreshToken.setExpiryDate(Instant.now().plusMillis(refreshTokenDurationMs));
+
+        // Save the refresh token
         refreshToken = refreshTokenRepository.save(refreshToken);
+
+        // Print the values for debugging
+        System.out.println("le user: ");
+        System.out.println(refreshToken.getUser());
+        System.out.println("le token: ");
+        System.out.println(refreshToken.getToken());
+
         return refreshToken;
     }
+
 
     public RefreshToken verifyExpiration(RefreshToken token) {
         if (token.getExpiryDate().compareTo(Instant.now()) < 0) {

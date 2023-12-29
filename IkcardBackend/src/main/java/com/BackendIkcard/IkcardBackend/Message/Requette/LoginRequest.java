@@ -9,11 +9,13 @@ import javax.validation.constraints.NotBlank;
 @Setter
 public class LoginRequest {
 
-
-    @NotBlank
+    @NotBlank(message = "Username is required and must not be empty")
     private String username;
-    @NotBlank
-	private String password;
-    @NotBlank
+
+    @NotBlank(message = "Password is required and must not be empty")
+    private String password;
+
+    @NotBlank(message = "Email is required and must not be empty")
     private String email;
 }
+

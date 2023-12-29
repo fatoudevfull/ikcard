@@ -179,7 +179,7 @@ public class AdminController {
 
     // methode pour le login d'un Admin
     // Fin
-    @ApiOperation(value = "Le login d'un admin.")
+/*    @ApiOperation(value = "Le login d'un admin.")
     @PostMapping("/login")
     public ResponseEntity<Object> loginAdmin(@RequestBody LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
@@ -196,6 +196,7 @@ public class AdminController {
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(adminDetails.getId());
 
         return ResponseEntity.ok(new JwtResponse(jwt, refreshToken.getToken(), adminDetails.getId(), adminDetails.getUsername(), adminDetails.getEmail(), adminDetails.getNumero(), adminDetails.getNom(), roles));
-    }
+        return ResponseEntity.ok(new JwtResponse(jwt,refreshToken.getToken(), userDetails.getId(), userDetails.getUsername(),userDetails.getEmail(),userDetails.getTelephone(), userDetails.getNom(), userDetails.getPrenom(), userDetails.getPhoto(),userDetails.getPoint(),userDetails.getNiveau(),userDetails.getDateSouscription(),userDetails.getPays(), userDetails.getVille(), userDetails.getAdresse(), roles));
+    }*/
 
 }

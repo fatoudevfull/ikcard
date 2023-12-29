@@ -7,11 +7,13 @@ import com.BackendIkcard.IkcardBackend.Configuration.SpringSecurity.Services.Use
 import com.BackendIkcard.IkcardBackend.Configuration.SpringSecurity.Services.UserDetailsServiceImpl;
 import com.BackendIkcard.IkcardBackend.Message.Reponse.JwtResponse;
 import com.BackendIkcard.IkcardBackend.Message.Reponse.MessageResponse;
+import com.BackendIkcard.IkcardBackend.Message.Reponse.UserInfoResponse;
 import com.BackendIkcard.IkcardBackend.Message.Requette.LoginRequest;
 import com.BackendIkcard.IkcardBackend.Models.RefreshToken;
 import com.BackendIkcard.IkcardBackend.Models.Users;
 import com.BackendIkcard.IkcardBackend.Repository.UsersRepository;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,6 +43,7 @@ public class AuthController {
     @Autowired
     private RefreshTokenService refreshTokenService;
 
+
     @Autowired
     JwtUtils jwtUtils;
 
@@ -49,7 +53,7 @@ public class AuthController {
     @Autowired
     AuthenticationManager authenticationManager;
     // This assumes JwtResponse is a simple POJO
-    private JwtResponse jwtResponse = new JwtResponse();
+
 
     //**************************** DECLATION DES DIFFERENTES INSTANCE ******************************************
     @Autowired
@@ -59,64 +63,32 @@ public class AuthController {
     // DANS LES COOKIES
 
     //******************* METHODE PERMETTANT D'AUTHENTIFIER UN COLLABORATEUR ***********************************
-    @PostMapping("/signin")
-    public ResponseEntity<Object> login(@RequestBody LoginRequest loginRequest) {
-        try {
-            log.debug("Attempting to authenticate user: {}", loginRequest.getUsername());
 
-            // Validate input
-            if (StringUtils.isEmpty(loginRequest.getPassword())) {
-                log.error("Empty password provided for user: {}", loginRequest.getUsername());
-                return ResponseEntity.badRequest().body("Le mot de passe ne peut pas être vide");
-            }
+    @ApiOperation(value = "Le login d'un user.")
+    @PostMapping("/login")
+    public ResponseEntity<Object> Login(@RequestBody LoginRequest loginRequest) {
 
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String jwt = jwtUtils.generateJwtToken(authentication);
 
-            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-         //   RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
-            List<String> roles = userDetails.getAuthorities().stream()
-                    .map(item -> item.getAuthority())
-                    .collect(Collectors.toList());
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        List<String> roles = userDetails.getAuthorities().stream()
+                .map(item -> item.getAuthority())
+                .collect(Collectors.toList());
 
-         //   RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
-            RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
 
 
-            log.info("User authenticated successfully: {}", loginRequest.getUsername());
-            System.out.println(userDetails.getEmail());
-            System.out.println(userDetails.getUsername());
-            System.out.println(userDetails.getNom());
+        /////////////////
+        return ResponseEntity.ok(new JwtResponse(jwt,
+                userDetails.getId(),
+                userDetails.getUsername(),
+                userDetails.getEmail(),
 
-            return ResponseEntity.ok(new JwtResponse(
-                    jwtUtils.generateJwtToken(authentication),
-                    refreshToken.getToken(),
-                    userDetails.getId(),
-                    userDetails.getUsername(),
-                    userDetails.getEmail(),
-                    userDetails.getNom(),
-                    userDetails.getPrenom(),
-                    roles
-            ));
-
-        } catch (BadCredentialsException e) {
-            log.error("Bad credentials for user: {}", loginRequest.getUsername(), e);
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Mauvaises informations d’identification");
-        } catch (LockedException e) {
-            log.error("User account locked: {}", loginRequest.getUsername(), e);
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Le compte d’utilisateur est verrouillé");
-        } catch (DisabledException e) {
-            log.error("User account disabled: {}", loginRequest.getUsername(), e);
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Le compte d’utilisateur est désactivé");
-        } catch (AuthenticationException e) {
-            log.error("Authentication failed for user: {}", loginRequest.getUsername(), e);
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Echec de l’authentification");
-        }
-    }
-
-
+                roles));    }
 
     //************************************** MEHTODE PERMETTANT DE CE DECONNECTER ****************************
     @PostMapping("/signout")
