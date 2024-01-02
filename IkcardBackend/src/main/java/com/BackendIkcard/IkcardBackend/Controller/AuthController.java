@@ -5,10 +5,13 @@ import com.BackendIkcard.IkcardBackend.Configuration.SpringSecurity.Jwt.JwtUtils
 import com.BackendIkcard.IkcardBackend.Configuration.SpringSecurity.Services.RefreshTokenService;
 import com.BackendIkcard.IkcardBackend.Configuration.SpringSecurity.Services.UserDetailsImpl;
 import com.BackendIkcard.IkcardBackend.Configuration.SpringSecurity.Services.UserDetailsServiceImpl;
+import com.BackendIkcard.IkcardBackend.Message.Exeption.TokenRefreshException;
 import com.BackendIkcard.IkcardBackend.Message.Reponse.JwtResponse;
 import com.BackendIkcard.IkcardBackend.Message.Reponse.MessageResponse;
+import com.BackendIkcard.IkcardBackend.Message.Reponse.TokenRefreshResponse;
 import com.BackendIkcard.IkcardBackend.Message.Reponse.UserInfoResponse;
 import com.BackendIkcard.IkcardBackend.Message.Requette.LoginRequest;
+import com.BackendIkcard.IkcardBackend.Message.Requette.TokenRefreshRequest;
 import com.BackendIkcard.IkcardBackend.Models.RefreshToken;
 import com.BackendIkcard.IkcardBackend.Models.Users;
 import com.BackendIkcard.IkcardBackend.Repository.UsersRepository;
@@ -30,6 +33,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @CrossOrigin(origins = {"http://localhost:4200", "http://localhost:8200", "http://localhost:8100"}, maxAge = 3600, allowCredentials = "true")
@@ -79,7 +83,9 @@ public class AuthController {
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
 
+
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
+
 
 
         /////////////////
@@ -87,8 +93,33 @@ public class AuthController {
                 userDetails.getId(),
                 userDetails.getUsername(),
                 userDetails.getEmail(),
+                userDetails.getNumero(),
+                userDetails.getNom(),
+                userDetails.getPrenom(),
+                userDetails.getPays(),
+                userDetails.getVille(),
+                userDetails.getPhoto(),
+                userDetails.getAdresse(),
+                refreshToken.getToken(),
+                roles));
 
-                roles));    }
+
+    }
+    ////**********************Refrech token****************
+    @PostMapping("/refreshtoken")
+    public ResponseEntity<?> refreshtoken( @RequestBody TokenRefreshRequest request) {
+        String requestRefreshToken = request.getRefreshToken();
+
+        return refreshTokenService.findByToken(requestRefreshToken)
+                .map(refreshTokenService::verifyExpiration)
+                .map(RefreshToken::getUser)
+                .map(user -> {
+                    String token = jwtUtils.generateTokenFromUsername(user.getUsername());
+                    return ResponseEntity.ok(new TokenRefreshResponse(token, requestRefreshToken));
+                })
+                .orElseThrow(() -> new TokenRefreshException(requestRefreshToken,
+                        "Refresh token is not in database!"));
+    }
 
     //************************************** MEHTODE PERMETTANT DE CE DECONNECTER ****************************
     @PostMapping("/signout")

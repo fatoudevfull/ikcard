@@ -14,6 +14,8 @@ public class UserSimple extends Users {
     @JoinColumn(name = "qrcode_data_id", referencedColumnName = "id")
     private QRCodeData qrCodeData;
 
+    @ManyToOne
+    private Role role;
 
 
 }

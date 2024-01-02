@@ -18,6 +18,7 @@ import java.util.UUID;
 @Service
 public class RefreshTokenService {
 
+
     @Value("${etulon.app.jwtRefreshExpirationMs}")
     private Long refreshTokenDurationMs;
 
@@ -31,12 +32,10 @@ public class RefreshTokenService {
         return refreshTokenRepository.findByToken(token);
     }
 
-    public RefreshToken createRefreshToken(Long id) {
+    public RefreshToken createRefreshToken(Long userId) {
         RefreshToken refreshToken = new RefreshToken();
 
-        // Retrieve the user from the repository and set it in the refresh token
-        Users user = userRepository.findById(id).orElse(null);
-        refreshToken.setUser(user);
+        refreshToken.setUser(userRepository.findById(userId).orElse(null));
 
         // Generate a unique token
         refreshToken.setToken(UUID.randomUUID().toString());
@@ -46,12 +45,6 @@ public class RefreshTokenService {
 
         // Save the refresh token
         refreshToken = refreshTokenRepository.save(refreshToken);
-
-        // Print the values for debugging
-        System.out.println("le user: ");
-        System.out.println(refreshToken.getUser());
-        System.out.println("le token: ");
-        System.out.println(refreshToken.getToken());
 
         return refreshToken;
     }

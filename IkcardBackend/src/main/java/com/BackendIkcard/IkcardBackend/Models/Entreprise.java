@@ -16,4 +16,7 @@ import javax.persistence.*;
 public class Entreprise extends Users {
 
     private String imageCouverture;
+    @ManyToOne
+    private Role role;
+
 }

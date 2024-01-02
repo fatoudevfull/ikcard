@@ -29,23 +29,17 @@ public abstract class Users {
     private String adresse;
     private String photo;
     public Date dateCreationCompte;
-
-
     @ManyToOne
     private Role role;
 
 
-/*    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    @JoinTable(name = "user_roles",
-            joinColumns = @JoinColumn(name = "idUtilisateur"),
-            inverseJoinColumns = @JoinColumn(name = "role_name"))
-    private Set<Role> roles = new HashSet<>();*/
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "idUtilisateur"),
             inverseJoinColumns = @JoinColumn(name = "role_name"))
     private Set<Role> roles = new HashSet<>();
+
 
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
