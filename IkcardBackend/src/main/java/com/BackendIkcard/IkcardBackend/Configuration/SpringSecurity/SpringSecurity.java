@@ -76,6 +76,7 @@ public class SpringSecurity {
                 .antMatchers("/anonce/**").permitAll()
                 .antMatchers("/connexion/**").permitAll()
                 .antMatchers("/qrcode/**").permitAll()
+                .antMatchers("/qr/**").permitAll()
                 .antMatchers("/logout").permitAll()
 
                 //.antMatchers("/swagger").permitAll()
