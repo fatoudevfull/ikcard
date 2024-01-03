@@ -57,7 +57,6 @@ public interface AnnonceService {
     void desactiverCompte(Long userId);
 
     void activerCompte(Long userId);
-    Annonce saveAnnonceWithFile(Annonce annonce, MultipartFile file);
 
 
 

@@ -17,25 +17,7 @@ public class AnnonceServImpl implements AnnonceService {
     @Autowired
     private AnnonceRepository annonceRepository;
 
-    @Override
-    public Annonce saveAnnonceWithFile(Annonce annonce, MultipartFile file) {
-        // Validate and handle file upload logic
-        if (file != null && !file.isEmpty()) {
-            // Set file-related attributes in the Annonce entity
-            annonce.setFileName(file.getOriginalFilename());
-            annonce.setFileType(file.getContentType());
 
-            try {
-                annonce.setData(file.getBytes());
-            } catch (IOException e) {
-                // Handle IOException
-                e.printStackTrace();
-            }
-        }
-
-        // Save the Annonce entity
-        return annonceRepository.save(annonce);
-    }
 
     @Override
     public List<Annonce> getAllAnnonces() {

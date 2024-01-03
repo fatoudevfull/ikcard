@@ -68,43 +68,99 @@ public class AuthController {
 
     //******************* METHODE PERMETTANT D'AUTHENTIFIER UN COLLABORATEUR ***********************************
 
-    @ApiOperation(value = "Le login d'un user.")
+/*    @ApiOperation(value = "Le login d'un utilisateur.")
     @PostMapping("/login")
-    public ResponseEntity<Object> Login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<Object> login(@RequestBody LoginRequest loginRequest) {
+        try {
+            String loginIdentifier = loginRequest.getUsername(); // Default to username
 
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+            // Check if the provided input is a valid email
+            if (loginRequest.getEmail() != null && !loginRequest.getEmail().isEmpty()) {
+                loginIdentifier = loginRequest.getEmail();
+            }
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateJwtToken(authentication);
+            // Authentication logic
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginIdentifier, loginRequest.getPassword()));
 
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        List<String> roles = userDetails.getAuthorities().stream()
-                .map(item -> item.getAuthority())
-                .collect(Collectors.toList());
+            String jwt = jwtUtils.generateJwtToken(authentication);
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+            List<String> roles = userDetails.getAuthorities().stream()
+                    .map(item -> item.getAuthority())
+                    .collect(Collectors.toList());
+
+            RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
+
+            // Return the response
+            return ResponseEntity.ok(new JwtResponse(jwt,
+                    userDetails.getId(),
+                    userDetails.getUsername(),
+                    userDetails.getEmail(),
+                    userDetails.getNumero(),
+                    userDetails.getNom(),
+                    userDetails.getPrenom(),
+                    userDetails.getPays(),
+                    userDetails.getVille(),
+                    userDetails.getPhoto(),
+                    userDetails.getAdresse(),
+                    refreshToken.getToken(),
+                    roles));
+
+        } catch (BadCredentialsException e) {
+            // Handle authentication failure
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Mauvaises informations d’identification");
+        } catch (LockedException e) {
+            // Handle locked account
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Le compte d’utilisateur est verrouillé");
+        } catch (DisabledException e) {
+            // Handle disabled account
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Le compte d’utilisateur est désactivé");
+        } catch (AuthenticationException e) {
+            // Handle other authentication failures
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Echec de l’authentification");
+        }
+    }*/
+@ApiOperation(value = "Le login d'un user.")
+@PostMapping("/login")
+public ResponseEntity<Object> Login(@RequestBody LoginRequest loginRequest) {
+
+    Authentication authentication = authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+
+    SecurityContextHolder.getContext().setAuthentication(authentication);
+    String jwt = jwtUtils.generateJwtToken(authentication);
+
+    UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+    List<String> roles = userDetails.getAuthorities().stream()
+            .map(item -> item.getAuthority())
+            .collect(Collectors.toList());
 
 
-        RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
+    RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
 
 
 
-        /////////////////
-        return ResponseEntity.ok(new JwtResponse(jwt,
-                userDetails.getId(),
-                userDetails.getUsername(),
-                userDetails.getEmail(),
-                userDetails.getNumero(),
-                userDetails.getNom(),
-                userDetails.getPrenom(),
-                userDetails.getPays(),
-                userDetails.getVille(),
-                userDetails.getPhoto(),
-                userDetails.getAdresse(),
-                refreshToken.getToken(),
-                roles));
+    /////////////////
+    return ResponseEntity.ok(new JwtResponse(jwt,
+            userDetails.getId(),
+            userDetails.getUsername(),
+            userDetails.getEmail(),
+            userDetails.getNumero(),
+            userDetails.getNom(),
+            userDetails.getPrenom(),
+            userDetails.getPays(),
+            userDetails.getVille(),
+            userDetails.getPhoto(),
+            userDetails.getAdresse(),
+            refreshToken.getToken(),
+            roles));
 
 
-    }
+}
+
     ////**********************Refrech token****************
     @PostMapping("/refreshtoken")
     public ResponseEntity<?> refreshtoken( @RequestBody TokenRefreshRequest request) {

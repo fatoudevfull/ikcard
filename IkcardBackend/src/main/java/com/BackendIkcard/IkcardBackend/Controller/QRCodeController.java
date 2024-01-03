@@ -32,7 +32,7 @@ import java.util.Optional;
 @CrossOrigin(origins = {"http://localhost:4200", "http://localhost:8200", "http://localhost:8100"}, maxAge = 3600, allowCredentials = "true")
 @Api(value = "qrcode", description = "Les actions reslisables par les code QR du systeme.")
 @RestController
-@RequestMapping("/api/qrcode")
+@RequestMapping("/qrcode")
 public class QRCodeController {
 
     @Autowired
@@ -47,39 +47,8 @@ public class QRCodeController {
     @Autowired
     private QRCodeDataRepository qrCodeDataRepository;
 
-    @GetMapping(value = "/generate/{username}", produces = MediaType.IMAGE_PNG_VALUE)
-    public ResponseEntity<byte[]> generateQRCode(@PathVariable String username) {
-        try {
-            // Retrieve user information
-            Optional<Users> userOptional = userService.findByUsername(username);
-            System.out.println(username);
 
-            if (userOptional.isEmpty()) {
-                // Gérer le cas où l'utilisateur n'est pas trouvé
-                return ResponseEntity.notFound().build();
-            }
-
-            Users user = userOptional.get();
-            System.out.println("email: "+user.getEmail());
-            System.out.println("nom: "+user.getNom());
-            System.out.println(user.getUsername());
-
-            // Generate QR code based on user information
-            byte[] qrCode = qrCodeGeneratorService.generateAndSaveQRCode(user);
-
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.IMAGE_PNG);
-            headers.setContentLength(qrCode.length);
-
-            return new ResponseEntity<>(qrCode, headers, HttpStatus.OK);
-        } catch (IOException | WriterException e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().build();
-        }
-    }
-
-
-
+    @GetMapping(value = "/generatecode/{username}", produces = MediaType.IMAGE_PNG_VALUE)
     public byte[] generateAndSaveQRCode(UserSimple user) throws WriterException, IOException {
         // Vérifier si l'utilisateur est null
         if (user == null) {
@@ -110,6 +79,12 @@ public class QRCodeController {
 
         // Associer les données du code QR à l'utilisateur
         user.setQrCodeData(qrCodeDataEntity);
+        System.out.println("email: "+user.getEmail());
+        System.out.println("nom: "+user.getNom());
+        System.out.println(user.getUsername());
+        System.out.println("email: "+user.getNumero());
+        System.out.println("nom: "+user.getPrenom());
+        System.out.println("username: "+user.getUsername());
 
         // Enregistrer l'entité utilisateur avec les données du code QR associées
         userRepository.save(user);
@@ -120,26 +95,6 @@ public class QRCodeController {
 
 
 
-
-
-  /*  @PostMapping("/generateBy/{userId}")
-    public ResponseEntity<String> generateQrCodeForUser(@PathVariable Long userId) {
-        try {
-            Optional<Optional<User>> userOptional = Optional.ofNullable(userRepository.findById(userId));
-
-            if (userOptional.isPresent()) {
-                Optional<User> user = userOptional.get();
-                String carte = carteService.generateContentForUser(user);
-                return ResponseEntity.ok("Code QR généré et stocké pour l’utilisateur avec ID: " + userId);
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Utilisateur introuvable avec ID: " + userId);
-            }
-        } catch (Exception e) {
-            e.printStackTrace(); // Handle the exception appropriately
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Echec de la génération du code QR.");
-        }
-    }*/
 }
 
 
-//http://localhost:8080/api/qrcode/generate/JohnDoe

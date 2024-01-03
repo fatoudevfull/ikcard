@@ -1,6 +1,7 @@
 package com.BackendIkcard.IkcardBackend.Models;
 
 import lombok.Data;
+import lombok.Getter;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -13,19 +14,28 @@ public class Annonce {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    // Other existing attributes...
-
     private String titre;
     private Date dateAnnonce;
     private String contenu;
+    private String image;
     private boolean etat;
-
     private String fileName;
     private String fileType;
-
+    @Getter
     @Lob
     private byte[] data;
+    public Annonce(String fileName, String fileType, byte[] data) {
+        this.fileName = fileName;
+        this.fileType = fileType;
+        this.data = data;
+    }
 
-    // Constructors, getters, setters...
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+    public void setFileType(String fileType) {
+        this.fileType = fileType;
+    }
+
+
 }

@@ -3,14 +3,20 @@ package com.BackendIkcard.IkcardBackend.ServiceImplementation;
 
 
 import com.BackendIkcard.IkcardBackend.Message.Exeption.FileNotFoundException;
+import com.BackendIkcard.IkcardBackend.Message.Exeption.FileStorageException;
 import com.BackendIkcard.IkcardBackend.Models.DatabaseFile;
 import com.BackendIkcard.IkcardBackend.Repository.DatabaseFileRepository;
 import com.BackendIkcard.IkcardBackend.Repository.EntrepriseRepository;
 import com.BackendIkcard.IkcardBackend.Repository.UserSimpleRepository;
+import com.BackendIkcard.IkcardBackend.Repository.UsersRepository;
 import com.BackendIkcard.IkcardBackend.Service.DatabaseFileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.Objects;
 
 @Service
 public class DatabaseFileServiceImpl implements DatabaseFileService {
@@ -19,9 +25,9 @@ public class DatabaseFileServiceImpl implements DatabaseFileService {
     private DatabaseFileRepository dbFileRepository;
 
     @Autowired
-    private EntrepriseRepository entrepriseRepository;
+    private EntrepriseRepository dossierRepository;
     @Autowired
-    private UserSimpleRepository utilisateusRepository;
+    private UsersRepository utilisateusRepository;
 
 
     @Override

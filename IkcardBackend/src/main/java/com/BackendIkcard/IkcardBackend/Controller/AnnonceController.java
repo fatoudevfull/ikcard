@@ -1,5 +1,6 @@
 package com.BackendIkcard.IkcardBackend.Controller;
 
+import com.BackendIkcard.IkcardBackend.Message.Reponse.MessageResponse;
 import com.BackendIkcard.IkcardBackend.Models.Annonce;
 import com.BackendIkcard.IkcardBackend.Service.AnnonceService;
 import io.swagger.annotations.Api;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -28,18 +30,25 @@ public class AnnonceController {
         return annonceService.getAllAnnonces();
     }
 
-    @PostMapping("/saveWithFile")
-    public ResponseEntity<Annonce> saveAnnonceWithFile(
-            @RequestBody Annonce annonce,
-            @RequestParam("file") MultipartFile file) {
-        Annonce savedAnnonce = annonceService.saveAnnonceWithFile(annonce, file);
-        return ResponseEntity.ok().body(savedAnnonce);
-    }
-    @PostMapping("/save")
-    public Annonce saveAnnonce(@RequestBody Annonce annonce){
-        // Set the current date
+/*    @PostMapping("/save")
+    public ResponseEntity<MessageResponse> saveAnnonce(@RequestBody Annonce annonce){
+        // Set etat to true after saving
+        annonce.setEtat(true);
         annonce.setDateAnnonce(new Date());
-        return annonceService.createAnnonce(annonce);
+        annonceService.createAnnonce(annonce);
+        return ResponseEntity.ok(new MessageResponse("annonce enregistré avec succès!"));
+    }*/
+    @PostMapping("/save")
+    public ResponseEntity<Object> uploadAnnonce(@RequestParam("file") MultipartFile file,
+                                                @RequestBody Annonce annonce) throws IOException {
+        annonce.setFileName(file.getOriginalFilename());
+        annonce.setFileType(file.getContentType());
+        annonce.setData(file.getBytes());
+
+        Annonce savedAnnonce = annonceService.createAnnonce(annonce);
+
+        // Return response with the saved Annonce entity or any other response as needed
+        return ResponseEntity.ok(savedAnnonce);
     }
 
     @GetMapping("/{id}")
@@ -48,11 +57,6 @@ public class AnnonceController {
         return ResponseEntity.ok().body(annonce);
     }
 
-    @PostMapping
-    public ResponseEntity<Annonce> createAnnonce(@RequestBody Annonce annonce) {
-        Annonce createdAnnonce = annonceService.createAnnonce(annonce);
-        return ResponseEntity.ok().body(createdAnnonce);
-    }
 
     @PutMapping("/{id}")
     public ResponseEntity<Annonce> updateAnnonce(@PathVariable Long id, @RequestBody Annonce updatedAnnonce) {
