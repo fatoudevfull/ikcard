@@ -30,26 +30,28 @@ public class AnnonceController {
         return annonceService.getAllAnnonces();
     }
 
-/*    @PostMapping("/save")
+   @PostMapping("/save")
     public ResponseEntity<MessageResponse> saveAnnonce(@RequestBody Annonce annonce){
         // Set etat to true after saving
         annonce.setEtat(true);
         annonce.setDateAnnonce(new Date());
         annonceService.createAnnonce(annonce);
         return ResponseEntity.ok(new MessageResponse("annonce enregistré avec succès!"));
-    }*/
-    @PostMapping("/save")
-    public ResponseEntity<Object> uploadAnnonce(@RequestParam("file") MultipartFile file,
-                                                @RequestBody Annonce annonce) throws IOException {
-        annonce.setFileName(file.getOriginalFilename());
-        annonce.setFileType(file.getContentType());
-        annonce.setData(file.getBytes());
-
-        Annonce savedAnnonce = annonceService.createAnnonce(annonce);
-
-        // Return response with the saved Annonce entity or any other response as needed
-        return ResponseEntity.ok(savedAnnonce);
     }
+
+    @PostMapping("/{id}/ajouter-image")
+    public ResponseEntity<String> ajouterImageAnnonce(
+            @PathVariable Long id,
+            @RequestParam("image") MultipartFile image) {
+        annonceService.ajouterImageAnnonce(id, image);
+        return ResponseEntity.ok("Image ajoutée avec succès à l'annonce avec l'ID : " + id);
+    }
+    @PostMapping("/upload")
+        public ResponseEntity<String> uploadAnnonceWithFile(@ModelAttribute Annonce annonce, @RequestParam("file") MultipartFile file) {
+            Annonce savedAnnonce = annonceService.storeAnnonceWithFile(annonce, file);
+            return ResponseEntity.ok("Annonce avec fichier enregistrée avec succès. ID de l'annonce : " + savedAnnonce.getId());
+        }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<Annonce> getAnnonceById(@PathVariable Long id) {

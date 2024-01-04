@@ -45,6 +45,10 @@ public interface AnnonceService {
 
 
 
+    Annonce storeAnnonceWithFile(Annonce annonce, MultipartFile file);
+   // public void ajouterImageAAnnonce(Long annonceId, MultipartFile imageFile);
+   void ajouterImageAnnonce(Long id, MultipartFile image);
+
     List<Annonce> getAllAnnonces();
 
     Annonce getAnnonceById(Long id);

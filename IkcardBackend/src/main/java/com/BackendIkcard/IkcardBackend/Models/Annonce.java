@@ -17,24 +17,49 @@ public class Annonce {
     private String titre;
     private Date dateAnnonce;
     private String contenu;
-    private String image;
+    //private String image;
     private boolean etat;
     private String fileName;
+
     private String fileType;
-    @Getter
+
     @Lob
     private byte[] data;
+
+    public Annonce() {
+
+    }
+
     public Annonce(String fileName, String fileType, byte[] data) {
         this.fileName = fileName;
         this.fileType = fileType;
         this.data = data;
     }
 
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public String getFileType() {
+        return fileType;
+    }
+
+    public byte[] getData() {
+        return data;
+    }
+
+
     public void setFileName(String fileName) {
         this.fileName = fileName;
     }
+
     public void setFileType(String fileType) {
         this.fileType = fileType;
+    }
+
+    public void setData(byte[] data) {
+        this.data = data;
     }
 
 
