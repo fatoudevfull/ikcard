@@ -15,5 +15,5 @@ public class QRCodeData {
     private Long id;
 
     @Lob
-    private String qrCode; // Change the type to String
+    private String qrCode;
 }

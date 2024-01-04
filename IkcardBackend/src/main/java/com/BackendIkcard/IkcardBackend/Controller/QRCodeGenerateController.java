@@ -1,17 +1,19 @@
 package com.BackendIkcard.IkcardBackend.Controller;
 
+import com.BackendIkcard.IkcardBackend.Models.QRCodeData;
 import com.BackendIkcard.IkcardBackend.Models.Users;
+import com.BackendIkcard.IkcardBackend.Repository.QRCodeDataRepository;
+import com.BackendIkcard.IkcardBackend.Repository.UsersRepository;
 import com.BackendIkcard.IkcardBackend.Service.QRCodeService;
 import com.BackendIkcard.IkcardBackend.Service.UsersService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 @RestController
@@ -22,15 +24,98 @@ public class QRCodeGenerateController {
     private QRCodeService qrCodeService;
     @Autowired
     private UsersService usersService;
+    @Autowired
+    private QRCodeService qrCodeGeneratorService;
+    @Autowired
+    private UsersRepository userRepository;
+    @Autowired
+    private QRCodeDataRepository qrCodeDataRepository;
+
+/*    @PostMapping("/scan")
+    public ResponseEntity<String> scanQRCode(@RequestBody String scannedQRCode) {
+        // Vous devez implémenter la logique pour extraire les informations du QR code scanné
+        // Par exemple, vous pouvez utiliser une bibliothèque comme ZXing
+        String userInfo = extractUserInfoFromQRCode(scannedQRCode);
+
+        // Utilisez les informations de l'utilisateur comme nécessaire
+        System.out.println(userInfo);
+
+        return ResponseEntity.ok(userInfo);
+    }
+
+    // Méthode fictive pour extraire les informations du QR code
+    private String extractUserInfoFromQRCode(String scannedQRCode) {
+        // Vous devez implémenter la logique pour extraire les informations du QR code
+        // Utilisez une bibliothèque comme ZXing
+        // Retournez les informations sous forme de chaîne
+        return "Informations extraites du QR code";
+    }*/
 
     @GetMapping(value = "/generate/{username}", produces = MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<byte[]> generateQR(@PathVariable String username) {
+        Optional<Users> userOptional = usersService.findByUsername(username);
+
+        if (userOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Users user = userOptional.get();
+        System.out.println(username);
+        System.out.println(user.getNom());
+        System.out.println(username);
+        System.out.println(user.getEmail());
+        byte[] qrCode = qrCodeService.generateQRCode(user);
+
+        return ResponseEntity.ok().body(qrCode);
+    }
+
+    @PostMapping("/scan")
+    public ResponseEntity<String> scanQRCode(@RequestBody String scannedQRCode) {
+        // Vous devez implémenter la logique pour extraire les informations du QR code scanné
+        String userInfo = extractUserInfoFromQRCode(scannedQRCode);
+
+        // Utilisez les informations de l'utilisateur comme nécessaire
+        System.out.println(userInfo);
+
+        return ResponseEntity.ok(userInfo);
+    }
+
+    private String extractUserInfoFromQRCode(String scannedQRCode) {
+        // Vous devez implémenter la logique pour extraire les informations du QR code
+        // Exemple fictif : Vous pouvez simplement renvoyer le contenu du QR Code
+        return scannedQRCode;
+    }
+
+
+
+ /*   @GetMapping(value = "/generate/{username}", produces = MediaType.IMAGE_PNG_VALUE)
     public ResponseEntity<byte[]> generateQRCode(@PathVariable String username) {
         Optional<Users> userOptional = usersService.findByUsername(username);
         System.out.println(username);
 
         if (userOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Users user = userOptional.get();
+        System.out.println(username);
+        System.out.println(user.getNom());
+        System.out.println(username);
+        System.out.println(user.getEmail());
+        byte[] qrCode = qrCodeService.generateQRCode(user);
+
+
+        // Vous pouvez ajouter des en-têtes personnalisés si nécessaire
+        return ResponseEntity.ok().body(qrCode);
+
+    }
+
+    @GetMapping(value = "/generateI/{username}", produces = MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<byte[]> generateQRCodeI(@PathVariable String username) {
+        Optional<Users> userOptional = usersService.findByUsername(username);
+
+        if (userOptional.isEmpty()) {
             // Gérer le cas où l'utilisateur n'est pas trouvé
-            System.out.println("Le username n'existe pas");
             return ResponseEntity.notFound().build();
         }
 
@@ -43,6 +128,34 @@ public class QRCodeGenerateController {
 
         // Vous pouvez ajouter des en-têtes personnalisés si nécessaire
         return ResponseEntity.ok().body(qrCode);
+    }*/
+
+    @PostMapping("/save")
+    public ResponseEntity<String> saveQRCodeData(@RequestBody String qrCode) {
+        // Supposez que vous ayez une méthode dans votre service QRCodeService pour sauvegarder
+        // les données du QR code dans la base de données, puis renvoyer l'ID généré.
+        // Cette méthode peut également être utilisée pour obtenir les données du QR code par la suite.
+        qrCodeService.saveQRCodeData(qrCode);
+        // Vous pouvez renvoyer l'ID généré ou un message de succès ici.
+        return ResponseEntity.ok("QR code saved successfully.");
+    }
+
+    @GetMapping("/get/{id}")
+    public ResponseEntity<byte[]> getQRCodeData(@PathVariable Long id) {
+        Optional<QRCodeData> qrCodeDataOptional = qrCodeService.getQRCodeData(id);
+
+        if (qrCodeDataOptional.isPresent()) {
+            String qrCode = qrCodeDataOptional.get().getQrCode();
+            // Convertir le texte du QR code en tableau d'octets (byte[])
+            byte[] qrCodeBytes = qrCode.getBytes(StandardCharsets.UTF_8);
+            // Vous pouvez ajouter des en-têtes personnalisés si nécessaire
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+            headers.setContentLength(qrCodeBytes.length);
+            return new ResponseEntity<>(qrCodeBytes, headers, HttpStatus.OK);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 }

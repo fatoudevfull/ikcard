@@ -6,5 +6,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface QRCodeDataRepository extends JpaRepository<QRCodeData, Long> {
-    // Add custom queries if needed
 }

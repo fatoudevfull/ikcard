@@ -62,9 +62,5 @@ public class DatabaseFile {
 	public void setData(byte[] data) {
 		this.data = data;
 	}
-	@ManyToOne
-	private Entreprise entreprise;
-	@ManyToOne
-	private  Users utilisateus;
 
 }

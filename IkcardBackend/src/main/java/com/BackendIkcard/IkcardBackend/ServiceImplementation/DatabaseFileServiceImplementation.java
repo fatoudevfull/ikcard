@@ -19,25 +19,31 @@ import java.io.IOException;
 import java.util.Objects;
 
 @Service
-public class DatabaseFileServiceImpl implements DatabaseFileService {
+public class DatabaseFileServiceImplementation implements DatabaseFileService {
 
     @Autowired
     private DatabaseFileRepository dbFileRepository;
 
     @Autowired
-    private EntrepriseRepository dossierRepository;
-    @Autowired
-    private UsersRepository utilisateusRepository;
-
-
+    private EntrepriseRepository entrepriseRepository;
     @Override
-    public DatabaseFile storeFile(MultipartFile file, Long idUser, Long id) {
-        return null;
-    }
+    public DatabaseFile storeFile(MultipartFile file) {
+        // Normaliser le nom du fichier
+        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
 
-    @Override
-    public DatabaseFile saveFile(MultipartFile file, Long idUser) {
-        return null;
+        try {
+            // Vérifiez si le nom du fichier contient des caractères invalides
+            if(fileName.contains("..")) {
+                throw new FileStorageException("Pardon! Le nom de fichier contient une séquence de chemin non valide " + fileName);
+            }
+
+            DatabaseFile dbFile = new DatabaseFile(fileName, file.getContentType(), file.getBytes());
+            // dbFile.setUtilisateus(utilisateusRepository.findById(idDossier).get());
+            //dbFile.setDossier(dossierRepository.findByIddossier(id));
+            return dbFileRepository.save(dbFile);
+        } catch (IOException ex) {
+            throw new FileStorageException("Impossible de stocker le fichier" + fileName + ". Veuillez réessayer!", ex);
+        }
     }
 
     @Override

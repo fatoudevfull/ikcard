@@ -8,7 +8,6 @@ import com.BackendIkcard.IkcardBackend.Repository.CarteRepository;
 import com.BackendIkcard.IkcardBackend.Repository.UserSimpleRepository;
 import com.BackendIkcard.IkcardBackend.Service.CarteService;
 import com.BackendIkcard.IkcardBackend.Service.UserSimpleService;
-import com.BackendIkcard.IkcardBackend.ServiceImplementation.QRCodeService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,29 +34,7 @@ public class CarteController {
     private CarteRepository carteRepository;
     @Autowired
     private UserSimpleService userSimpleService;
-    @Autowired
-    private QRCodeService qrCodeService;
 
-    // Créer une carte
-/*    @PostMapping("/creer/{id}")
-    public ResponseEntity<Carte> creerCarte(@RequestBody Carte carte, @PathVariable Long id) {
-        // Retrieve the user from the database based on the provided userId
-        Optional<User> userOptional = userRepository.findById(id);
-
-        if (userOptional.isEmpty()) {
-            // Handle the case where the user with the specified userId is not found
-            return ResponseEntity.notFound().build();
-        }
-
-        // Set the user for the card
-        User user = userOptional.get();
-        carte.setUser(user);
-
-        // Assuming carteService.creerCarte method saves the card to the database
-        Carte nouvelleCarte = carteService.creerCarte(carte);
-
-        return new ResponseEntity<>(nouvelleCarte, HttpStatus.CREATED);
-    }*/
     @PostMapping("/creer/{username}")
     public Carte creerCarte(@RequestBody Carte carte, @PathVariable String username) {
         // Vérifier que le nom d'utilisateur n'est pas null
@@ -84,54 +61,6 @@ public class CarteController {
         // Enregistrez la carte dans le référentiel de la carte
         return carteRepository.save(carte);
     }
-
-/*    @PostMapping(value = "/generate/{userId}", produces = MediaType.IMAGE_PNG_VALUE)
-    public ResponseEntity<byte[]> generateQRCode(@PathVariable Long userId, String username) {
-        try {
-            // Récupérer les informations sur l'utilisateur
-            User user = userService.findById(userId);
-            System.out.println(user.getEmail());
-
-            // Générer le code QR basé sur les informations de l'utilisateur
-            byte[] qrCode = qrCodeService.generateAndSaveQRCode(user);
-
-            // Enregistrer la carte dans la base de données
-            Carte carte = new Carte();
-            carte.setUser(user);
-            // Ajoutez d'autres informations de la carte si nécessaire
-            System.out.println(carte.getNomComplet());
-
-            // Vérifier que le nom d'utilisateur n'est pas null
-            if (username == null) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Le nom d'utilisateur ne peut pas être null");
-            }
-
-            // Recherche de l'utilisateur par nom d'utilisateur
-            Optional<User> userOptional = userRepository.findByUsername(username);
-
-            // Vérifier si l'utilisateur existe
-            if (userOptional.isEmpty()) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Utilisateur non trouvé avec le nom d'utilisateur : " + username);
-            }
-
-            // Associer la carte à l'utilisateur
-            User user = userOptional.get();
-            carte.setUser(user);
-
-            // Votre logique de création de carte ici
-            // Set the current date
-            carte.setDateCreationCarte(new Date());
-
-            // Enregistrez la carte dans le référentiel de la carte
-             carteRepository.save(carte);
-
-            return ResponseEntity.ok().body(qrCode);
-        } catch (IOException | WriterException e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().build();
-        }
-        }
-    */
 
 
         @PostMapping("/creernom/{username}")
