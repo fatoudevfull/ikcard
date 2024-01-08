@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class AmbassadeurServiceImp implements AmbassadeurService {
@@ -29,28 +30,57 @@ public class AmbassadeurServiceImp implements AmbassadeurService {
             return new ReponseMessage("Cet Ambassadeur existe déjà", false);
         }
     }
+
+    public Ambassadeur creerAmbassadeurL(Ambassadeur ambassadeur) {
+        // Logique pour générer le lien de référencement automatiquement
+        ambassadeur.setLienReferencement(genererLienReferencementUnique());
+        return ambassadeurRepository.save(ambassadeur);
+    }
+
+    private String genererLienReferencementUnique() {
+        // Logique de génération du lien de référencement unique
+        // Vous pouvez utiliser UUID ou une autre méthode pour garantir l'unicité
+        return UUID.randomUUID().toString();
+    }
     @Override
     public ReponseMessage modifierAmbassadeur(Long id, Ambassadeur ambassadeur) {
-        Optional<Ambassadeur> existingAdminOptional = ambassadeurRepository.findById(id);
+        Optional<Ambassadeur> existingAbsOptional = ambassadeurRepository.findById(id);
 
-        if (existingAdminOptional.isPresent()) {
-            Ambassadeur existingAdmin = existingAdminOptional.get();
+        if (existingAbsOptional.isPresent()) {
+            Ambassadeur existingAbs = existingAbsOptional.get();
+
             // Set etat to true before updating
-            ambassadeur.setEtat(true);
-            existingAdmin.setNom(ambassadeur.getNom());
-            existingAdmin.setNumero(ambassadeur.getNumero());
-            existingAdmin.setUsername(ambassadeur.getUsername());
-            existingAdmin.setPassword(ambassadeur.getPassword());
-            existingAdmin.setPrenom(ambassadeur.getPrenom());
-            // existingAdmin.setPhoto(ambassadeur.getPhoto());
-            ambassadeur.setEmail(ambassadeur.getEmail());
+            existingAbs.setEtat(true);
+
+            // Update only non-null properties
+            if (ambassadeur.getNom() != null) {
+                existingAbs.setNom(ambassadeur.getNom());
+            }
+            if (ambassadeur.getNumero() != null) {
+                existingAbs.setNumero(ambassadeur.getNumero());
+            }
+            if (ambassadeur.getUsername() != null) {
+                existingAbs.setUsername(ambassadeur.getUsername());
+            }
+            if (ambassadeur.getPassword() != null) {
+                existingAbs.setPassword(ambassadeur.getPassword());
+            }
+            if (ambassadeur.getPrenom() != null) {
+                existingAbs.setPrenom(ambassadeur.getPrenom());
+            }
+            if (ambassadeur.getEmail() != null) {
+                existingAbs.setEmail(ambassadeur.getEmail());
+            }
+
             // Set other fields as needed
-            ambassadeurRepository.save(existingAdmin);
+
+            ambassadeurRepository.save(existingAbs);
             return new ReponseMessage("Ambassadeur modifié avec succès", true);
         } else {
             return new ReponseMessage("Désolé, Ambassadeur non trouvé", false);
         }
     }
+
 
     public void desactiverCompte(Long userId) {
         Ambassadeur user = ambassadeurRepository.findById(userId)

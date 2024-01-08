@@ -1,16 +1,17 @@
 package com.BackendIkcard.IkcardBackend.Controller;
 
 import com.BackendIkcard.IkcardBackend.Message.Reponse.MessageResponse;
+import com.BackendIkcard.IkcardBackend.Message.ReponseMessage;
 import com.BackendIkcard.IkcardBackend.Models.Annonce;
 import com.BackendIkcard.IkcardBackend.Service.AnnonceService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class AnnonceController {
     @Autowired
     private AnnonceService annonceService;
 
-    @GetMapping
+    @GetMapping("/liste")
     public List<Annonce> getAllAnnonces() {
         return annonceService.getAllAnnonces();
     }
@@ -39,18 +40,19 @@ public class AnnonceController {
         return ResponseEntity.ok(new MessageResponse("annonce enregistré avec succès!"));
     }
 
-    @PostMapping("/{id}/ajouter-image")
+    @PostMapping("/{id}/image")
     public ResponseEntity<String> ajouterImageAnnonce(
             @PathVariable Long id,
             @RequestParam("image") MultipartFile image) {
         annonceService.ajouterImageAnnonce(id, image);
         return ResponseEntity.ok("Image ajoutée avec succès à l'annonce avec l'ID : " + id);
     }
-    @PostMapping("/upload")
-        public ResponseEntity<String> uploadAnnonceWithFile(@ModelAttribute Annonce annonce, @RequestParam("file") MultipartFile file) {
-            Annonce savedAnnonce = annonceService.storeAnnonceWithFile(annonce, file);
-            return ResponseEntity.ok("Annonce avec fichier enregistrée avec succès. ID de l'annonce : " + savedAnnonce.getId());
-        }
+    @GetMapping("/{id}/image")
+    public ResponseEntity<byte[]> getImage(@PathVariable Long id) {
+        byte[] image = annonceService.getImage(id);
+        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(image);
+    }
+
 
 
     @GetMapping("/{id}")
@@ -60,13 +62,13 @@ public class AnnonceController {
     }
 
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Annonce> updateAnnonce(@PathVariable Long id, @RequestBody Annonce updatedAnnonce) {
-        Annonce updated = annonceService.updateAnnonce(id, updatedAnnonce);
+    @PutMapping("/update/{id}")
+    public ResponseEntity<ReponseMessage> updateAnnonce(@PathVariable Long id, @RequestBody Annonce updatedAnnonce) {
+        ReponseMessage updated = annonceService.updateAnnonce(id, updatedAnnonce);
         return ResponseEntity.ok().body(updated);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteAnnonce(@PathVariable Long id) {
         annonceService.deleteAnnonce(id);
         return ResponseEntity.ok().body("Annonce supprimée avec succès");

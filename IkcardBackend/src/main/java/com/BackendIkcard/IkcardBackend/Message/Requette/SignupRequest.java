@@ -57,7 +57,7 @@ public class SignupRequest {
     private String roleName;
 
 
-    public String getRoleName() {
+    public @NotBlank String getRoleName() {
         return roleName;
     }
 

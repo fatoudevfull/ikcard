@@ -10,5 +10,6 @@ public interface UsersService {
     List<Users> getAllUsers();
     Optional<Users> findByUsername(String username);
     void ajouterPhoto(Long userId, MultipartFile photo);
+    byte[] getImagephotoProfil(Long id);
 
 }

@@ -42,28 +42,56 @@ public class UserSimpleServiceImp implements UserSimpleService {
 
     @Override
     public ReponseMessage modifierUserSimple(Long id, UserSimple userSimple) {
-        Optional<UserSimple> existingAdminOptional = userSimpleRepository.findById(id);
+        Optional<UserSimple> existingUserOptional = userSimpleRepository.findById(id);
 
-        if (existingAdminOptional.isPresent()) {
-            UserSimple existingAdmin = existingAdminOptional.get();
+        if (existingUserOptional.isPresent()) {
+            UserSimple existingUser = existingUserOptional.get();
+
             // Set etat to true before updating
             userSimple.setEtat(true);
-            existingAdmin.setNom(userSimple.getNom());
-            existingAdmin.setNumero(userSimple.getNumero());
-            existingAdmin.setAdresse(userSimple.getAdresse());
-            existingAdmin.setPassword(userSimple.getPassword());
-            existingAdmin.setPrenom(userSimple.getPrenom());
-            existingAdmin.setPhotoProfil(userSimple.getPhotoProfil());
-            userSimple.setEmail(userSimple.getEmail());
-            userSimple.setVille(userSimple.getVille());
-            userSimple.setPays(userSimple.getPays());
+
+            // Vérifier chaque champ avant la mise à jour
+            if (userSimple.getNom() != null) {
+                existingUser.setNom(userSimple.getNom());
+            }
+
+            if (userSimple.getNumero() != null) {
+                existingUser.setNumero(userSimple.getNumero());
+            }
+
+            if (userSimple.getAdresse() != null) {
+                existingUser.setAdresse(userSimple.getAdresse());
+            }
+
+            if (userSimple.getPrenom() != null) {
+                existingUser.setPrenom(userSimple.getPrenom());
+            }
+
+            if (userSimple.getPhotoProfil() != null) {
+                existingUser.setPhotoProfil(userSimple.getPhotoProfil());
+            }
+
+            if (userSimple.getEmail() != null) {
+                existingUser.setEmail(userSimple.getEmail());
+            }
+
+            if (userSimple.getVille() != null) {
+                existingUser.setVille(userSimple.getVille());
+            }
+
+            if (userSimple.getPays() != null) {
+                existingUser.setPays(userSimple.getPays());
+            }
+
             // Set other fields as needed
-            userSimpleRepository.save(existingAdmin);
+
+            userSimpleRepository.save(existingUser);
             return new ReponseMessage("Utilisateur modifié avec succès", true);
         } else {
             return new ReponseMessage("Désolé, Utilisateur non trouvé", false);
         }
     }
+
 
     public void desactiverCompte(Long userId) {
         UserSimple user = userSimpleRepository.findById(userId)

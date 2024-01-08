@@ -33,6 +33,7 @@ import org.springframework.http.HttpStatus;
 import javax.validation.Valid;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @CrossOrigin(origins = {"http://localhost:4200", "http://localhost:8200", "http://localhost:8100"}, maxAge = 3600, allowCredentials = "true")
@@ -126,7 +127,6 @@ public class AmbassadeurController {
         return ambassadeurService.SupprimerAmbassadeur(id);
     }
 
-
     //modifier
     @PutMapping("/modifier/{id}")
     public ReponseMessage Modifier(@PathVariable Long id, @RequestBody Ambassadeur ambassadeur) {
@@ -138,27 +138,5 @@ public class AmbassadeurController {
         return ambassadeurService.afficherToutLesAmbassadeur();
     }
 
-    // methode pour le login d'un Admin
-/*    @ApiOperation(value = "Le login d'un user.")
-    @PostMapping("/login")
-    public ResponseEntity<Object> Login(@RequestBody LoginRequest loginRequest) {
-
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateJwtToken(authentication);
-
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        List<String> roles = userDetails.getAuthorities().stream()
-                .map(item -> item.getAuthority())
-                .collect(Collectors.toList());
-
-        RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
-
-
-        /////////////////
-        return ResponseEntity.ok(new JwtResponse(jwt, refreshToken.getToken(), userDetails.getId(), userDetails.getUsername(), userDetails.getEmail(), userDetails.getNumero(), userDetails.getNom(), roles));
-    }*/
     // Fin
 }

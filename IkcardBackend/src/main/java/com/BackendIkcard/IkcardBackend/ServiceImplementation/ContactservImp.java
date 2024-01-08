@@ -41,29 +41,26 @@ public class ContactservImp implements ContactService {
         Contact contactExistant = contactRepository.findById(contactId)
                 .orElseThrow(() -> new NoSuchElementException("Contact introuvable"));
 
-        // Mettez à jour les champs du contact existant avec les nouvelles valeurs
-        contactExistant.setNomComplet(contactModifie.getNomComplet());
-        contactExistant.setEmail(contactModifie.getEmail());
-        contactExistant.setFixe1(contactModifie.getFixe1());
-        contactExistant.setInstagramLink(contactModifie.getInstagramLink());
-        contactExistant.setLinkedinLink(contactModifie.getLinkedinLink());
-        contactExistant.setFacebookLink(contactModifie.getFacebookLink());
-        contactExistant.setEmail1(contactModifie.getEmail1());
-        contactExistant.setAddresse(contactModifie.getAddresse());
-        contactExistant.setWebSite(contactExistant.getWebSite());
-        contactExistant.setCompagnie(contactModifie.getCompagnie());
-        contactExistant.setMobile3(contactModifie.getMobile3());
-        contactExistant.setMobile1(contactModifie.getMobile1());
-        contactExistant.setAutrelink(contactModifie.getAutrelink());
-        contactExistant.setFixe2(contactModifie.getFixe2());
-        contactExistant.setTweetterLink(contactModifie.getTweetterLink());
-        contactExistant.setTiktoklink(contactModifie.getTiktoklink());
-        // Ajoutez d'autres champs à mettre à jour
+        // Mettez à jour les champs non-nulls du contact existant avec les nouvelles valeurs
+        if (contactModifie.getNomComplet() != null) {
+            contactExistant.setNomComplet(contactModifie.getNomComplet());
+        }
+
+        if (contactModifie.getEmail() != null) {
+            contactExistant.setEmail(contactModifie.getEmail());
+        }
+
+        if (contactModifie.getFixe1() != null) {
+            contactExistant.setFixe1(contactModifie.getFixe1());
+        }
+
+        // Ajoutez d'autres champs à mettre à jour de la même manière
 
         contactRepository.save(contactExistant);
 
         return new ReponseMessage("Contact modifié avec succès", true);
     }
+
 
     public List<Contact> afficherTousLesContacts(long userId) {
         Users utilisateur = userRepository.findById(userId)

@@ -40,26 +40,54 @@ public class EntrepriseServiceImp implements EntrepriseService {
 
     @Override
     public ReponseMessage modifierEntreprise(Long id, Entreprise entreprise) {
-        Optional<Entreprise> existingAdminOptional = entrepriseRepository.findById(id);
+        Optional<Entreprise> existingEntrepriseOptional = entrepriseRepository.findById(id);
 
-        if (existingAdminOptional.isPresent()) {
-            Entreprise existingAdmin = existingAdminOptional.get();
+        if (existingEntrepriseOptional.isPresent()) {
+            Entreprise existingEntreprise = existingEntrepriseOptional.get();
             // Set etat to true before updating
             entreprise.setEtat(true);
-            existingAdmin.setNom(entreprise.getNom());
-            existingAdmin.setNumero(entreprise.getNumero());
-            existingAdmin.setPassword(entreprise.getPassword());
-            existingAdmin.setImageCouverture(entreprise.getImageCouverture());
-            existingAdmin.setPhotoProfil(entreprise.getPhotoProfil());
-            entreprise.setEmail(entreprise.getEmail());
-            entreprise.setAdresse(entreprise.getAdresse());
-            // Set other fields as needed
-            entrepriseRepository.save(existingAdmin);
-            return new ReponseMessage("Entretpise modifié avec succès", true);
+
+            if (entreprise.getNom() != null) {
+                existingEntreprise.setNom(entreprise.getNom());
+            }
+
+            if (entreprise.getNumero() != null) {
+                existingEntreprise.setNumero(entreprise.getNumero());
+            }
+
+
+            if (entreprise.getImageCouverture() != null) {
+                existingEntreprise.setImageCouverture(entreprise.getImageCouverture());
+            }
+
+            if (entreprise.getPhotoProfil() != null) {
+                existingEntreprise.setPhotoProfil(entreprise.getPhotoProfil());
+            }
+
+            if (entreprise.getEmail() != null) {
+                existingEntreprise.setEmail(entreprise.getEmail());
+            }
+
+            if (entreprise.getPays() != null) {
+                existingEntreprise.setPays(entreprise.getPays());
+            }
+
+            if (entreprise.getVille() != null) {
+                existingEntreprise.setVille(entreprise.getVille());
+            }
+
+            if (entreprise.getAdresse() != null) {
+                existingEntreprise.setAdresse(entreprise.getAdresse());
+            }
+
+
+            entrepriseRepository.save(existingEntreprise);
+            return new ReponseMessage("Entreprise modifié avec succès", true);
         } else {
             return new ReponseMessage("Désolé, entreprise non trouvé", false);
         }
     }
+
 
 
     @Override

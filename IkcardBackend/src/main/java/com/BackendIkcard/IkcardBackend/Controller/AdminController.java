@@ -65,11 +65,6 @@ public class AdminController {
     @PostMapping("/save")
     public ResponseEntity<?> registerAdmin(@Valid @RequestBody SignupRequest signupRequest) {
         // Check if the username already exists
-      /*  if (adminnistrateurRepository.existsByUsername(signupRequest.getUsername())) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new MessageResponse("Erreur: Ce nom d'utilisateur existe déjà!"));
-        }*/
         if (adminnistrateurRepository.existsByUsername(signupRequest.getUsername()) ||
                 userSimpleRepository.existsByUsername(signupRequest.getUsername()) ||
                 ambassadeurRepository.existsByUsername(signupRequest.getUsername())) {
@@ -77,7 +72,6 @@ public class AdminController {
                     .badRequest()
                     .body(new MessageResponse("Erreur: Ce nom d'utilisateur existe déjà!"));
         }
-
 
         // Check if the email already exists
         if (adminnistrateurRepository.existsByEmail(signupRequest.getEmail())) {
@@ -94,27 +88,10 @@ public class AdminController {
         }
 
         // Vérifier si les champs requis ne sont pas vides
-        // Vérifier si le numéro existe déjà
-        if (adminnistrateurRepository.existsByNumero(signupRequest.getNumero())) {
+        if (signupRequest.getUsername().isEmpty() || signupRequest.getEmail().isEmpty() || signupRequest.getNumero().isEmpty()) {
             return ResponseEntity
                     .badRequest()
-                    .body(new MessageResponse("Erreur: Ce numéro est déjà utilisé!"));
-        }
-        // Vérifier si le nom d'utilisateur existe déjà
-        if (signupRequest.getUsername()=="")  {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new MessageResponse("Erreur: Le nom t'utilisateur ne peut etre null!"));
-        }
-        if (signupRequest.getEmail()=="")  {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new MessageResponse("Erreur: L'email ne peut etre null!"));
-        }
-        if (signupRequest.getNumero()=="")  {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new MessageResponse("Erreur: Le numero ne peut etre null!"));
+                    .body(new MessageResponse("Erreur: Veuillez remplir tous les champs obligatoires!"));
         }
 
         // Create new administrator's account
@@ -126,30 +103,23 @@ public class AdminController {
         administrateur.setPassword(encoder.encode(signupRequest.getPassword()));
         administrateur.setNom(signupRequest.getNom());
         administrateur.setNumero(signupRequest.getNumero());
-        System.out.println(administrateur.getPassword());
-        System.out.println(administrateur.getUsername());
 
-        // Set role based on the specified roleName
-        Role adminRole = roleRepository.findByName(getRoleByName(signupRequest.getRoleName()));
+        Role AminRole = roleRepository.findByName(ERole.ADMINIVEAU2);
+        administrateur.setRole(AminRole);
+        System.out.println(administrateur);
+        System.out.println("le role: ");
+        Role adminRole = roleRepository.findByName(ERole.ADMINIVEAU2);
+        System.out.println(adminRole);
         administrateur.setRole(adminRole);
 
         // Set etat to true before updating
         administrateur.setEtat(true);
         administrateur.setDateCreationCompte(new Date());
-
         adminnistrateurRepository.save(administrateur);
 
         return ResponseEntity.ok(new MessageResponse("Adminnistrateur enregistré avec succès!"));
     }
 
-    // Helper method to get role by name
-    private ERole getRoleByName(String roleName) {
-        try {
-            return ERole.valueOf(roleName);
-        } catch (IllegalArgumentException e) {
-            throw new RuntimeException("Role not found: " + roleName);
-        }
-    }
 
  @PutMapping("/desactiver/{userId}")
  public ResponseEntity<String> desactiverCompte(@PathVariable Long userId) {

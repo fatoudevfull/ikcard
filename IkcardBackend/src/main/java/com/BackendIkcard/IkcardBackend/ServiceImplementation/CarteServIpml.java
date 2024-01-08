@@ -64,24 +64,20 @@ public class CarteServIpml implements CarteService {
         Carte carteExistant = carteRepository.findById(carteId)
                 .orElseThrow(() -> new NoSuchElementException("Carte introuvable"));
 
-        // Mettez à jour les champs du contact existant avec les nouvelles valeurs
-        carteExistant.setNomComplet(cartetModifie.getNomComplet());
-        carteExistant.setEmail1(cartetModifie.getEmail1());
-        carteExistant.setFixe1(cartetModifie.getFixe1());
-        carteExistant.setAddresse(cartetModifie.getAddresse());
-        carteExistant.setPosteOccupe(cartetModifie.getPosteOccupe());
-        carteExistant.setFacebookLink(cartetModifie.getFacebookLink());
-        carteExistant.setEmail2(cartetModifie.getEmail2());
-        carteExistant.setCatalogue(cartetModifie.getCatalogue());
-        carteExistant.setMobile3(cartetModifie.getMobile3());
-        carteExistant.setWhatsappLink(cartetModifie.getWhatsappLink());
-        carteExistant.setProfession(cartetModifie.getProfession());
-        carteExistant.setWebSite(cartetModifie.getWebSite());
-        carteExistant.setPhotoProfil(cartetModifie.getPhotoProfil());
-        carteExistant.setPhotoCouverture(cartetModifie.getPhotoCouverture());
-        carteExistant.setInstagramLink(cartetModifie.getInstagramLink());
-        carteExistant.setLinkedinLink(cartetModifie.getLinkedinLink());
-        // Ajoutez d'autres champs à mettre à jour
+        // Mettez à jour les champs du contact existant avec les nouvelles valeurs non nulles
+        if (cartetModifie.getNomComplet() != null) {
+            carteExistant.setNomComplet(cartetModifie.getNomComplet());
+        }
+        if (cartetModifie.getEmail1() != null) {
+            carteExistant.setEmail1(cartetModifie.getEmail1());
+        }
+        if (cartetModifie.getFixe1() != null) {
+            carteExistant.setFixe1(cartetModifie.getFixe1());
+        }
+        if (cartetModifie.getAddresse() != null) {
+            carteExistant.setAddresse(cartetModifie.getAddresse());
+        }
+        // Répétez ce processus pour chaque champ que vous souhaitez mettre à jour
 
         carteRepository.save(carteExistant);
 

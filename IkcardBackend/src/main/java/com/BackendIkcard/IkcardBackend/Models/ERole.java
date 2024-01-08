@@ -1,11 +1,18 @@
 package com.BackendIkcard.IkcardBackend.Models;
 
-public enum ERole {
+import org.springframework.security.core.GrantedAuthority;
+
+public enum ERole implements GrantedAuthority {
     SUPERADMIN,
     ADMINIVEAU1,
     AMBASSADEUR,
     ADMINIVEAU2,
     ENTREPRISE,
-    USER,
+    USER;
 
+    @Override
+    public String getAuthority() {
+        return name();
+    }
 }
+

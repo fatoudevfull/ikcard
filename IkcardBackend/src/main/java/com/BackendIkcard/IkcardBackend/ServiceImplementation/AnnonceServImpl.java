@@ -1,19 +1,18 @@
 package com.BackendIkcard.IkcardBackend.ServiceImplementation;
 
-import com.BackendIkcard.IkcardBackend.Message.Exeption.FileStorageException;
+import com.BackendIkcard.IkcardBackend.Message.ReponseMessage;
 import com.BackendIkcard.IkcardBackend.Models.Annonce;
 import com.BackendIkcard.IkcardBackend.Repository.AnnonceRepository;
 import com.BackendIkcard.IkcardBackend.Service.AnnonceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class AnnonceServImpl implements AnnonceService {
@@ -43,30 +42,40 @@ public class AnnonceServImpl implements AnnonceService {
             throw new RuntimeException("Erreur lors de l'ajout de l'image à l'annonce.", e);
         }
     }
-    public Annonce storeAnnonceWithFile(Annonce annonce, MultipartFile file) {
-        try {
-            // Normaliser le nom du fichier
-            String fileName = StringUtils.cleanPath(file.getOriginalFilename());
 
-            // Vérifier si le nom du fichier contient des caractères invalides
-            if(fileName.contains("..")) {
-                throw new FileStorageException("Pardon! Le nom de fichier contient une séquence de chemin non valide " + fileName);
-            }
+    @Override
+    public byte[] getImage(Long id) {
+        Annonce annonce = annonceRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("annonce non trouvée avec l'ID : " + id));
 
-            annonce.setFileName(fileName);
-            annonce.setFileType(file.getContentType());
-            annonce.setData(file.getBytes());
-
-            return annonceRepository.save(annonce);
-        } catch (IOException ex) {
-            throw new FileStorageException("Impossible de stocker le fichier" + file.getOriginalFilename() + ". Veuillez réessayer!", ex);
-        }
+        return annonce.getData();
     }
 
     @Override
-    public Annonce getAnnonceById(Long id) {
+  /*  public Annonce getAnnonceById(Long id) {
         return annonceRepository.findById(id).orElse(null);
+    }*/
+
+    public Annonce getAnnonceById(Long id) {
+        Optional<Annonce> annonceOptional = annonceRepository.findById(id);
+
+        if (annonceOptional.isPresent()) {
+            Annonce annonce = annonceOptional.get();
+
+            // Ne renvoyer que les informations non sensibles
+            Annonce annonceFiltered = new Annonce();
+            annonceFiltered.setId(annonce.getId());
+            annonceFiltered.setTitre(annonce.getTitre());
+            // Ajoutez d'autres champs non sensibles ici
+            annonceFiltered.setDateAnnonce(annonce.getDateAnnonce());
+            annonceFiltered.setFileName(annonce.getFileName());
+
+            return annonceFiltered;
+        } else {
+            return null;
+        }
     }
+
 
     @Override
     public Annonce createAnnonce(Annonce annonce) {
@@ -75,18 +84,34 @@ public class AnnonceServImpl implements AnnonceService {
     }
 
     @Override
-    public Annonce updateAnnonce(Long id, Annonce updatedAnnonce) {
+    public ReponseMessage updateAnnonce(Long id, Annonce annonce) {
         // Implement validation or business logic if needed
-        Annonce existingAnnonce = annonceRepository.findById(id).orElse(null);
-        if (existingAnnonce != null) {
-            // Update existingAnnonce with fields from updatedAnnonce
-            // Make sure to handle file-related attributes appropriately
-            // ...
+        Optional<Annonce> existingAnnonceOptional = annonceRepository.findById(id);
 
-            // Save the updatedAnnonce
-            return annonceRepository.save(existingAnnonce);
+        if (existingAnnonceOptional.isPresent()) {
+            Annonce existingAnnonce = existingAnnonceOptional.get();
+
+            // Set etat to true before updating
+            existingAnnonce.setEtat(true);
+
+            // Update only non-null properties
+            if (annonce.getTitre() != null) {
+                existingAnnonce.setTitre(annonce.getTitre());
+            }
+            if (annonce.getContenu() != null) {
+                existingAnnonce.setContenu(annonce.getContenu());
+            }
+            if (annonce.getFileType() != null) {
+                existingAnnonce.setFileType(annonce.getFileType());
+            }
+            if (annonce.getFileName() != null) {
+                existingAnnonce.setFileName(annonce.getFileName());
+            }
+            // Set
+            annonceRepository.save(existingAnnonce);
+            return new ReponseMessage("annonce modifié avec succès", true);
         }
-        return null; // Or throw an exception indicating not found
+        return new ReponseMessage("Désolé, l'annoce non trouvé", false);
     }
 
     @Override

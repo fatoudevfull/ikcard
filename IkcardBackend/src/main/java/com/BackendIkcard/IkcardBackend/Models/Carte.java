@@ -20,7 +20,7 @@ public class Carte {
     public String nomComplet;
     public String email1;
     public String Email2;
-    public String photoProfil;
+  //  public String photoProfil;
     public String photoCouverture;
     private String photoCouvertureType;  // Champ pour stocker le type de l'image de couverture
 

@@ -35,6 +35,7 @@ public interface AnnonceService {
 */
 package com.BackendIkcard.IkcardBackend.Service;
 
+import com.BackendIkcard.IkcardBackend.Message.ReponseMessage;
 import com.BackendIkcard.IkcardBackend.Models.Annonce;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -45,9 +46,9 @@ public interface AnnonceService {
 
 
 
-    Annonce storeAnnonceWithFile(Annonce annonce, MultipartFile file);
    // public void ajouterImageAAnnonce(Long annonceId, MultipartFile imageFile);
    void ajouterImageAnnonce(Long id, MultipartFile image);
+    byte[] getImage(Long id);
 
     List<Annonce> getAllAnnonces();
 
@@ -55,7 +56,7 @@ public interface AnnonceService {
 
     Annonce createAnnonce(Annonce annonce);
 
-    Annonce updateAnnonce(Long id, Annonce updatedAnnonce);
+    ReponseMessage updateAnnonce(Long id, Annonce updatedAnnonce);
 
     void deleteAnnonce(Long id);
     void desactiverCompte(Long userId);

@@ -23,6 +23,7 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -183,5 +184,11 @@ public class UserSimplecontroller {
                                                @RequestParam("photo") MultipartFile photo) {
         usersService.ajouterPhoto(userId, photo);
         return ResponseEntity.ok("Photo ajoutée avec succès pour l'utilisateur avec l'ID : " + userId);
+    }
+
+    @GetMapping("/{id}/image")
+    public ResponseEntity<byte[]> getImageCouvertureEntreprise(@PathVariable Long id) {
+        byte[] image = usersService.getImagephotoProfil(id);
+        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(image);
     }
 }

@@ -16,9 +16,7 @@ public class Ambassadeur extends Users {
 
 
     private String lienReferencement;
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "qrcode_data_id", referencedColumnName = "id")
-    private QRCodeData qrCodeData;
+
 
 
     @ManyToOne
