@@ -1,21 +1,32 @@
 package com.BackendIkcard.IkcardBackend.ServiceImplementation;
 
+import com.BackendIkcard.IkcardBackend.Message.Exeption.FileStorageException;
 import com.BackendIkcard.IkcardBackend.Message.ReponseMessage;
-import com.BackendIkcard.IkcardBackend.Models.*;
+import com.BackendIkcard.IkcardBackend.Models.Carte;
+import com.BackendIkcard.IkcardBackend.Models.UserSimple;
+import com.BackendIkcard.IkcardBackend.Models.Users;
 import com.BackendIkcard.IkcardBackend.Repository.CarteRepository;
 import com.BackendIkcard.IkcardBackend.Repository.UserSimpleRepository;
 import com.BackendIkcard.IkcardBackend.Service.CarteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.util.*;
+import javax.persistence.EntityNotFoundException;
+import java.io.IOException;
+import java.util.Date;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 public class CarteServIpml implements CarteService {
-   // private CarteRepository carteRepository;
-   private final CarteRepository carteRepository;
-   @Autowired
-   private UserSimpleRepository userRepository;
+    // private CarteRepository carteRepository;
+    private final CarteRepository carteRepository;
+    @Autowired
+    private UserSimpleRepository userRepository;
 
 
     // Dans votre CarteService
@@ -23,99 +34,32 @@ public class CarteServIpml implements CarteService {
         this.carteRepository = carteRepository;
     }
 
-/*    public Carte creerCarte(Carte carte, Long id) {
-        // Vérifier si l'utilisateur a déjà une carte
-        Optional<User> userOptional = userRepository.findById(id);
-
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-
-            // Vérifier si l'utilisateur a déjà une carte
-            if (user.getCarte() != null) {
-                // L'utilisateur a déjà une carte, vous pouvez choisir de lever une exception,
-                // de mettre à jour la carte existante, ou de prendre une autre action appropriée.
-                // Dans cet exemple, je lève une exception.
-                throw new RuntimeException("L'utilisateur a déjà une carte.");
-            }
-
-            // L'utilisateur n'a pas encore de carte, associez la nouvelle carte à l'utilisateur
-            carte.setUser(user);
-
-            // Définir la date de création de la carte
-            carte.setDateCreationCarte(new Date());
-
-            // Sauvegarder la nouvelle carte
-            return carteRepository.save(carte);
-        } else {
-            // L'utilisateur n'a pas été trouvé, vous pouvez choisir de lever une exception
-            // ou de prendre une autre action appropriée. Dans cet exemple, je lève une exception.
-            throw new RuntimeException("Utilisateur non trouvé avec l'ID : " + id);
-        }
-    }*/
-
-public Carte creerCarte(Carte carte, String username) {
-    // Vérifier si l'utilisateur existe dans la base de données
-    Optional<UserSimple> userOptional = userRepository.findByUsername(username);
-
-    if (userOptional.isPresent()) {
-        Users user = userOptional.get();
-
-        // Vérifier si l'utilisateur a déjà une carte
-        if (user.getCarte() != null) {
-            // L'utilisateur a déjà une carte, vous pouvez choisir de lever une exception,
-            // de mettre à jour la carte existante, ou de prendre une autre action appropriée.
-            // Dans cet exemple, je lève une exception.
-            throw new RuntimeException("L'utilisateur a déjà une carte.");
+    @Override
+    public Carte creerCarteAvecNomPrenom(Carte carte, String username) {
+        if (username == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Le nom d'utilisateur ne peut pas être null");
         }
 
-        // L'utilisateur n'a pas encore de carte, associez la nouvelle carte à l'utilisateur
-        carte.setUser(user);
-
-        // Définir la date de création de la carte
-        carte.setDateCreationCarte(new Date());
-
-        // Sauvegarder la nouvelle carte
-        return carteRepository.save(carte);
-    } else {
-        // L'utilisateur n'a pas été trouvé, vous pouvez choisir de lever une exception
-        // ou de prendre une autre action appropriée. Dans cet exemple, je lève une exception.
-        throw new RuntimeException("Utilisateur non trouvé avec le nom d'utilisateur : " + username);
-    }
-}
-
-
-    public Carte enregistrerCarte(Carte carte, String username) {
-        // Vérifier si l'utilisateur existe dans la base de données
         Optional<UserSimple> userOptional = userRepository.findByUsername(username);
 
-        if (userOptional.isPresent()) {
-            Users user = userOptional.get();
-
-            // Vérifier si l'utilisateur a déjà une carte
-            if (user.getCarte() != null) {
-                // L'utilisateur a déjà une carte, vous pouvez choisir de lever une exception,
-                // de mettre à jour la carte existante, ou de prendre une autre action appropriée.
-                // Dans cet exemple, je lève une exception.
-                throw new RuntimeException("L'utilisateur a déjà une carte.");
-            }
-
-            // L'utilisateur n'a pas encore de carte, associez la nouvelle carte à l'utilisateur
-            carte.setUser(user);
-
-            // Définir la date de création de la carte
-            carte.setDateCreationCarte(new Date());
-
-            // Sauvegarder la nouvelle carte
-            return carteRepository.save(carte);
-        } else {
-            // L'utilisateur n'a pas été trouvé, vous pouvez choisir de lever une exception
-            // ou de prendre une autre action appropriée. Dans cet exemple, je lève une exception.
-            throw new RuntimeException("Utilisateur non trouvé avec le nom d'utilisateur : " + username);
+        if (userOptional.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Utilisateure peut pas être null");
         }
-        //return carteRepository.save(carte);
-    }
-    // Dans votre CarteService
 
+        Users user = userOptional.get();
+        carte.setUser(user);
+
+        carte.setEtat(true);
+        carte.setDateCreationCarte(new Date());
+        carte.setNomComplet(user.getPrenom() + " " + user.getNom());
+
+        return carteRepository.save(carte);
+    }
+
+
+
+
+    // Dans votre CarteService
     public ReponseMessage modifierCarte(long carteId, Carte cartetModifie) {
         Carte carteExistant = carteRepository.findById(carteId)
                 .orElseThrow(() -> new NoSuchElementException("Carte introuvable"));
@@ -149,13 +93,13 @@ public Carte creerCarte(Carte carte, String username) {
         return carteRepository.findAll();
     }
 
-  public void desactiverCompte(Long userId) {
-      Carte carte = carteRepository.findById(userId)
-              .orElseThrow(() -> new NoSuchElementException("Utilisateur introuvable"));
+    public void desactiverCompte(Long userId) {
+        Carte carte = carteRepository.findById(userId)
+                .orElseThrow(() -> new NoSuchElementException("Utilisateur introuvable"));
 
-      carte.setEtat(false); // Mettez à false pour désactiver le compte
-      carteRepository.save(carte);
-  }
+        carte.setEtat(false); // Mettez à false pour désactiver le compte
+        carteRepository.save(carte);
+    }
 
     public void activerCompte(Long userId) {
         Carte carte = carteRepository.findById(userId)
@@ -165,14 +109,14 @@ public Carte creerCarte(Carte carte, String username) {
         carteRepository.save(carte);
     }
 
-
-
     private void setQrCode(String savedFilePath) {
     }
+
     // Dans votre CarteService
     public Optional<Carte> afficherCarteParId(Long id) {
         return carteRepository.findById(id);
     }
+
     // Dans votre CarteService
     public void supprimerCarte(Long id) {
         // Assurez-vous que la carte existe avant de la supprimer
@@ -186,6 +130,21 @@ public Carte creerCarte(Carte carte, String username) {
     @Override
     public List<Object> ListeCarteparEntreprise(String compagnie) {
         return carteRepository.ListeCarteparEntreprise(compagnie);
+    }
+
+    @Override
+    public void ajouterphotoCouverture(Long userId, MultipartFile photo) {
+        Carte carte = carteRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("Utilisateur non trouvé avec l'ID : " + userId));
+
+        try {
+            carte.setPhotoCouvertureData(photo.getBytes());
+            carte.setPhotoCouvertureType(photo.getContentType());
+            carte.setPhotoCouverture(photo.getOriginalFilename());
+            carteRepository.save(carte);
+        } catch (IOException e) {
+            throw new FileStorageException("Erreur lors de l'enregistrement de la photo pour l'utilisateur avec l'ID : " + userId, e);
+        }
     }
 
 

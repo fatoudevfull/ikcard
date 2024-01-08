@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Date;
@@ -35,35 +36,9 @@ public class CarteController {
     @Autowired
     private UserSimpleService userSimpleService;
 
-    @PostMapping("/creer/{username}")
-    public Carte creerCarte(@RequestBody Carte carte, @PathVariable String username) {
-        // Vérifier que le nom d'utilisateur n'est pas null
-        if (username == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Le nom d'utilisateur ne peut pas être null");
-        }
-
-        // Recherche de l'utilisateur par nom d'utilisateur
-        Optional<UserSimple> userOptional = userRepository.findByUsername(username);
-
-        // Vérifier si l'utilisateur existe
-        if (userOptional.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Utilisateur non trouvé avec le nom d'utilisateur : " + username);
-        }
-
-        // Associer la carte à l'utilisateur
-        UserSimple user = userOptional.get();
-        carte.setUser(user);
-
-        // Votre logique de création de carte ici
-        // Set the current date
-        carte.setDateCreationCarte(new Date());
-
-        // Enregistrez la carte dans le référentiel de la carte
-        return carteRepository.save(carte);
-    }
 
 
-        @PostMapping("/creernom/{username}")
+ /*   @PostMapping("/creernom/{username}")
     public Carte creerCarteAvecNomPrenom(@RequestBody Carte carte, @PathVariable String username) {
         // Vérifier que le nom d'utilisateur n'est pas null
         if (username == null) {
@@ -86,14 +61,23 @@ public class CarteController {
         carte.setDateCreationCarte(new Date());
 
         // Définir le nomComplet de la carte comme étant égal au nom et prénom de l'utilisateur
-        carte.setNomComplet(user.getPrenom() +" "+ user.getNom()  );
+        carte.setNomComplet(user.getPrenom() + " " + user.getNom());
 
         // Enregistrez la carte dans le référentiel de la carte
         System.out.println(carte.getNomComplet());
         System.out.println(carte.getMobile1());
         return carteRepository.save(carte);
-    }
+    }*/
 
+    @PostMapping("/create/{username}")
+    public ResponseEntity<Carte> createCarte(@RequestBody Carte carte, @PathVariable String username) {
+        try {
+            Carte createdCarte = carteService.creerCarteAvecNomPrenom(carte, username);
+            return new ResponseEntity<>(createdCarte, HttpStatus.CREATED);
+        } catch (ResponseStatusException ex) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 
 
     // Modifier une carte
@@ -111,7 +95,6 @@ public class CarteController {
     public List<Object> compagnieNombre(@PathVariable String compagnie) {
         return carteService.ListeCarteparEntreprise(compagnie);
     }
-
     @PutMapping("/activer/{userId}")
     public ResponseEntity<String> activerCompte(@PathVariable Long userId) {
         carteService.activerCompte(userId);
@@ -139,6 +122,13 @@ public class CarteController {
     public ResponseEntity<Void> supprimerCarte(@PathVariable Long id) {
         carteService.supprimerCarte(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/{id}/photo")
+    public ResponseEntity<String> ajouterPhoto(@PathVariable Long id,
+                                               @RequestParam("photo") MultipartFile photo) {
+        carteService.ajouterphotoCouverture(id, photo);
+        return ResponseEntity.ok("Photo couverture ajoutée avec succès a la carte : " + id);
     }
 }
 

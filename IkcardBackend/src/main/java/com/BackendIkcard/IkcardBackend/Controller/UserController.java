@@ -108,7 +108,7 @@ public class UserController {
         user.setUsername(signupRequest.getUsername());
         user.setEmail(signupRequest.getEmail());
         user.setPrenom(signupRequest.getPrenom());
-        user.setPhoto(signupRequest.getPhoto());
+        user.setPhotoProfil(signupRequest.getPhoto());
         user.setPassword(encoder.encode(signupRequest.getPassword()));
         user.setNom(signupRequest.getNom());
         user.setNumero(signupRequest.getNumero());
@@ -121,4 +121,5 @@ public class UserController {
         user.setEtat(true);
         return ResponseEntity.ok(new MessageResponse("utilisateur enregistré avec succès!"));
     }
+
 }

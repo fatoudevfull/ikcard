@@ -153,7 +153,7 @@ public ResponseEntity<Object> Login(@RequestBody LoginRequest loginRequest) {
             userDetails.getPrenom(),
             userDetails.getPays(),
             userDetails.getVille(),
-            userDetails.getPhoto(),
+            userDetails.getPhotoProfil(),
             userDetails.getAdresse(),
             refreshToken.getToken(),
             roles));

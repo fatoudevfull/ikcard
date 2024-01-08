@@ -27,7 +27,7 @@ public class UserDetailsImpl implements UserDetails{
     private String username;
     private String numero;
     private String email;
-    private String photo;
+    private String photoProfil;
     private String Pays;
     private String ville;
     private String adresse;
@@ -49,7 +49,7 @@ public class UserDetailsImpl implements UserDetails{
             user.getUsername(), 
             user.getNumero(),
             user.getEmail(),
-            user.getPhoto(),
+            user.getPhotoProfil(),
             user.getPays(),
             user.getVille(),
             user.getAdresse(),

@@ -93,7 +93,7 @@ public class AmbassadeurController {
         ambassadeur.setUsername(signupRequest.getUsername());
         ambassadeur.setEmail(signupRequest.getEmail());
         ambassadeur.setPrenom(signupRequest.getPrenom());
-        ambassadeur.setPhoto(signupRequest.getPhoto());
+        ambassadeur.setPhotoProfil(signupRequest.getPhoto());
         ambassadeur.setPassword(encoder.encode(signupRequest.getPassword()));
         ambassadeur.setNom(signupRequest.getNom());
         ambassadeur.setNumero(signupRequest.getNumero());

@@ -17,6 +17,7 @@ import com.BackendIkcard.IkcardBackend.Models.UserSimple;
 import com.BackendIkcard.IkcardBackend.Repository.RoleRepository;
 import com.BackendIkcard.IkcardBackend.Repository.UserSimpleRepository;
 import com.BackendIkcard.IkcardBackend.Service.UserSimpleService;
+import com.BackendIkcard.IkcardBackend.Service.UsersService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -30,6 +31,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.Date;
@@ -56,6 +58,8 @@ public class UserSimplecontroller {
 
     @Autowired
     private UserSimpleService userSimpleService;
+    @Autowired
+    private UsersService usersService;
 
     @Autowired
     private RoleRepository roleRepository;
@@ -114,7 +118,7 @@ public class UserSimplecontroller {
         user.setUsername(signupRequest.getUsername());
         user.setEmail(signupRequest.getEmail());
         user.setPrenom(signupRequest.getPrenom());
-        user.setPhoto(signupRequest.getPhoto());
+        user.setPhotoProfil(signupRequest.getPhoto());
        // user.setPassword(encoder.encode(signupRequest.getPassword()));
         user.setPassword(encoder.encode(signupRequest.getPassword()));
         user.setNom(signupRequest.getNom());
@@ -157,29 +161,6 @@ public class UserSimplecontroller {
     public List<UserSimple> Afficher() {
         return userSimpleService.afficherToutLesUserSimple();
     }
-
-    // methode pour le login d'un Admin
-/*    @ApiOperation(value = "Le login d'un user.")
-    @PostMapping("/login")
-    public ResponseEntity<Object> Login(@RequestBody LoginRequest loginRequest) {
-
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateJwtToken(authentication);
-
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        List<String> roles = userDetails.getAuthorities().stream()
-                .map(item -> item.getAuthority())
-                .collect(Collectors.toList());
-
-        RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
-
-
-        /////////////////
-        return ResponseEntity.ok(new JwtResponse(jwt, refreshToken.getToken(), userDetails.getId(), userDetails.getUsername(), userDetails.getEmail(), userDetails.getNumero(), userDetails.getNom(), roles));
-    }*/
     // Fin
     //nombre ambassadeur
     @GetMapping("/ambamssadeurCunt")
@@ -196,5 +177,11 @@ public class UserSimplecontroller {
     @GetMapping("/{userpays}")
     public List<Object> nombreUserparpays(@PathVariable String pays) {
         return userSimpleService.NombreUserparpays(pays);
+    }
+    @PostMapping("/{userId}/photo")
+    public ResponseEntity<String> ajouterPhoto(@PathVariable Long userId,
+                                               @RequestParam("photo") MultipartFile photo) {
+        usersService.ajouterPhoto(userId, photo);
+        return ResponseEntity.ok("Photo ajoutée avec succès pour l'utilisateur avec l'ID : " + userId);
     }
 }

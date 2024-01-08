@@ -122,7 +122,7 @@ public class AdminController {
         administrateur.setUsername(signupRequest.getUsername());
         administrateur.setEmail(signupRequest.getEmail());
         administrateur.setPrenom(signupRequest.getPrenom());
-        administrateur.setPhoto(signupRequest.getPhoto());
+        administrateur.setPhotoProfil(signupRequest.getPhoto());
         administrateur.setPassword(encoder.encode(signupRequest.getPassword()));
         administrateur.setNom(signupRequest.getNom());
         administrateur.setNumero(signupRequest.getNumero());

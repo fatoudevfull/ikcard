@@ -22,6 +22,10 @@ public class Carte {
     public String Email2;
     public String photoProfil;
     public String photoCouverture;
+    private String photoCouvertureType;  // Champ pour stocker le type de l'image de couverture
+
+    @Lob
+    private byte[] photoCouvertureData;  // Champ pour stocker les données de l'image de couverture
     public String Mobile1;
     public String Mobile2;
     public String Mobile3;
@@ -44,11 +48,11 @@ public class Carte {
     public boolean etat;
 
 
+    /*@ManyToOne
+    private Users user;*/
     @ManyToOne
+    @JoinColumn(name = "user_id")
     private Users user;
-
-
-
     @Getter
     @Lob
     private byte[] qrCode;

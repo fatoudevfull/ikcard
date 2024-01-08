@@ -22,6 +22,10 @@ public class Contact {
     public String email1;
 
     public String photoProfil;
+    private String photoProfilType;  // Champ pour stocker le type de l'image de couverture
+
+    @Lob
+    private byte[] photoProfilData;  // Champ pour stocker les données de l'image de couverture
 
     public String mobile1;
 

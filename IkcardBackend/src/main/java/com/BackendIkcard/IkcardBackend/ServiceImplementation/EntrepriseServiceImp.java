@@ -9,7 +9,10 @@ import com.BackendIkcard.IkcardBackend.Service.AdministrateurService;
 import com.BackendIkcard.IkcardBackend.Service.EntrepriseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.EntityNotFoundException;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -47,7 +50,7 @@ public class EntrepriseServiceImp implements EntrepriseService {
             existingAdmin.setNumero(entreprise.getNumero());
             existingAdmin.setPassword(entreprise.getPassword());
             existingAdmin.setImageCouverture(entreprise.getImageCouverture());
-            existingAdmin.setPhoto(entreprise.getPhoto());
+            existingAdmin.setPhotoProfil(entreprise.getPhotoProfil());
             entreprise.setEmail(entreprise.getEmail());
             entreprise.setAdresse(entreprise.getAdresse());
             // Set other fields as needed
@@ -59,25 +62,29 @@ public class EntrepriseServiceImp implements EntrepriseService {
     }
 
 
- /*   @Override
-    public void activerEntreprise(Long id) {
-        Administrateur administrateur = adminnistrateurRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Administrateur introuvable"));
-        administrateur.setEtat(true);
-        adminnistrateurRepository.save(administrateur);
-    }*/
+    @Override
+    public void ajouterImageCouvertureEntreprise(Long entrepriseId, MultipartFile image) {
+        Entreprise entreprise = entrepriseRepository.findById(entrepriseId)
+                .orElseThrow(() -> new EntityNotFoundException("Entreprise non trouvée avec l'ID : " + entrepriseId));
 
-  /*  @Override
-    public void activerEntreprise(Long id) {
-        Optional<Entreprise> existingAdmin = entrepriseRepository.findById(id);
-        existingAdmin.ifPresent(entreprise -> {
-            // Set etat to true
-            entreprise.setEtat(true);
+        try {
+            entreprise.setImageCouvertureType(image.getContentType());
+            entreprise.setImageCouverture(image.getOriginalFilename());
+            entreprise.setImageCouvertureData(image.getBytes());
 
-            // Save the updated entity
             entrepriseRepository.save(entreprise);
-        });
-    }*/
+        } catch (IOException e) {
+            throw new RuntimeException("Erreur lors de l'ajout de l'image de couverture à l'entreprise.", e);
+        }
+    }
+
+    @Override
+    public byte[] getImageCouvertureEntreprise(Long entrepriseId) {
+        Entreprise entreprise = entrepriseRepository.findById(entrepriseId)
+                .orElseThrow(() -> new EntityNotFoundException("Entreprise non trouvée avec l'ID : " + entrepriseId));
+
+        return entreprise.getImageCouvertureData();
+    }
 
     public void desactiverCompte(Long userId) {
         Entreprise entreprise = entrepriseRepository.findById(userId)

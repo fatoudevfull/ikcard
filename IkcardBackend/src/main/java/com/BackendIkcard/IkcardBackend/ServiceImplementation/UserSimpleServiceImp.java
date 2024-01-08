@@ -53,7 +53,7 @@ public class UserSimpleServiceImp implements UserSimpleService {
             existingAdmin.setAdresse(userSimple.getAdresse());
             existingAdmin.setPassword(userSimple.getPassword());
             existingAdmin.setPrenom(userSimple.getPrenom());
-            existingAdmin.setPhoto(userSimple.getPhoto());
+            existingAdmin.setPhotoProfil(userSimple.getPhotoProfil());
             userSimple.setEmail(userSimple.getEmail());
             userSimple.setVille(userSimple.getVille());
             userSimple.setPays(userSimple.getPays());

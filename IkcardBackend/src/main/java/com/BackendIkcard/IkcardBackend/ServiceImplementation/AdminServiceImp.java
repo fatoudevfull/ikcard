@@ -42,7 +42,7 @@ public class AdminServiceImp implements AdministrateurService {
             existingAdmin.setUsername(administrateur.getUsername());
             existingAdmin.setPassword(administrateur.getPassword());
             existingAdmin.setPrenom(administrateur.getPrenom());
-            existingAdmin.setPhoto(administrateur.getPhoto());
+            existingAdmin.setPhotoProfil(administrateur.getPhotoProfil());
             administrateur.setEmail(administrateur.getEmail());
             // Set other fields as needed
             adminnistrateurRepository.save(existingAdmin);

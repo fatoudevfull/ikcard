@@ -15,6 +15,7 @@ import com.BackendIkcard.IkcardBackend.Service.EntrepriseService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,6 +24,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.multipart.MultipartFile;
 
 
 import javax.validation.Valid;
@@ -78,7 +80,7 @@ public class EntrepriseController {
         entreprise.setImageCouverture(signupRequest.getImageCouverture());
         entreprise.setEmail(signupRequest.getEmail());
         entreprise.setAdresse(signupRequest.getAdresse());
-        entreprise.setPhoto(signupRequest.getPhoto());
+        entreprise.setPhotoProfil(signupRequest.getPhoto());
         entreprise.setPassword(encoder.encode(signupRequest.getPassword()));
         entreprise.setNom(signupRequest.getNom());
         entreprise.setNumero(signupRequest.getNumero());
@@ -120,6 +122,20 @@ public class EntrepriseController {
     @PutMapping("/modifier/{id}")
     public ReponseMessage Modifier(@PathVariable Long id, @RequestBody Entreprise entreprise) {
         return entrepriseService.modifierEntreprise(id, entreprise);
+    }
+    //ajouter l'image de couverture
+    @PostMapping("/{entrepriseId}/ajouter-image-couverture")
+    public ResponseEntity<String> ajouterImageCouvertureEntreprise(
+            @PathVariable Long entrepriseId,
+            @RequestParam("image") MultipartFile image) {
+        entrepriseService.ajouterImageCouvertureEntreprise(entrepriseId, image);
+        return ResponseEntity.ok("Image de couverture ajoutée avec succès à l'entreprise avec l'ID : " + entrepriseId);
+    }
+
+    @GetMapping("/{entrepriseId}/image-couverture")
+    public ResponseEntity<byte[]> getImageCouvertureEntreprise(@PathVariable Long entrepriseId) {
+        byte[] image = entrepriseService.getImageCouvertureEntreprise(entrepriseId);
+        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(image);
     }
 
     @GetMapping("/afficher")

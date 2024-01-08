@@ -27,7 +27,11 @@ public abstract class Users {
     private String pays;
     private String ville;
     private String adresse;
-    private String photo;
+    private String photoProfil;
+    private String photoType;  // Champ pour stocker le type  de photo
+
+    @Lob
+    private byte[] photoData;  // Champ pour stocker les données de photo
 
     public Date dateCreationCompte;
     @ManyToOne
@@ -48,6 +52,8 @@ public abstract class Users {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Carte> carte = new ArrayList<>();
+
+
 
 
 }

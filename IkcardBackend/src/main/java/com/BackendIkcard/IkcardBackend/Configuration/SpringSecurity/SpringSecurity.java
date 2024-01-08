@@ -70,6 +70,7 @@ public class SpringSecurity {
                 .antMatchers("/auth/**").permitAll()
                 .antMatchers("/ambassadeur/**").permitAll()
                 .antMatchers("/contact/**").permitAll()
+                .antMatchers("/usersimple/**").permitAll()
                 .antMatchers("/entreprise/**").permitAll()
                 .antMatchers("/contact/**").permitAll()
                 .antMatchers("/import/**").permitAll()
