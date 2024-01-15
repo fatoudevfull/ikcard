@@ -2,25 +2,18 @@ package com.BackendIkcard.IkcardBackend.Controller;
 
 import com.BackendIkcard.IkcardBackend.Configuration.SpringSecurity.Jwt.JwtUtils;
 import com.BackendIkcard.IkcardBackend.Configuration.SpringSecurity.Services.RefreshTokenService;
-import com.BackendIkcard.IkcardBackend.Configuration.SpringSecurity.Services.UserDetailsImpl;
-import com.BackendIkcard.IkcardBackend.Message.Reponse.JwtResponse;
 import com.BackendIkcard.IkcardBackend.Message.Reponse.MessageResponse;
 import com.BackendIkcard.IkcardBackend.Message.ReponseMessage;
-import com.BackendIkcard.IkcardBackend.Message.Requette.LoginRequest;
 import com.BackendIkcard.IkcardBackend.Message.Requette.SignupRequest;
 import com.BackendIkcard.IkcardBackend.Models.*;
 import com.BackendIkcard.IkcardBackend.Repository.EntrepriseRepository;
 import com.BackendIkcard.IkcardBackend.Repository.RoleRepository;
 import com.BackendIkcard.IkcardBackend.Service.EntrepriseService;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
@@ -30,7 +23,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @CrossOrigin(origins = {"http://localhost:4200", "http://localhost:8200", "http://localhost:8100"}, maxAge = 3600, allowCredentials = "true")
 @Api(value = "entreprise", description = "Les actions reslisables par les admin du systeme.")

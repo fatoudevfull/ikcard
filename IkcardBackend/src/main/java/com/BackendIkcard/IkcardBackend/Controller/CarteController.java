@@ -2,8 +2,6 @@ package com.BackendIkcard.IkcardBackend.Controller;
 
 import com.BackendIkcard.IkcardBackend.Message.ReponseMessage;
 import com.BackendIkcard.IkcardBackend.Models.Carte;
-import com.BackendIkcard.IkcardBackend.Models.Users;
-import com.BackendIkcard.IkcardBackend.Models.UserSimple;
 import com.BackendIkcard.IkcardBackend.Repository.CarteRepository;
 import com.BackendIkcard.IkcardBackend.Repository.UserSimpleRepository;
 import com.BackendIkcard.IkcardBackend.Service.CarteService;
@@ -16,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 

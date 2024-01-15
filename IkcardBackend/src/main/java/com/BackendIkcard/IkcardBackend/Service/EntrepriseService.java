@@ -3,7 +3,6 @@ package com.BackendIkcard.IkcardBackend.Service;
 
 
 import com.BackendIkcard.IkcardBackend.Message.ReponseMessage;
-import com.BackendIkcard.IkcardBackend.Models.Administrateur;
 import com.BackendIkcard.IkcardBackend.Models.Entreprise;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,7 +18,7 @@ public interface EntrepriseService {
 
 
     // Mise à jour d'un Entreprise
-    ReponseMessage modifierEntreprise (Long id,Entreprise entreprise);
+    ReponseMessage modifierEntreprise (Long id, Entreprise entreprise);
 
     //affichage d'un Entreprise
 

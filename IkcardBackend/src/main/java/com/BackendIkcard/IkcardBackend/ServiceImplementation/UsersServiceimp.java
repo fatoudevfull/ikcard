@@ -31,6 +31,7 @@ public class UsersServiceimp implements UsersService {
         return userRepository.findAll();
     }
 
+
     @Override
     public Optional<Users> findByUsername(String username) {
         return userRepository.findByUsername(username);
@@ -57,6 +58,8 @@ public class UsersServiceimp implements UsersService {
 
         return users.getPhotoData();
     }
+
+
 
     private String resolveImageType(MultipartFile photo) {
         return MimeTypeUtils.parseMimeType(photo.getContentType()).getSubtype();

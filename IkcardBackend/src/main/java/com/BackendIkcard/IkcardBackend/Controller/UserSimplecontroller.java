@@ -4,41 +4,28 @@ package com.BackendIkcard.IkcardBackend.Controller;
 
 import com.BackendIkcard.IkcardBackend.Configuration.SpringSecurity.Jwt.JwtUtils;
 import com.BackendIkcard.IkcardBackend.Configuration.SpringSecurity.Services.RefreshTokenService;
-import com.BackendIkcard.IkcardBackend.Configuration.SpringSecurity.Services.UserDetailsImpl;
-import com.BackendIkcard.IkcardBackend.Message.Reponse.JwtResponse;
 import com.BackendIkcard.IkcardBackend.Message.Reponse.MessageResponse;
 import com.BackendIkcard.IkcardBackend.Message.ReponseMessage;
-import com.BackendIkcard.IkcardBackend.Message.Requette.LoginRequest;
 import com.BackendIkcard.IkcardBackend.Message.Requette.SignupRequest;
-import com.BackendIkcard.IkcardBackend.Models.ERole;
-import com.BackendIkcard.IkcardBackend.Models.RefreshToken;
-import com.BackendIkcard.IkcardBackend.Models.Role;
-import com.BackendIkcard.IkcardBackend.Models.UserSimple;
+import com.BackendIkcard.IkcardBackend.Models.*;
 import com.BackendIkcard.IkcardBackend.Repository.RoleRepository;
 import com.BackendIkcard.IkcardBackend.Repository.UserSimpleRepository;
 import com.BackendIkcard.IkcardBackend.Service.UserSimpleService;
 import com.BackendIkcard.IkcardBackend.Service.UsersService;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @CrossOrigin(origins = {"http://localhost:4200", "http://localhost:8200", "http://localhost:8100"}, maxAge = 3600, allowCredentials = "true")
 @Api(value = "user", description = "Les actions reslisables par les admin du systeme.")
@@ -120,7 +107,7 @@ public class UserSimplecontroller {
         user.setEmail(signupRequest.getEmail());
         user.setPrenom(signupRequest.getPrenom());
         user.setPhotoProfil(signupRequest.getPhoto());
-       // user.setPassword(encoder.encode(signupRequest.getPassword()));
+        // user.setPassword(encoder.encode(signupRequest.getPassword()));
         user.setPassword(encoder.encode(signupRequest.getPassword()));
         user.setNom(signupRequest.getNom());
         user.setNumero(signupRequest.getNumero());
@@ -174,8 +161,19 @@ public class UserSimplecontroller {
         return userSimpleService.NombreUser();
     }
 
+    @GetMapping("get/{username}")
+    public ResponseEntity<List<Users>> getUsersByUsername(@PathVariable String username) {
+        List<Users> users = userSimpleService.getUsersByUsername(username);
+        if (!users.isEmpty()) {
+            return ResponseEntity.ok(users);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
     //Nombre user par pays
-    @GetMapping("/{userpays}")
+    @GetMapping("pays/{userpays}")
     public List<Object> nombreUserparpays(@PathVariable String pays) {
         return userSimpleService.NombreUserparpays(pays);
     }
@@ -192,3 +190,4 @@ public class UserSimplecontroller {
         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(image);
     }
 }
+

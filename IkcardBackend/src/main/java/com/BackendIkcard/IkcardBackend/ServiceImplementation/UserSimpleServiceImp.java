@@ -2,21 +2,22 @@ package com.BackendIkcard.IkcardBackend.ServiceImplementation;
 
 import com.BackendIkcard.IkcardBackend.Message.ReponseMessage;
 import com.BackendIkcard.IkcardBackend.Models.UserSimple;
+import com.BackendIkcard.IkcardBackend.Models.Users;
 import com.BackendIkcard.IkcardBackend.Repository.UserSimpleRepository;
+import com.BackendIkcard.IkcardBackend.Repository.UsersRepository;
 import com.BackendIkcard.IkcardBackend.Service.UserSimpleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UserSimpleServiceImp implements UserSimpleService {
 
     @Autowired
     private UserSimpleRepository userSimpleRepository;
+    @Autowired
+    private UsersRepository usersRepository;
 
     @Override
     public ReponseMessage creerUserSimple(UserSimple userSimple) {
@@ -32,8 +33,10 @@ public class UserSimpleServiceImp implements UserSimpleService {
         }
     }
 
-
-
+    @Override
+    public List<Users> getUsersByUsername(String username) {
+        return userSimpleRepository.findAllByUsername(username);
+    }
 
     @Override
     public UserSimple findById(Long userId) {
@@ -145,7 +148,4 @@ public class UserSimpleServiceImp implements UserSimpleService {
     public List<Object> NombreUserparpays(String pays) {
         return userSimpleRepository.NombreUserParPays(pays);
     }
-
-    // Other methods...
-
 }

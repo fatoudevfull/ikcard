@@ -4,6 +4,7 @@ package com.BackendIkcard.IkcardBackend.Service;
 
 import com.BackendIkcard.IkcardBackend.Message.ReponseMessage;
 import com.BackendIkcard.IkcardBackend.Models.UserSimple;
+import com.BackendIkcard.IkcardBackend.Models.Users;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,19 +23,21 @@ public interface UserSimpleService {
 
     List<UserSimple > afficherToutLesUserSimple ();
 
+    List<Users> getUsersByUsername(String username);
+
     //Suppression d'un UserSimple
     ReponseMessage SupprimerUserSimple (Long id );
-  //  public void activerUserSimple(Long id);
+    //  public void activerUserSimple(Long id);
 
     void desactiverCompte(Long userId);
     Optional<UserSimple> findByUsername(String username);
 
 
     void activerCompte(Long userId);
-   // User saveUserWithImage(User user, MultipartFile imageFile);
-   List<Object> NombreAmbassadeur();
-   List<Object> NombreUser();
-   List<Object> NombreUserparpays(String pays);
+    // User saveUserWithImage(User user, MultipartFile imageFile);
+    List<Object> NombreAmbassadeur();
+    List<Object> NombreUser();
+    List<Object> NombreUserparpays(String pays);
 
 
 

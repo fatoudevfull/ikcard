@@ -23,7 +23,7 @@ public class AdminServiceImp implements AdministrateurService {
             // Set etat to true before saving
             administrateur.setEtat(true);
             adminnistrateurRepository.save(administrateur);
-            return new ReponseMessage("Administrateur ajouté avec succès", true);
+            return new ReponseMessage ("Administrateur ajouté avec succès", true);
         } else {
             return new ReponseMessage("Cet administrateur existe déjà", false);
         }

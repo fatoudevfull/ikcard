@@ -3,7 +3,6 @@ package com.BackendIkcard.IkcardBackend.Service;
 
 
 import com.BackendIkcard.IkcardBackend.Message.ReponseMessage;
-import com.BackendIkcard.IkcardBackend.Models.Administrateur;
 import com.BackendIkcard.IkcardBackend.Models.Ambassadeur;
 
 import java.util.List;
@@ -14,7 +13,7 @@ public interface AmbassadeurService {
     ReponseMessage creerAmbassadeur(Ambassadeur ambassadeur);
 
     // Mise à jour d'un Ambassadeur
-    ReponseMessage modifierAmbassadeur (Long id,Ambassadeur ambassadeur);
+    ReponseMessage modifierAmbassadeur (Long id, Ambassadeur ambassadeur);
 
     //affichage d'un Ambassadeur
 

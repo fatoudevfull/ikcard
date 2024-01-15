@@ -2,6 +2,7 @@ package com.BackendIkcard.IkcardBackend.Repository;
 
 
 import com.BackendIkcard.IkcardBackend.Models.UserSimple;
+import com.BackendIkcard.IkcardBackend.Models.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,7 +13,7 @@ import java.util.Optional;
 public interface UserSimpleRepository extends JpaRepository<UserSimple, Long> {
 
     UserSimple findByEmail(String email);
-
+    List<Users> findAllByUsername(String username);
     Optional<UserSimple> findByUsername(String username);
     boolean existsByEmail(String email);
     boolean existsByUsername(String username);

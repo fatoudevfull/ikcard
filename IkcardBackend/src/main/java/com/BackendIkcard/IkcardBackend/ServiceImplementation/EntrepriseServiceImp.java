@@ -1,11 +1,8 @@
 package com.BackendIkcard.IkcardBackend.ServiceImplementation;
 
 import com.BackendIkcard.IkcardBackend.Message.ReponseMessage;
-import com.BackendIkcard.IkcardBackend.Models.Administrateur;
 import com.BackendIkcard.IkcardBackend.Models.Entreprise;
-import com.BackendIkcard.IkcardBackend.Repository.AdminnistrateurRepository;
 import com.BackendIkcard.IkcardBackend.Repository.EntrepriseRepository;
-import com.BackendIkcard.IkcardBackend.Service.AdministrateurService;
 import com.BackendIkcard.IkcardBackend.Service.EntrepriseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,16 +10,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
-import java.util.Date;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class EntrepriseServiceImp implements EntrepriseService {
 
     @Autowired
     private EntrepriseRepository entrepriseRepository;
+
 
     @Override
     public ReponseMessage creerEntreprise(Entreprise entreprise) {
@@ -148,7 +143,4 @@ public class EntrepriseServiceImp implements EntrepriseService {
             return new ReponseMessage("entreprise non trouvé", false);
         }
     }
-
-    // Other methods...
-
 }

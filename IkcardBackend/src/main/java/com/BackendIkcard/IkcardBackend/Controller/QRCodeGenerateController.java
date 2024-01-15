@@ -31,25 +31,7 @@ public class QRCodeGenerateController {
     @Autowired
     private QRCodeDataRepository qrCodeDataRepository;
 
-/*    @PostMapping("/scan")
-    public ResponseEntity<String> scanQRCode(@RequestBody String scannedQRCode) {
-        // Vous devez implémenter la logique pour extraire les informations du QR code scanné
-        // Par exemple, vous pouvez utiliser une bibliothèque comme ZXing
-        String userInfo = extractUserInfoFromQRCode(scannedQRCode);
 
-        // Utilisez les informations de l'utilisateur comme nécessaire
-        System.out.println(userInfo);
-
-        return ResponseEntity.ok(userInfo);
-    }
-
-    // Méthode fictive pour extraire les informations du QR code
-    private String extractUserInfoFromQRCode(String scannedQRCode) {
-        // Vous devez implémenter la logique pour extraire les informations du QR code
-        // Utilisez une bibliothèque comme ZXing
-        // Retournez les informations sous forme de chaîne
-        return "Informations extraites du QR code";
-    }*/
 
     @GetMapping(value = "/generate/{username}", produces = MediaType.IMAGE_PNG_VALUE)
     public ResponseEntity<byte[]> generateQR(@PathVariable String username) {
@@ -60,14 +42,14 @@ public class QRCodeGenerateController {
         }
 
         Users user = userOptional.get();
-        System.out.println(username);
-        System.out.println(user.getNom());
-        System.out.println(username);
-        System.out.println(user.getEmail());
-        byte[] qrCode = qrCodeService.generateQRCode(user);
+        byte[] qrCode = qrCodeService.generateQRCodeData(user);
 
         return ResponseEntity.ok().body(qrCode);
     }
+
+
+
+
 
     @PostMapping("/scan")
     public ResponseEntity<String> scanQRCode(@RequestBody String scannedQRCode) {
@@ -86,49 +68,6 @@ public class QRCodeGenerateController {
         return scannedQRCode;
     }
 
-
-
- /*   @GetMapping(value = "/generate/{username}", produces = MediaType.IMAGE_PNG_VALUE)
-    public ResponseEntity<byte[]> generateQRCode(@PathVariable String username) {
-        Optional<Users> userOptional = usersService.findByUsername(username);
-        System.out.println(username);
-
-        if (userOptional.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        Users user = userOptional.get();
-        System.out.println(username);
-        System.out.println(user.getNom());
-        System.out.println(username);
-        System.out.println(user.getEmail());
-        byte[] qrCode = qrCodeService.generateQRCode(user);
-
-
-        // Vous pouvez ajouter des en-têtes personnalisés si nécessaire
-        return ResponseEntity.ok().body(qrCode);
-
-    }
-
-    @GetMapping(value = "/generateI/{username}", produces = MediaType.IMAGE_PNG_VALUE)
-    public ResponseEntity<byte[]> generateQRCodeI(@PathVariable String username) {
-        Optional<Users> userOptional = usersService.findByUsername(username);
-
-        if (userOptional.isEmpty()) {
-            // Gérer le cas où l'utilisateur n'est pas trouvé
-            return ResponseEntity.notFound().build();
-        }
-
-        Users user = userOptional.get();
-        System.out.println(username);
-        System.out.println(user.getNom());
-        System.out.println(username);
-        System.out.println(user.getEmail());
-        byte[] qrCode = qrCodeService.generateQRCode(user);
-
-        // Vous pouvez ajouter des en-têtes personnalisés si nécessaire
-        return ResponseEntity.ok().body(qrCode);
-    }*/
 
     @PostMapping("/save")
     public ResponseEntity<String> saveQRCodeData(@RequestBody String qrCode) {

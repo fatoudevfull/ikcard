@@ -2,15 +2,11 @@ package com.BackendIkcard.IkcardBackend.Controller;
 
 import com.BackendIkcard.IkcardBackend.Configuration.SpringSecurity.Jwt.JwtUtils;
 import com.BackendIkcard.IkcardBackend.Configuration.SpringSecurity.Services.RefreshTokenService;
-import com.BackendIkcard.IkcardBackend.Configuration.SpringSecurity.Services.UserDetailsImpl;
-import com.BackendIkcard.IkcardBackend.Message.Reponse.JwtResponse;
 import com.BackendIkcard.IkcardBackend.Message.Reponse.MessageResponse;
 import com.BackendIkcard.IkcardBackend.Message.ReponseMessage;
-import com.BackendIkcard.IkcardBackend.Message.Requette.LoginRequest;
 import com.BackendIkcard.IkcardBackend.Message.Requette.SignupRequest;
 import com.BackendIkcard.IkcardBackend.Models.Administrateur;
 import com.BackendIkcard.IkcardBackend.Models.ERole;
-import com.BackendIkcard.IkcardBackend.Models.RefreshToken;
 import com.BackendIkcard.IkcardBackend.Models.Role;
 import com.BackendIkcard.IkcardBackend.Repository.AdminnistrateurRepository;
 import com.BackendIkcard.IkcardBackend.Repository.AmbassadeurRepository;
@@ -18,13 +14,9 @@ import com.BackendIkcard.IkcardBackend.Repository.RoleRepository;
 import com.BackendIkcard.IkcardBackend.Repository.UserSimpleRepository;
 import com.BackendIkcard.IkcardBackend.Service.AdministrateurService;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
@@ -33,7 +25,6 @@ import org.springframework.http.HttpStatus;
 import javax.validation.Valid;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @CrossOrigin(origins = {"http://localhost:4200", "http://localhost:8200", "http://localhost:8100"}, maxAge = 3600, allowCredentials = "true")
 @Api(value = "admin", description = "Les actions reslisables par les admin du systeme.")
@@ -147,26 +138,6 @@ public class AdminController {
         return administrateurService.afficherToutLesAdministrateur();
     }
 
-    // methode pour le login d'un Admin
-    // Fin
-/*    @ApiOperation(value = "Le login d'un admin.")
-    @PostMapping("/login")
-    public ResponseEntity<Object> loginAdmin(@RequestBody LoginRequest loginRequest) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateJwtToken(authentication);
-
-        UserDetailsImpl adminDetails = (UserDetailsImpl) authentication.getPrincipal();
-        List<String> roles = adminDetails.getAuthorities().stream()
-                .map(item -> item.getAuthority())
-                .collect(Collectors.toList());
-
-        RefreshToken refreshToken = refreshTokenService.createRefreshToken(adminDetails.getId());
-
-        return ResponseEntity.ok(new JwtResponse(jwt, refreshToken.getToken(), adminDetails.getId(), adminDetails.getUsername(), adminDetails.getEmail(), adminDetails.getNumero(), adminDetails.getNom(), roles));
-        return ResponseEntity.ok(new JwtResponse(jwt,refreshToken.getToken(), userDetails.getId(), userDetails.getUsername(),userDetails.getEmail(),userDetails.getTelephone(), userDetails.getNom(), userDetails.getPrenom(), userDetails.getPhoto(),userDetails.getPoint(),userDetails.getNiveau(),userDetails.getDateSouscription(),userDetails.getPays(), userDetails.getVille(), userDetails.getAdresse(), roles));
-    }*/
 
 }
