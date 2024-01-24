@@ -11,5 +11,6 @@ public interface UsersService {
     Optional<Users> findByUsername(String username);
     void ajouterPhoto(Long userId, MultipartFile photo);
     byte[] getImagephotoProfil(Long id);
+    Optional<Users> getUsersByUsername(String username);
 
 }

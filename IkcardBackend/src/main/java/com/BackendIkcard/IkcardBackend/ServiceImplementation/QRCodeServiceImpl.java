@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -34,67 +35,22 @@ public class QRCodeServiceImpl implements QRCodeService {
 
 
     // Méthode pour générer les données du QRCode avec les informations du profil de l'utilisateur
-    private byte[] generateQRCodeDataI(Users user, int width, int height) {
-        // Construire le contenu du QRCode avec les informations du profil de l'utilisateur
-        String content = String.format("Nom: %s, Prénom: %s, Email: %s, Numéro: %s",
-                user.getNom(), user.getPrenom(), user.getEmail(), user.getNumero());
-
-        // Appel à une méthode de génération de QRCode (vous devez implémenter cela)
-        return generateQRCode(content, width, height);
-    }
 
 
-public byte[] generateQRCodeData(Users user) {
-    String userData = generateQRCodeDataInternal(user);
-    int width = 300;
-    int height = 300;
-    return generateQRCode(userData, width, height);
-}
+    @Override
 
-    private String generateQRCodeDataInternal(Users user) {
-        JSONObject userData = new JSONObject();
-        userData.put("username", user.getUsername());
-        userData.put("email", user.getEmail());
-        userData.put("phoneNumber", user.getNumero());
-        // Ajoutez d'autres informations au besoin
-
-        return userData.toString();
-    }
-
-    private byte[] generateQRCode(String content, int width, int height) {
-        Map<EncodeHintType, Object> hints = new HashMap<>();
-        hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
-        hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
-
+    public byte[] generateQRCodeData(String data, int width, int height) {
         try {
-            QRCodeWriter qrCodeWriter = new QRCodeWriter();
-            BitMatrix bitMatrix = qrCodeWriter.encode(content, BarcodeFormat.QR_CODE, width, height, hints);
-
+            BitMatrix bitMatrix = new MultiFormatWriter().encode(data, BarcodeFormat.QR_CODE, width, height);
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             MatrixToImageWriter.writeToStream(bitMatrix, "PNG", outputStream);
-
             return outputStream.toByteArray();
         } catch (WriterException | IOException e) {
             e.printStackTrace();
             return new byte[0];
         }
     }
-
-    @Override
-    public void saveQRCodeData(String qrCode) {
-        QRCodeData qrCodeData = new QRCodeData();
-        qrCodeData.setQrCode(qrCode);
-        qrCodeDataRepository.save(qrCodeData);
-    }
-
-    @Override
-    public Optional<QRCodeData> getQRCodeData(Long id) {
-        return qrCodeDataRepository.findById(id);
-    }
-
-
-
-    }
+}
 
 
 
